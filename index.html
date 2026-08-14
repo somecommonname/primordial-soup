@@ -4,6 +4,8 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Primordial Soup</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#050A14">
 <style>
   :root{
     --abyss:#050A14; --deep:#04070F; --ink:#C9D8EA; --dim:#5F7391;
@@ -903,7 +905,13 @@ $('btnPause').addEventListener('click',()=>{paused=!paused;$('btnPause').textCon
 window.addEventListener('keydown',e=>{if(e.code==='Space'&&e.target===document.body){e.preventDefault();$('btnPause').click();}});
 $('btnPlague').addEventListener('click',plague);
 $('btnIce').addEventListener('click',iceAge);
-$('btnReset').addEventListener('click',initWorld);
+let resetArm=0;
+$('btnReset').addEventListener('click',()=>{
+  const n=performance.now();
+  if(n-resetArm<3000){store.del(SAVE_KEY);catchupLeft=0;initWorld();resetArm=0;$('btnReset').textContent='↻ new dish';}
+  else{resetArm=n;$('btnReset').textContent='⚠ erase this world?';
+    setTimeout(()=>{if(performance.now()-resetArm>=2900){$('btnReset').textContent='↻ new dish';resetArm=0;}},3100);}
+});
 $('inspClose').addEventListener('click',()=>{selected=null;updateInspector();});
 const foodEl=$('foodRate'),radEl=$('mutRate');
 function syncDials(){
@@ -914,6 +922,60 @@ function syncDials(){
 foodEl.addEventListener('input',syncDials);
 radEl.addEventListener('input',syncDials);
 
+// ---------- persistence: the dish lives between visits ----------
+const GAME_V=5;
+const SAVE_KEY='primordialSoup.save';
+const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
+  return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
+ }catch(e){ const m={}; return {get:k=>(k in m?m[k]:null),set:(k,v)=>{m[k]=String(v);},del:k=>{delete m[k];}}; }})();
+let catchupLeft=0,cuB0=0,cuD0=0,cuG0=1,lastSaveT=0,hintCU=false;
+
+function saveWorld(){
+  try{
+    const cs=creatures.map(c=>({id:c.id,x:Math.round(c.x*10)/10,y:Math.round(c.y*10)/10,
+      dir:Math.round(c.dir*100)/100,energy:Math.round(c.energy),cap:c.cap,age:Math.round(c.age*10)/10,
+      gen:c.gen,kids:c.kids,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
+      phase:Math.round(c.phase*100)/100,g:c.g}));
+    const al=new Array(algae.length*2);
+    for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
+    store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
+      simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
+      foodRate,mutRate,rocks,jets,blooms,cs,al,hist}));
+  }catch(e){}
+}
+function loadWorld(){
+  let s=null;
+  try{s=JSON.parse(store.get(SAVE_KEY));}catch(e){return false;}
+  if(!s||s.v!==GAME_V||!s.cs||!s.cs.length||!s.dish||!s.dish.R)return false;
+  const sc=R/s.dish.R, ox=s.dish.CX, oy=s.dish.CY;
+  const tx=x=>CX+(x-ox)*sc, ty=y=>CY+(y-oy)*sc;
+  creatures.length=0;algae.length=0;events.length=0;blooms.length=0;rocks.length=0;jets.length=0;
+  for(const c of s.cs){
+    for(const k in GENES)if(typeof c.g[k]!=='number')c.g[k]=(GENES[k].min+GENES[k].max)/2;
+    creatures.push({...c,x:tx(c.x),y:ty(c.y),dead:false,lock:null,lockT:0,mateT:0});
+  }
+  for(let i=0;i<s.al.length;i+=2)algae.push({x:tx(s.al[i]),y:ty(s.al[i+1]),eaten:false});
+  for(const rk of s.rocks)rocks.push({x:tx(rk.x),y:ty(rk.y),r:rk.r*sc,spk:rk.spk||[]});
+  for(const j of s.jets)jets.push({...j,off:j.off*sc,width:j.width*sc});
+  for(const b of s.blooms)blooms.push({x:tx(b.x),y:ty(b.y)});
+  simT=s.simT;nextId=s.nextId;births=s.births;deaths=s.deaths;
+  sexBirths=s.sexBirths||0;cloneBirths=s.cloneBirths||0;
+  maxGen=s.maxGen;iceUntil=s.iceUntil??-1;lastSpeciesN=s.lastSpeciesN||1;
+  foodRate=s.foodRate;mutRate=s.mutRate;foodEl.value=foodRate;radEl.value=mutRate;syncDials();
+  for(const k in hist)hist[k]=(s.hist&&Array.isArray(s.hist[k]))?s.hist[k]:[];
+  lastSample=simT-1;lastHud=simT-1;lastSpeciesMsgT=simT;selected=null;extinctAt=-1;
+  initSnow();
+  const away=(Date.now()-s.savedAt)/1000;
+  if(away>90){
+    catchupLeft=Math.floor(clamp(away,0,480))*60;
+    cuB0=births;cuD0=deaths;cuG0=maxGen;
+    say('the dish stirs from sleep — you were away '+(away>5400?Math.round(away/3600)+'h':Math.round(away/60)+'m'));
+  }else catchupLeft=0;
+  return true;
+}
+document.addEventListener('visibilitychange',()=>{if(document.hidden&&worldReady&&catchupLeft<=0)saveWorld();});
+window.addEventListener('pagehide',()=>{if(worldReady)saveWorld();});
+
 // ---------- main loop ----------
 let lastT=performance.now(),acc=0;
 function frame(){
@@ -921,16 +983,27 @@ function frame(){
   const dt=Math.min((now-lastT)/1000,0.1); lastT=now;
   if(!worldReady){
     resize();
-    if(R>80&&W>200){initCharts();initWorld();worldReady=true;}
+    if(R>80&&W>200){initCharts();if(!loadWorld())initWorld();worldReady=true;}
     else{ctx.fillStyle='#050A14';ctx.fillRect(0,0,W,H);requestAnimationFrame(frame);return;}
   }
   if(!paused){
-    acc+=dt*speedMult;
-    let guard=0;
-    while(acc>=1/60&&guard<12){step(1/60);guard++;acc-=1/60;}
-    if(guard>=12)acc=0;
-    sample();
+    if(catchupLeft>0){
+      const burst=Math.min(20,catchupLeft);
+      for(let i=0;i<burst;i++)step(1/60);
+      catchupLeft-=burst; sample(); acc=0;
+      if(catchupLeft<=0)say('⏩ while you slept: '+(births-cuB0)+' born, '+(deaths-cuD0)+' died'+(maxGen>cuG0?', now gen '+maxGen:''));
+    }else{
+      acc+=dt*speedMult;
+      let guard=0;
+      while(acc>=1/60&&guard<12){step(1/60);guard++;acc-=1/60;}
+      if(guard>=12)acc=0;
+      sample();
+    }
   }
+  if((catchupLeft>0)!==hintCU){hintCU=catchupLeft>0;
+    $('hint').textContent=hintCU?'⏩ THE DISH KEPT LIVING — CATCHING UP':'CLICK A CELL TO INSPECT';}
+  const nowMs=performance.now();
+  if(worldReady&&catchupLeft<=0&&nowMs-lastSaveT>5000){saveWorld();lastSaveT=nowMs;}
   render();
   updateHud();
   const ib=$('btnIce');
@@ -941,6 +1014,9 @@ function frame(){
 syncDials();
 ctx.fillStyle='#050A14';ctx.fillRect(0,0,W,H);
 frame();
+if(location.protocol.indexOf('http')===0&&'serviceWorker' in navigator){
+  try{navigator.serviceWorker.register('./sw.js').catch(()=>{});}catch(e){}
+}
 </script>
 </body>
 </html>

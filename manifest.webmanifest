@@ -1,0 +1,13 @@
+{
+  "name": "Primordial Soup",
+  "short_name": "Soup",
+  "description": "A small evolving universe in one HTML file. Your dish persists and keeps living while you're away.",
+  "start_url": ".",
+  "scope": ".",
+  "display": "standalone",
+  "background_color": "#050A14",
+  "theme_color": "#050A14",
+  "icons": [
+    { "src": "icon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

@@ -37,6 +37,10 @@ Sexual reproduction with courtship, uniform crossover + mutation, **hue-based ma
 ### v0.4 — Terrain
 Rocks (physical obstacles: slide-along collision, prey can be cornered, wanderers steer off) and **current jets** that slowly wander across epochs, carry algae into food streams, and sweep small creatures while big ones resist — size is now also current-resistance. Marine snow advects with the flow, so currents are visible. Species counter, sexual/cloned birth counters, and divergence announcements in the HUD.
 
+### v0.5 — The dish lives on your machine
+Persistent worlds: the dish auto-saves every few seconds and resumes exactly where it left off — same rocks, same species, same history — and when you return it **simulates the time you were away** as a visible fast-forward ("⏩ while you slept: 214 born, 198 died"). Installable as an app (PWA): offline-capable, lives in your dock. "New dish" now asks before erasing a world, because worlds are worth something now.
+*Field notes:* first step toward the ambient-companion goal — a dish that effectively runs 24/7: it remembers, and time passes while you're gone. Verified by save → wipe → restore → catch-up round-trip: the world returned atom-for-atom identical, then lived its missed five minutes to the exact second.
+
 ---
 
 ## Next (each ~a session)
@@ -54,6 +58,7 @@ Rocks (physical obstacles: slide-along collision, prey can be cornered, wanderer
 - **Evolving parasites** — a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
 - **Sensory honesty** — line-of-sight blocked by rocks; ambush predation becomes real.
 - **Performance floor** — spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
+- **The menu-bar pet** — a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 
 ## Frontier (the "how far can this go" answer)
 

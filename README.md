@@ -6,7 +6,11 @@ Creatures with real genomes — size, speed, vision, diet, fear, fertility, herd
 
 ## Play
 
-Open `index.html` in any modern browser. That's it — no dependencies, no build step, no server.
+**Just open the URL** — the game runs entirely in your browser. No download, no account, no server.
+
+Your dish **persists**: it auto-saves as you play, and when you come back it fast-forwards through the time you were away. In Chrome or Edge you can install it as an app (install icon in the address bar) — it works offline and lives in your dock.
+
+Running locally works too: open `index.html`. No dependencies, no build step.
 
 - **🔍 inspect** — click any cell to read its genome; every creature has a name
 - **☄️ meteor / 🌿 bloom / 🧬 seed** — aim and click the dish
