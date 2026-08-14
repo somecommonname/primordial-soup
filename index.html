@@ -92,7 +92,7 @@
       <button data-sp="1" class="on">1×</button><button data-sp="2">2×</button><button data-sp="4">4×</button>
     </div>
   </div>
-  <div class="ptitle" style="margin-top:14px">MEDDLE — CLICK THE DISH</div>
+  <div class="ptitle" style="margin-top:14px">MEDDLE · CLICK THE DISH</div>
   <div class="toolgrid" id="toolSeg">
     <button data-tool="inspect" class="on">🔍 inspect</button>
     <button data-tool="meteor">☄️ meteor</button>
@@ -292,7 +292,7 @@ function initWorld(){
       const x=b.x+gauss()*90,y=b.y+gauss()*90;
       if((x-CX)**2+(y-CY)**2<R*R) spawnAlgae(x,y);}
   }
-  say('the dish forms — '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells');
+  say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells');
   updateInspector();
 }
 
@@ -564,12 +564,12 @@ function step(dt){
 
   // extinction watch → spontaneous generation
   if(creatures.length===0){
-    if(extinctAt<0){extinctAt=simT; say('extinction — the dish falls silent');}
+    if(extinctAt<0){extinctAt=simT; say('extinction. the dish falls silent');}
     else if(simT-extinctAt>5){
       extinctAt=-1;
       const baseHue=rand(0,360);
       for(let i=0;i<28;i++){const [x,y]=randInDish(0.8);creatures.push(makeCreature(founderGenome(baseHue),x,y));}
-      say('spontaneous generation — life tries again');
+      say('spontaneous generation: life tries again');
     }
   }else extinctAt=-1;
 }
@@ -791,17 +791,17 @@ function updateHud(){
   const spN=speciesCount();
   $('stSpecies').textContent=spN;
   if(simT>20&&simT-lastSpeciesMsgT>10){
-    if(spN>lastSpeciesN){say('🌱 divergence — '+spN+' species now share the dish');lastSpeciesMsgT=simT;}
+    if(spN>lastSpeciesN){say('🌱 divergence: '+spN+' species now share the dish');lastSpeciesMsgT=simT;}
     else if(spN<lastSpeciesN){say('a species has vanished from the dish');lastSpeciesMsgT=simT;}
   }
   lastSpeciesN=spN;
   const L=hist.pop.length-1;
   if(L>=0){
-    $('vSize').textContent=isNaN(hist.size[L])?'—':hist.size[L].toFixed(1);
-    $('vSpeed').textContent=isNaN(hist.speed[L])?'—':hist.speed[L].toFixed(0);
-    $('vSense').textContent=isNaN(hist.sense[L])?'—':hist.sense[L].toFixed(0);
+    $('vSize').textContent=isNaN(hist.size[L])?'·':hist.size[L].toFixed(1);
+    $('vSpeed').textContent=isNaN(hist.speed[L])?'·':hist.speed[L].toFixed(0);
+    $('vSense').textContent=isNaN(hist.sense[L])?'·':hist.sense[L].toFixed(0);
     const d=hist.diet[L];
-    $('vDiet').textContent=isNaN(d)?'—':(d<0.25?'herb':d<0.55?'omni':'carn')+' '+d.toFixed(2);
+    $('vDiet').textContent=isNaN(d)?'·':(d<0.25?'herb':d<0.55?'omni':'carn')+' '+d.toFixed(2);
   }
   drawCharts();
   updateInspector();
@@ -838,7 +838,7 @@ function meteor(x,y){
   ping(x,y,'rgba(255,180,120,0.9)',150,3,0.8);
   ping(x,y,'rgba(255,107,94,0.6)',115,1.5,1.1);
   shake=7;
-  say('☄️ meteor strike — '+killed+' cells vaporised, nutrients scattered');
+  say('☄️ meteor strike: '+killed+' cells vaporised, nutrients scattered');
 }
 function plague(){
   let killed=0;
@@ -852,11 +852,11 @@ function plague(){
       if(selected===c)selected=null;}
   }
   let w=0;for(const c of creatures)if(!c.dead)creatures[w++]=c;creatures.length=w;
-  say('🦠 plague sweeps the dish — '+killed+' perished (crowds suffered most)');
+  say('🦠 plague sweeps the dish: '+killed+' perished (crowds suffered most)');
 }
 function iceAge(){
   iceUntil=simT+22;
-  say('❄️ ice age — cold waters for 22s: scarce food, sluggish cells');
+  say('❄️ ice age: cold waters for 22s: scarce food, sluggish cells');
 }
 function seedCreature(x,y){
   const g={
@@ -969,7 +969,7 @@ function loadWorld(){
   if(away>90){
     catchupLeft=Math.floor(clamp(away,0,480))*60;
     cuB0=births;cuD0=deaths;cuG0=maxGen;
-    say('the dish stirs from sleep — you were away '+(away>5400?Math.round(away/3600)+'h':Math.round(away/60)+'m'));
+    say('the dish stirs from sleep. you were away '+(away>5400?Math.round(away/3600)+'h':Math.round(away/60)+'m'));
   }else catchupLeft=0;
   return true;
 }
@@ -1001,7 +1001,7 @@ function frame(){
     }
   }
   if((catchupLeft>0)!==hintCU){hintCU=catchupLeft>0;
-    $('hint').textContent=hintCU?'⏩ THE DISH KEPT LIVING — CATCHING UP':'CLICK A CELL TO INSPECT';}
+    $('hint').textContent=hintCU?'⏩ THE DISH KEPT LIVING · CATCHING UP':'CLICK A CELL TO INSPECT';}
   const nowMs=performance.now();
   if(worldReady&&catchupLeft<=0&&nowMs-lastSaveT>5000){saveWorld();lastSaveT=nowMs;}
   render();

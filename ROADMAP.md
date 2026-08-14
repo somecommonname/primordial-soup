@@ -1,8 +1,8 @@
-# 🧫 Primordial Soup — Roadmap
+# 🧫 Primordial Soup Roadmap
 
-*A small evolving universe in one HTML file. No dependencies, no scripts telling creatures what to become — just genomes, physics, and selection.*
+*A small evolving universe in one HTML file. No dependencies, no scripts telling creatures what to become, just genomes, physics, and selection.*
 
-**Play:** open `index.html`, or the published artifact. **Source:** everything lives in one file, on purpose — the whole universe should stay readable in one sitting.
+**Play:** open `index.html`, or the published artifact. **Source:** everything lives in one file, on purpose: the whole universe should stay readable in one sitting.
 
 ---
 
@@ -15,55 +15,55 @@ A dish that keeps surprising us. Every feature must create **selection pressure*
 1. **Physics, not scripts.** Mechanics are costs and opportunities; behavior emerges. (Predators became viable through geometry fixes, not stat buffs.)
 2. **Measure before tuning.** Every balance change in this project came from instrumenting a single creature and watching it live or die. Napkin math lies; telemetry doesn't.
 3. **Bugs are field notes.** The best moments so far were diagnoses: creatures orbiting food they couldn't reach, hunters starving mid-contact, the rim carousel. Keep the stories.
-4. **The dish must survive the player.** Catastrophes and dials can devastate but not brick the toy — extinction triggers spontaneous generation.
+4. **The dish must survive the player.** Catastrophes and dials can devastate but not brick the toy: extinction triggers spontaneous generation.
 5. **One file.** Readability is a feature.
 
 ---
 
 ## Shipped
 
-### v0.1 — The dish
+### v0.1 · The dish
 Genomes (size, speed, vision, diet, fear, fertility, wander), energy economics, algae blooms, god tools (meteor, plague, ice age, bloom, seed), dials (food, radiation), inspector with named creatures, population + trait-drift charts.
-*Field notes:* creatures orbited their food (turn radius > eat radius) and starved amid plenty; fixed with arrival slowdown + opportunistic grazing. First dish evolved **couch potatoes** — slowness as a survival strategy.
+*Field notes:* creatures orbited their food (turn radius > eat radius) and starved amid plenty; fixed with arrival slowdown + opportunistic grazing. First dish evolved **couch potatoes**, slowness as a survival strategy.
 
-### v0.2 — Predation that works
-Target lock with give-up timer, opportunistic bite, **lead pursuit** (intercept-point aiming — pure pursuit provably loses to a tighter-turning dodger), satiation, reproduction cooldown, diet-scaled metabolism, quadratic meat digestion (specialists only), nutrient recycling from corpses.
-*Field notes:* the dish is too small for stable apex wolves (2–3 sustainable individuals → stochastic extinction) — the persistent niche is the **jackal** (omnivore). A cannibal-soup collapse taught us casual meat-eating must not pay. The rim of the dish was accidentally a predator-proof sanctuary; fixing it turned the rim into a hunting ground.
+### v0.2 · Predation that works
+Target lock with give-up timer, opportunistic bite, **lead pursuit** (intercept-point aiming; pure pursuit provably loses to a tighter-turning dodger), satiation, reproduction cooldown, diet-scaled metabolism, quadratic meat digestion (specialists only), nutrient recycling from corpses.
+*Field notes:* the dish is too small for stable apex wolves (2-3 sustainable individuals → stochastic extinction), so the persistent niche is the **jackal** (omnivore). A cannibal-soup collapse taught us casual meat-eating must not pay. The rim of the dish was accidentally a predator-proof sanctuary; fixing it turned the rim into a hunting ground.
 
-### v0.3 — Sex, species, herds
+### v0.3 · Sex, species, herds
 Sexual reproduction with courtship, uniform crossover + mutation, **hue-based mate compatibility (±40°)** with assortative preference, desperation-clone fallback for the lonely, herd gene (kin cohesion + alignment, stampedes), slowed hue drift so speciation takes generations.
-*Field notes:* sex became 93–98% of births immediately. Herding verified (3× clustering) but **selected against in predator-free dishes** — crowding costs with no benefit. Natives stay one species under panmixia (honest biology: no isolation, no speciation); founder events via the seed tool create instantly isolated species. High radiation is now a genuine sterilization ray (mutational meltdown).
+*Field notes:* sex became 93-98% of births immediately. Herding verified (3× clustering) but **selected against in predator-free dishes**, crowding costs with no benefit. Natives stay one species under panmixia (honest biology: no isolation, no speciation); founder events via the seed tool create instantly isolated species. High radiation is now a genuine sterilization ray (mutational meltdown).
 
-### v0.4 — Terrain
-Rocks (physical obstacles: slide-along collision, prey can be cornered, wanderers steer off) and **current jets** that slowly wander across epochs, carry algae into food streams, and sweep small creatures while big ones resist — size is now also current-resistance. Marine snow advects with the flow, so currents are visible. Species counter, sexual/cloned birth counters, and divergence announcements in the HUD.
+### v0.4 · Terrain
+Rocks (physical obstacles: slide-along collision, prey can be cornered, wanderers steer off) and **current jets** that slowly wander across epochs, carry algae into food streams, and sweep small creatures while big ones resist; size is now also current-resistance. Marine snow advects with the flow, so currents are visible. Species counter, sexual/cloned birth counters, and divergence announcements in the HUD.
 
-### v0.5 — The dish lives on your machine
-Persistent worlds: the dish auto-saves every few seconds and resumes exactly where it left off — same rocks, same species, same history — and when you return it **simulates the time you were away** as a visible fast-forward ("⏩ while you slept: 214 born, 198 died"). Installable as an app (PWA): offline-capable, lives in your dock. "New dish" now asks before erasing a world, because worlds are worth something now.
-*Field notes:* first step toward the ambient-companion goal — a dish that effectively runs 24/7: it remembers, and time passes while you're gone. Verified by save → wipe → restore → catch-up round-trip: the world returned atom-for-atom identical, then lived its missed five minutes to the exact second.
+### v0.5 · The dish lives on your machine
+Persistent worlds: the dish auto-saves every few seconds and resumes exactly where it left off (same rocks, same species, same history), and when you return it **simulates the time you were away** as a visible fast-forward ("⏩ while you slept: 214 born, 198 died"). Installable as an app (PWA): offline-capable, lives in your dock. "New dish" now asks before erasing a world, because worlds are worth something now.
+*Field notes:* first step toward the ambient-companion goal: a dish that effectively runs 24/7. It remembers, and time passes while you're gone. Verified by save → wipe → restore → catch-up round-trip: the world returned atom-for-atom identical, then lived its missed five minutes to the exact second.
 
 ---
 
 ## Next (each ~a session)
 
-- **Live phylogeny tree** — watch the tree of life grow; extinct branches fade. The single best "science instrument" we could add.
-- **Armor & weapons genes** — spikes (defense vs. speed), shells (defense vs. metabolism). Opens coevolutionary arms races beyond speed.
-- **Plants that spread** — algae reproduce logistically instead of raining from heaven; grazing fronts, overgrazing deserts, succession after meteors.
-- **Dish seeds** — save/load/share a world as a seed string; trade ecosystems, replay famous dishes.
-- **Sound** — Web Audio bloops keyed to births, kills, courtship; the dish should be listenable.
+- **Live phylogeny tree**: watch the tree of life grow; extinct branches fade. The single best "science instrument" we could add.
+- **Armor & weapons genes**: spikes (defense vs. speed), shells (defense vs. metabolism). Opens coevolutionary arms races beyond speed.
+- **Plants that spread**: algae reproduce logistically instead of raining from heaven; grazing fronts, overgrazing deserts, succession after meteors.
+- **Dish seeds**: save/load/share a world as a seed string; trade ecosystems, replay famous dishes.
+- **Sound**: Web Audio bloops keyed to births, kills, courtship; the dish should be listenable.
 
 ## Later
 
-- **Temperature zones + seasons** — warm shallows, cold deeps; metabolism scaled by local temperature → migration pressure, seasonal booms.
-- **Geographic speciation watch** — with rocks/currents partitioning the dish, test whether isolated pockets diverge past the 40° mate barrier *in situ* (the machinery exists; terrain may already make it happen).
-- **Evolving parasites** — a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
-- **Sensory honesty** — line-of-sight blocked by rocks; ambush predation becomes real.
-- **Performance floor** — spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
-- **The menu-bar pet** — a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
+- **Temperature zones + seasons**: warm shallows, cold deeps; metabolism scaled by local temperature → migration pressure, seasonal booms.
+- **Geographic speciation watch**: with rocks/currents partitioning the dish, test whether isolated pockets diverge past the 40° mate barrier *in situ* (the machinery exists; terrain may already make it happen).
+- **Evolving parasites**: a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
+- **Sensory honesty**: line-of-sight blocked by rocks; ambush predation becomes real.
+- **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
+- **The menu-bar pet**: a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 
 ## Frontier (the "how far can this go" answer)
 
-- **Neural brains.** Replace the fixed seek/flee/wander program with a tiny evolvable network (inputs: food/threat/kin vectors, energy; outputs: turn, thrust). Behavior itself then evolves — ambush, migration, hoarding, deception could appear *unprogrammed*. This is the jump from tuning an animal to growing one.
-- **Morphology.** Multi-segment bodies (genes for plan: segments, fins, mouths) — speed/size/armor stop being abstract numbers and become consequences of shape.
+- **Neural brains.** Replace the fixed seek/flee/wander program with a tiny evolvable network (inputs: food/threat/kin vectors, energy; outputs: turn, thrust). Behavior itself then evolves: ambush, migration, hoarding, deception could appear *unprogrammed*. This is the jump from tuning an animal to growing one.
+- **Morphology.** Multi-segment bodies (genes for plan: segments, fins, mouths), where speed/size/armor stop being abstract numbers and become consequences of shape.
 - **Open-endedness.** The honest research frontier (Tierra, Avida, and friends): can the dish keep inventing? Nobody has fully solved this. We get to try in one HTML file.
 
 **Ceilings, stated honestly:** gene ranges bound every trait (a pinned gene is a spent direction); one canvas thread comfortably holds ~1k creatures (WebGL raises it ~10×); and without new genes or brains, evolution here optimizes but never invents. The roadmap above is, precisely, the plan for removing those ceilings one at a time.
