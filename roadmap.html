@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Roadmap — Primordial Soup</title>
+<style>
+  :root{
+    --abyss:#050A14; --deep:#04070F; --ink:#C9D8EA; --dim:#5F7391;
+    --cyan:#63E2FF; --algae:#6FE08A; --danger:#FF6B5E;
+    --panel:rgba(8,14,26,0.78); --line:rgba(99,140,190,0.16);
+    --mono:ui-monospace,'SF Mono',SFMono-Regular,Menlo,Consolas,monospace;
+    --sans:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{margin:0;padding:0;box-sizing:border-box}
+  body{background:var(--abyss);color:var(--ink);font-family:var(--sans);
+       font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased}
+  .wrap{max-width:760px;margin:0 auto;padding:52px 22px 90px}
+  .nav{display:flex;justify-content:space-between;align-items:center;margin-bottom:44px;
+       font-family:var(--mono);font-size:11px;letter-spacing:0.14em}
+  .nav a{color:var(--dim);text-decoration:none;transition:color .15s}
+  .nav a:hover{color:var(--cyan)}
+  h1{font-family:var(--mono);font-size:22px;font-weight:600;letter-spacing:0.24em;color:var(--cyan);margin-bottom:8px}
+  .tagline{color:var(--dim);font-style:italic;margin-bottom:40px}
+  h2{font-family:var(--mono);font-size:11px;font-weight:600;letter-spacing:0.26em;color:var(--dim);
+     margin:46px 0 14px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+  h3{font-family:var(--mono);font-size:13px;font-weight:600;letter-spacing:0.06em;color:var(--ink);margin:24px 0 6px}
+  h3 .v{color:var(--cyan)}
+  p{margin-bottom:12px}
+  ul,ol{margin:0 0 14px 22px}
+  li{margin-bottom:7px}
+  b,strong{color:#E6F0FA;font-weight:600}
+  em{color:var(--dim)}
+  .note{font-size:13.5px;color:var(--dim);border-left:2px solid var(--line);padding-left:14px;margin:10px 0 18px}
+  .note b{color:var(--ink)}
+  .tier{font-family:var(--mono);font-size:10px;letter-spacing:0.2em;color:var(--algae);margin-right:8px}
+  .tier.later{color:var(--cyan)}
+  .tier.frontier{color:var(--danger)}
+  .dl{font-family:var(--mono);font-size:11px;letter-spacing:0.1em;color:var(--abyss);background:var(--cyan);
+      border-radius:7px;padding:7px 12px;text-decoration:none}
+  .dl:hover{opacity:0.85}
+  footer{margin-top:60px;font-family:var(--mono);font-size:10.5px;letter-spacing:0.14em;color:var(--dim)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="nav">
+    <a href="index.html">← BACK TO THE DISH</a>
+    <a class="dl" href="ROADMAP.md" download>⬇ DOWNLOAD .MD</a>
+  </div>
+
+  <h1>ROADMAP</h1>
+  <p class="tagline">A small evolving universe in one HTML file. No dependencies, no scripts telling creatures what to become — just genomes, physics, and selection.</p>
+
+  <h2>NORTH STAR</h2>
+  <p>A dish that keeps surprising us. Every feature must create <b>selection pressure</b>, never a scripted outcome. If we can predict exactly what evolves, the feature failed. The long goal: climb the ladder from <em>parameter evolution</em> (tuning knobs on a fixed animal) to <em>open-ended evolution</em> (new kinds of things keep appearing).</p>
+
+  <h2>DESIGN PRINCIPLES</h2>
+  <ol>
+    <li><b>Physics, not scripts.</b> Mechanics are costs and opportunities; behavior emerges. Predators became viable through geometry fixes, not stat buffs.</li>
+    <li><b>Measure before tuning.</b> Every balance change came from instrumenting a single creature and watching it live or die. Napkin math lies; telemetry doesn't.</li>
+    <li><b>Bugs are field notes.</b> The best moments were diagnoses: creatures orbiting food they couldn't reach, hunters starving mid-contact, the rim carousel. Keep the stories.</li>
+    <li><b>The dish must survive the player.</b> Catastrophes can devastate but never brick the toy — extinction triggers spontaneous generation.</li>
+    <li><b>One file.</b> The whole universe stays readable in one sitting.</li>
+  </ol>
+
+  <h2>SHIPPED</h2>
+
+  <h3><span class="v">v0.1</span> — The dish</h3>
+  <p>Genomes (size, speed, vision, diet, fear, fertility, wander), energy economics, algae blooms, god tools (meteor, plague, ice age, bloom, seed), dials for food and radiation, an inspector with named creatures, population and trait-drift charts.</p>
+  <p class="note"><b>Field notes:</b> creatures orbited food they couldn't reach (turn radius exceeded eat radius) and starved amid plenty; fixed with arrival slowdown and opportunistic grazing. The first dish evolved <b>couch potatoes</b> — slowness as a survival strategy.</p>
+
+  <h3><span class="v">v0.2</span> — Predation that works</h3>
+  <p>Target lock with a give-up timer, opportunistic biting, <b>lead pursuit</b> (intercept-point aiming — pure pursuit provably loses to a tighter-turning dodger), satiation, reproduction cooldown, diet-scaled metabolism, quadratic meat digestion so only specialists profit, nutrient recycling from corpses.</p>
+  <p class="note"><b>Field notes:</b> the dish is too small for stable apex wolves (two or three sustainable individuals go extinct by chance) — the persistent niche is the <b>jackal</b>. A cannibal-soup collapse taught us casual meat-eating must not pay. The dish rim was accidentally a predator-proof sanctuary; fixing it turned the rim into a hunting ground.</p>
+
+  <h3><span class="v">v0.3</span> — Sex, species, herds</h3>
+  <p>Sexual reproduction with courtship, uniform crossover plus mutation, <b>hue-based mate compatibility (±40°)</b> with assortative preference, a desperation-clone fallback for the lonely, a herd gene (kin cohesion, alignment, stampedes), and slowed color drift so speciation takes generations.</p>
+  <p class="note"><b>Field notes:</b> sex became 93–98% of all births immediately. Herding verified (3× clustering) but <b>selected against in predator-free dishes</b>. Natives stay one species under panmixia — no isolation, no speciation, exactly as biology predicts; founder events via the seed tool create instantly isolated species. High radiation is a genuine sterilization ray.</p>
+
+  <h3><span class="v">v0.4</span> — Terrain</h3>
+  <p>Rocks as physical obstacles (slide-along collision, prey get cornered, wanderers steer off) and <b>current jets</b> that wander across epochs, carry algae into visible food streams, and sweep small creatures while big ones resist — size is now also current-resistance. Marine snow traces the flow. Species counter, sexual/cloned birth counters, and divergence announcements in the HUD.</p>
+
+  <h2>NEXT <span style="font-weight:400;letter-spacing:0.1em">— each ≈ a session</span></h2>
+  <ul>
+    <li><span class="tier">NEXT</span><b>Live phylogeny tree</b> — watch the tree of life grow; extinct branches fade. The best science instrument we could add.</li>
+    <li><span class="tier">NEXT</span><b>Armor &amp; weapons genes</b> — spikes and shells with real tradeoffs; arms races beyond speed.</li>
+    <li><span class="tier">NEXT</span><b>Plants that spread</b> — logistic algae growth: grazing fronts, overgrazing deserts, succession after meteors.</li>
+    <li><span class="tier">NEXT</span><b>Dish seeds</b> — save, load, and share a world as a seed string; trade ecosystems, replay famous dishes.</li>
+    <li><span class="tier">NEXT</span><b>Sound</b> — Web Audio bloops for births, kills, courtship; the dish should be listenable.</li>
+  </ul>
+
+  <h2>LATER</h2>
+  <ul>
+    <li><span class="tier later">LATER</span><b>Temperature zones + seasons</b> — warm shallows, cold deeps, migration pressure, seasonal booms.</li>
+    <li><span class="tier later">LATER</span><b>Geographic speciation watch</b> — do rock-and-current pockets diverge past the mate barrier in place? The machinery exists; terrain may already make it happen.</li>
+    <li><span class="tier later">LATER</span><b>Evolving parasites</b> — a second tiny replicator living on creatures; Red Queen dynamics.</li>
+    <li><span class="tier later">LATER</span><b>Sensory honesty</b> — line-of-sight blocked by rocks; real ambush predation.</li>
+    <li><span class="tier later">LATER</span><b>Performance floor</b> — spatial-hash tuning, WebGL renderer: 1k → 10k creatures.</li>
+  </ul>
+
+  <h2>FRONTIER <span style="font-weight:400;letter-spacing:0.1em">— the "how far can this go" answer</span></h2>
+  <ul>
+    <li><span class="tier frontier">FRONTIER</span><b>Neural brains.</b> Replace the fixed seek/flee/wander program with a tiny evolvable network. Behavior itself then evolves — ambush, migration, hoarding, deception could appear unprogrammed. The jump from tuning an animal to growing one.</li>
+    <li><span class="tier frontier">FRONTIER</span><b>Morphology.</b> Multi-segment bodies where speed, size, and armor stop being abstract numbers and become consequences of shape.</li>
+    <li><span class="tier frontier">FRONTIER</span><b>Open-endedness.</b> The honest research frontier (Tierra, Avida, and friends): can the dish keep inventing? Nobody has fully solved this. We get to try from one HTML file.</li>
+  </ul>
+  <p class="note"><b>Ceilings, stated honestly:</b> gene ranges bound every trait (a pinned gene is a spent direction); one canvas thread holds ~1k creatures (WebGL raises it ~10×); and without new genes or brains, evolution here optimizes but never invents. This roadmap is, precisely, the plan for removing those ceilings one at a time.</p>
+
+  <h2>EXPERIMENTS WORTH RUNNING</h2>
+  <ol>
+    <li><b>Selection reversal:</b> seed predators → watch herd, speed, and fear rise; plague them away → watch the same traits decay.</li>
+    <li><b>Founder speciation:</b> seed a stranger during algae recovery (not famine); its lineage is isolated by construction.</li>
+    <li><b>Radiation dose-response:</b> find the mutation rate where adaptation tips into meltdown.</li>
+    <li><b>Current niches:</b> compare mean size inside vs. outside the jet streams — drag selects.</li>
+    <li><b>Island biogeography:</b> meteor one half of the dish repeatedly; compare diversity across halves.</li>
+  </ol>
+
+  <footer>PRIMORDIAL SOUP · BUILT LIVE WITH CLAUDE · THE ROADMAP IS THE GENOME</footer>
+</div>
+</body>
+</html>
