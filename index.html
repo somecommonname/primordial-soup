@@ -58,7 +58,7 @@
   .spark .lbl{width:44px;color:var(--dim)}
   .spark .val{width:44px;text-align:right;color:var(--ink)}
   .spark canvas{width:110px;height:22px;flex:1}
-  #inspector{left:50%;bottom:18px;transform:translateX(-50%);width:300px;display:none}
+  #inspector{right:18px;bottom:18px;width:300px;display:none}
   #inspector.show{display:block}
   #inspector .name{font-size:13px;color:var(--cyan);letter-spacing:0.08em}
   #inspector .meta{font-size:10px;color:var(--dim);margin:2px 0 8px}
@@ -70,7 +70,14 @@
   .gene .bar{flex:1;height:4px;background:rgba(99,140,190,0.15);border-radius:2px;overflow:hidden}
   .gene .bar i{display:block;height:100%;border-radius:2px;background:var(--ink)}
   .gene.diet .bar i{background:linear-gradient(90deg,var(--algae),var(--danger))}
-  #ticker{position:fixed;left:18px;bottom:16px;font-size:10.5px;color:var(--dim);pointer-events:none}
+  #ticker{position:fixed;left:18px;bottom:246px;font-size:10.5px;color:var(--dim);pointer-events:none}
+  #treePanel{left:18px;bottom:18px;width:min(560px,44vw);padding:10px 12px 8px}
+  #treePanel .thead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
+  #treePanel .thead button{padding:2px 8px;font-size:9px;border:none;background:none;color:var(--dim)}
+  #treePanel .thead button:hover{color:var(--cyan)}
+  #treeCv{width:100%;height:120px;display:block}
+  #treeShow{position:fixed;left:18px;bottom:16px;display:none;font-size:14px;padding:6px 9px}
+  @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
   #ticker div{margin-top:4px;animation:tick 9s forwards}
   @keyframes tick{0%{opacity:0;transform:translateY(4px)}5%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
   #hint{position:fixed;bottom:16px;right:18px;font-size:9.5px;letter-spacing:0.14em;color:var(--dim);opacity:0.75}
@@ -132,6 +139,12 @@
   <div class="spark"><span class="lbl">vision</span><canvas id="spSense"></canvas><span class="val" id="vSense"></span></div>
   <div class="spark"><span class="lbl">diet</span><canvas id="spDiet"></canvas><span class="val" id="vDiet"></span></div>
 </div>
+
+<div class="panel" id="treePanel">
+  <div class="thead"><span class="ptitle" style="margin:0">TREE OF LIFE</span><button id="treeHide">hide</button></div>
+  <canvas id="treeCv"></canvas>
+</div>
+<button id="treeShow" title="tree of life">🌳</button>
 
 <div class="panel" id="inspector">
   <button class="close" id="inspClose">✕</button>
@@ -282,10 +295,13 @@ function initWorld(){
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
   lastSample=-1; lastHud=-9; sexBirths=0; cloneBirths=0; lastSpeciesN=1; lastSpeciesMsgT=0;
   hist.t=[];hist.pop=[];hist.alg=[];hist.size=[];hist.speed=[];hist.sense=[];hist.diet=[];
+  lineages.clear(); linNext=1; treeT.length=0; treeDt=2; lastTreeSample=-1;
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
   for(let i=0;i<5;i++){const [x,y]=randInDish(0.7); blooms.push({x,y});}
   for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
+  const rootLin=newLineage(0,baseHue);
+  for(const c of creatures)c.lin=rootLin;
   for(let i=0;i<1600;i++){
     if(Math.random()<0.55){const [x,y]=randInDish(); spawnAlgae(x,y);}
     else{const b=blooms[(Math.random()*blooms.length)|0];
@@ -526,6 +542,7 @@ function step(dt){
         cg.hue=Math.random()<0.5?g.hue:mate.g.hue;
         const mg=mutate(cg);
         const child=makeCreature(mg,(c.x+mate.x)/2,(c.y+mate.y)/2,null,Math.max(c.gen,mate.gen)+1);
+        child.lin=lineageOf(c.lin,mg.hue);
         child.energy=Math.min((c.energy+mate.energy)*0.28,child.cap);
         c.energy*=0.68; mate.energy*=0.68;
         c.kids++; mate.kids++; c.lastRep=c.age; mate.lastRep=mate.age;
@@ -539,6 +556,7 @@ function step(dt){
       if(c.mateT>5){
         const cg=mutate(g);
         const child=makeCreature(cg, c.x+gauss()*10, c.y+gauss()*10, null, c.gen+1);
+        child.lin=lineageOf(c.lin,cg.hue);
         child.energy=Math.min(c.energy*0.45,child.cap);
         c.energy*=0.45; c.kids++; c.lastRep=c.age; c.mateT=0;
         newborns.push(child); births++; cloneBirths++;
@@ -569,6 +587,8 @@ function step(dt){
       extinctAt=-1;
       const baseHue=rand(0,360);
       for(let i=0;i<28;i++){const [x,y]=randInDish(0.8);creatures.push(makeCreature(founderGenome(baseHue),x,y));}
+      const rl=newLineage(0,baseHue);
+      for(const c of creatures)if(c.lin==null)c.lin=rl;
       say('spontaneous generation: life tries again');
     }
   }else extinctAt=-1;
@@ -588,6 +608,7 @@ function sample(){
   hist.sense.push(n?mn/n:NaN); hist.diet.push(n?md/n:NaN);
   const MAX=260;
   for(const k in hist)if(hist[k].length>MAX)hist[k].shift();
+  sampleTree();
 }
 function speciesCount(){
   const n=creatures.length;
@@ -733,9 +754,10 @@ function setupChart(id){const c=document.getElementById(id);
   c.width=r.width*DPR;c.height=r.height*DPR;
   const g=c.getContext('2d');g.setTransform(DPR,0,0,DPR,0,0);
   return {g,w:r.width,h:r.height};}
-let popC,spC={};
+let popC,spC={},treeC=null;
 function initCharts(){
   popC=setupChart('popChart');
+  treeC=setupChart('treeCv');
   spC={size:setupChart('spSize'),speed:setupChart('spSpeed'),sense:setupChart('spSense'),diet:setupChart('spDiet')};
 }
 function drawLine(g,w,h,data,color,vmax,vmin=0){
@@ -865,7 +887,9 @@ function seedCreature(x,y){
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
     herd:rand(0,1), hue:rand(0,360),
   };
-  creatures.push(makeCreature(g,x,y));
+  const p=makeCreature(g,x,y);
+  p.lin=newLineage(0,g.hue);
+  creatures.push(p);
   ping(x,y,'hsla('+g.hue+',85%,70%,0.8)',30,1.5,0.8);
   say(g.diet>0.55?'🧬 a stranger with teeth slips into the dish':'🧬 a stranger arrives in the dish');
 }
@@ -923,7 +947,7 @@ foodEl.addEventListener('input',syncDials);
 radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
-const GAME_V=5;
+const GAME_V=6;
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -935,18 +959,24 @@ function saveWorld(){
     const cs=creatures.map(c=>({id:c.id,x:Math.round(c.x*10)/10,y:Math.round(c.y*10)/10,
       dir:Math.round(c.dir*100)/100,energy:Math.round(c.energy),cap:c.cap,age:Math.round(c.age*10)/10,
       gen:c.gen,kids:c.kids,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
-      phase:Math.round(c.phase*100)/100,g:c.g}));
+      phase:Math.round(c.phase*100)/100,lin:c.lin||0,g:c.g}));
     const al=new Array(algae.length*2);
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
     store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
-      foodRate,mutRate,rocks,jets,blooms,cs,al,hist}));
+      foodRate,mutRate,rocks,jets,blooms,cs,al,hist,
+      lins:[...lineages.entries()],linNext,treeT,treeDt}));
   }catch(e){}
 }
 function loadWorld(){
   let s=null;
   try{s=JSON.parse(store.get(SAVE_KEY));}catch(e){return false;}
-  if(!s||s.v!==GAME_V||!s.cs||!s.cs.length||!s.dish||!s.dish.R)return false;
+  if(!s)return false;
+  if(s.v!==GAME_V){
+    try{say('the old world could not survive the new physics. a fresh dish begins');}catch(e){}
+    return false;
+  }
+  if(!s.cs||!s.cs.length||!s.dish||!s.dish.R)return false;
   const sc=R/s.dish.R, ox=s.dish.CX, oy=s.dish.CY;
   const tx=x=>CX+(x-ox)*sc, ty=y=>CY+(y-oy)*sc;
   creatures.length=0;algae.length=0;events.length=0;blooms.length=0;rocks.length=0;jets.length=0;
@@ -964,6 +994,8 @@ function loadWorld(){
   foodRate=s.foodRate;mutRate=s.mutRate;foodEl.value=foodRate;radEl.value=mutRate;syncDials();
   for(const k in hist)hist[k]=(s.hist&&Array.isArray(s.hist[k]))?s.hist[k]:[];
   lastSample=simT-1;lastHud=simT-1;lastSpeciesMsgT=simT;selected=null;extinctAt=-1;
+  lineages=new Map((s.lins||[]).map(([id,L])=>[id,L]));
+  linNext=s.linNext||1; treeT=s.treeT||[]; treeDt=s.treeDt||2; lastTreeSample=simT;
   initSnow();
   const away=(Date.now()-s.savedAt)/1000;
   if(away>90){
@@ -975,6 +1007,112 @@ function loadWorld(){
 }
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&worldReady&&catchupLeft<=0)saveWorld();});
 window.addEventListener('pagehide',()=>{if(worldReady)saveWorld();});
+
+// ---------- tree of life ----------
+let lineages=new Map(), linNext=1, treeT=[], treeDt=2, lastTreeSample=-1;
+let treeOpen=true;
+function newLineage(parent,hue){
+  const id=linNext++;
+  lineages.set(id,{parent:parent||0,hue:Math.round(hue),t0:simT,t1:null,counts:new Array(treeT.length).fill(0)});
+  return id;
+}
+function lineageOf(parentLin,childHue){
+  const L=lineages.get(parentLin);
+  if(L&&hueDist(childHue,L.hue)<=30)return parentLin;
+  return newLineage(parentLin||0,childHue);
+}
+function pruneTree(){
+  for(const [id,L] of [...lineages]){
+    if(L.t1==null)continue;
+    let peak=0;for(const v of L.counts)if(v>peak)peak=v;
+    if(peak<3){
+      const P=lineages.get(L.parent);
+      if(P)for(let i=0;i<L.counts.length;i++)P.counts[i]=(P.counts[i]||0)+(L.counts[i]||0);
+      for(const [,O] of lineages)if(O.parent===id)O.parent=L.parent;
+      lineages.delete(id);
+    }
+  }
+}
+function sampleTree(){
+  if(simT-lastTreeSample<treeDt)return;
+  lastTreeSample=simT;
+  treeT.push(simT);
+  const alive=new Map();
+  for(const c of creatures)if(c.lin)alive.set(c.lin,(alive.get(c.lin)||0)+1);
+  for(const [id,L] of lineages){
+    const v=alive.get(id)||0;
+    L.counts.push(v);
+    if(v===0&&L.t1==null){
+      let hadLife=false;
+      for(let i=0;i<L.counts.length-1;i++)if(L.counts[i]>0){hadLife=true;break;}
+      if(hadLife)L.t1=simT;
+    }
+  }
+  if(treeT.length%60===0)pruneTree();
+  if(treeT.length>600){
+    treeT=treeT.filter((_,i)=>i%2===0);
+    for(const [,L] of lineages)L.counts=L.counts.filter((_,i)=>i%2===0);
+    treeDt*=2;
+  }
+  drawTree();
+}
+function drawTree(){
+  if(!treeOpen||!treeC)return;
+  const {g,w,h}=treeC;
+  if(!w)return;
+  g.clearRect(0,0,w,h);
+  const n=treeT.length;
+  if(n<2||!lineages.size)return;
+  const kids=new Map();
+  for(const [id,L] of lineages){
+    if(!kids.has(L.parent))kids.set(L.parent,[]);
+    kids.get(L.parent).push(id);
+  }
+  const order=[];
+  (function dfs(p){
+    const arr=(kids.get(p)||[]).sort((a,b)=>lineages.get(a).t0-lineages.get(b).t0);
+    for(const id of arr){order.push(id);dfs(id);}
+  })(0);
+  const totals=new Array(n).fill(0);
+  for(const id of order){
+    const c=lineages.get(id).counts;
+    for(let i=0;i<n;i++)totals[i]+=c[i]||0;
+  }
+  let maxTot=1;for(const t of totals)if(t>maxTot)maxTot=t;
+  const sc=(h-14)/maxTot, X=i=>i/(n-1)*w;
+  const acc=new Array(n);
+  for(let i=0;i<n;i++)acc[i]=(h-6-totals[i]*sc)/2;
+  for(const id of order){
+    const L=lineages.get(id),c=L.counts;
+    let i0=-1,i1=-1;
+    for(let i=0;i<n;i++)if((c[i]||0)>0){if(i0<0)i0=i;i1=i;}
+    if(i0<0)continue;
+    i0=Math.max(0,i0-1); i1=Math.min(n-1,i1+1);
+    g.beginPath();
+    g.moveTo(X(i0),acc[i0]);
+    for(let i=i0;i<=i1;i++)g.lineTo(X(i),acc[i]);
+    for(let i=i1;i>=i0;i--)g.lineTo(X(i),acc[i]+(c[i]||0)*sc);
+    g.closePath();
+    g.fillStyle='hsla('+L.hue+',70%,60%,'+(L.t1!=null?0.4:0.82)+')';
+    g.fill();
+    for(let i=0;i<n;i++)acc[i]+=(c[i]||0)*sc;
+  }
+  g.fillStyle='rgba(95,115,145,0.85)';
+  g.font='9px ui-monospace,monospace';
+  g.fillText('0m',2,h-1);
+  const mins=Math.round(simT/60);
+  g.fillText(mins+'m',w-(mins>=100?26:mins>=10?20:14),h-1);
+}
+$('treeHide').addEventListener('click',()=>{
+  treeOpen=false;$('treePanel').style.display='none';$('treeShow').style.display='block';
+  store.set('soup.tree','0');
+});
+$('treeShow').addEventListener('click',()=>{
+  treeOpen=true;$('treePanel').style.display='block';$('treeShow').style.display='none';
+  store.set('soup.tree','1');
+  treeC=setupChart('treeCv');drawTree();
+});
+if(store.get('soup.tree')==='0'){treeOpen=false;$('treePanel').style.display='none';$('treeShow').style.display='block';}
 
 // ---------- main loop ----------
 let lastT=performance.now(),acc=0;

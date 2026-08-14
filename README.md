@@ -17,6 +17,7 @@ Running locally works too: open `index.html`. No dependencies, no build step.
 - **🦠 plague / ❄️ ice age**: dish-wide catastrophes
 - **☀️ food / ☢️ radiation**: the slow dials of climate and mutation
 - Watch the **DISH REPORT**: population waves, species count, sexual vs. cloned births, and live trait drift
+- Watch the **TREE OF LIFE**: a live phylogeny streamgraph where branches split as lineages diverge and fade as they go extinct
 
 ## Roadmap
 

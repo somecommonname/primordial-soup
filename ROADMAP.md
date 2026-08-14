@@ -41,11 +41,14 @@ Rocks (physical obstacles: slide-along collision, prey can be cornered, wanderer
 Persistent worlds: the dish auto-saves every few seconds and resumes exactly where it left off (same rocks, same species, same history), and when you return it **simulates the time you were away** as a visible fast-forward ("⏩ while you slept: 214 born, 198 died"). Installable as an app (PWA): offline-capable, lives in your dock. "New dish" now asks before erasing a world, because worlds are worth something now.
 *Field notes:* first step toward the ambient-companion goal: a dish that effectively runs 24/7. It remembers, and time passes while you're gone. Verified by save → wipe → restore → catch-up round-trip: the world returned atom-for-atom identical, then lived its missed five minutes to the exact second.
 
+### v0.6 · The tree of life
+A live phylogeny panel: every creature carries a lineage id, children inherit it until their color drifts past 30° from the lineage's founding hue, and that drift founds a branch. Seeded strangers found new roots. The tree renders as a streamgraph (band thickness is population, splits are speciation, fading bands are extinctions) and its envelope is the population curve itself. Adaptive downsampling keeps a week-old dish's whole history in bounded memory, dead twigs fold into their parents, and the tree survives save/load, so it grows across visits and through catch-up time.
+*Field notes:* a high-radiation test dish produced 81 lineages in eleven minutes, and the great famine appeared in the tree as a pinch in the stream. Lineage count and species count measure different things: the tree records history, the species counter records current gene flow.
+
 ---
 
 ## Next (each ~a session)
 
-- **Live phylogeny tree**: watch the tree of life grow; extinct branches fade. The single best "science instrument" we could add.
 - **Armor & weapons genes**: spikes (defense vs. speed), shells (defense vs. metabolism). Opens coevolutionary arms races beyond speed.
 - **Plants that spread**: algae reproduce logistically instead of raining from heaven; grazing fronts, overgrazing deserts, succession after meteors.
 - **Dish seeds**: save/load/share a world as a seed string; trade ecosystems, replay famous dishes.

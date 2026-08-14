@@ -85,9 +85,12 @@
   <p>Persistent worlds: the dish auto-saves and resumes exactly where it left off (same rocks, same species, same history), and when you return it <b>simulates the time you were away</b> as a visible fast-forward ("⏩ while you slept: 214 born, 198 died"). Installable as an app (PWA), offline-capable. "New dish" asks before erasing a world, because worlds are worth something now.</p>
   <p class="note"><b>Field notes:</b> first step toward the ambient-companion goal. Verified by a save → wipe → restore → catch-up round-trip: the world returned atom-for-atom identical, then lived its missed five minutes to the exact second.</p>
 
+  <h3><span class="v">v0.6</span> · The tree of life</h3>
+  <p>A live phylogeny panel. Every creature carries a lineage id; children inherit it until their color drifts past 30° from the lineage's founding hue, which founds a branch. Seeded strangers found new roots. Rendered as a streamgraph: band thickness is population, splits are speciation, fading bands are extinctions, and the envelope of the whole tree is the population curve. Adaptive downsampling keeps a long-lived dish's entire history in bounded memory, and the tree survives save/load, so it grows across visits and through catch-up time.</p>
+  <p class="note"><b>Field notes:</b> a high-radiation test dish produced 81 lineages in eleven minutes, and the great famine appeared as a pinch in the stream. The tree records history; the species counter records current gene flow. They are different instruments.</p>
+
   <h2>NEXT <span style="font-weight:400;letter-spacing:0.1em">· each ≈ a session</span></h2>
   <ul>
-    <li><span class="tier">NEXT</span><b>Live phylogeny tree</b>: watch the tree of life grow; extinct branches fade. The best science instrument we could add.</li>
     <li><span class="tier">NEXT</span><b>Armor &amp; weapons genes</b>: spikes and shells with real tradeoffs; arms races beyond speed.</li>
     <li><span class="tier">NEXT</span><b>Plants that spread</b>: logistic algae growth; grazing fronts, overgrazing deserts, succession after meteors.</li>
     <li><span class="tier">NEXT</span><b>Dish seeds</b>: save, load, and share a world as a seed string; trade ecosystems, replay famous dishes.</li>
