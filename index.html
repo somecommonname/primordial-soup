@@ -230,7 +230,7 @@
   <div class="subnums">gen <b id="stGen">1</b> · species <b id="stSpecies">1</b> · strains <b id="stStrains">1</b> · <b id="stSeason"></b></div>
   <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b> · sick <b id="stSick">0</b> · calls <b id="stCalls">0</b>/m · eggs <b id="stEggs">0</b></div>
   <div class="subnums" id="stRecordsRow" title="records and badges">🏆 <b id="stRecords"></b></div>
-  <div class="subnums" id="stLineRow" style="display:none">☆ <b id="stLine"></b></div>
+  <div class="subnums" id="stLineRow" style="display:none">☆ <b id="stLine" style="cursor:pointer" title="tap to visit the line"></b> <b id="lineClear" style="cursor:pointer;color:var(--dim)" title="stop following">✕</b></div>
   <canvas id="popChart"></canvas>
   <div class="ptitle">TRAIT DRIFT</div>
   <div class="spark"><span class="lbl">size</span><canvas id="spSize"></canvas><span class="val" id="vSize"></span></div>
@@ -272,7 +272,7 @@
   <div class="ptitle">FIELD GUIDE</div>
   <div id="guideBody">
     <div class="gh">THE CREATURES</div>
-    <div class="gl">🧬 21 genes each, from size and speed to body shape, jaws, egg laying, parental care, and hibernation</div>
+    <div class="gl">🧬 20 genes each, from size and speed to body shape, jaws, egg laying, parental care, and hibernation</div>
     <div class="gl">💕 They court and breed; babies mix both parents' genes</div>
     <div class="gl">🌈 Color is family; drift too far apart and they become separate species</div>
     <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
@@ -280,6 +280,7 @@
     <div class="gl">🦔 Quills hurt attackers, shells resist teeth, both cost energy</div>
     <div class="gl">🦠 They catch parasites, evolve immunity, infect each other; gentle strains become helpful symbionts</div>
     <div class="gl">🍄 Death feeds fungi; fungi feed scavengers or burst into new plants</div>
+    <div class="gl">🎲 New dish accepts a seed: the same seed builds the same world for anyone, anywhere</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -294,7 +295,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 24 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 29 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -1631,7 +1632,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.14.0';
+const APP_V='1.14.1';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1890,6 +1891,26 @@ $('inspRename').addEventListener('click',()=>{
   if(!selected||selected.dead)return;
   const n=prompt('name this creature',nameOf(selected));
   if(n&&n.trim()){selected.cname=n.trim().slice(0,24);updateInspector();}
+});
+$('stLine').addEventListener('click',()=>{
+  if(!followLin)return;
+  const inLine=new Set();
+  for(const [id] of lineages){
+    let cur=id,depth=0;
+    while(cur&&depth<30){
+      if(cur===followLin){inLine.add(id);break;}
+      const L=lineages.get(cur);cur=L?L.parent:0;depth++;
+    }
+  }
+  let best=null;
+  for(const c of creatures)if(inLine.has(c.lin)&&(!best||c.gen>best.gen))best=c;
+  if(best){selected=best;updateInspector();say('☆ visiting '+nameOf(best)+' of the line of '+followName);}
+  else say('☆ no living members of the line remain');
+});
+$('lineClear').addEventListener('click',()=>{
+  say('☆ the vigil for '+followName+' is ended');
+  followLin=0;followName='';lineBestGen=0;lineWasAlive=false;
+  $('stLineRow').style.display='none';
 });
 $('inspFollow').addEventListener('click',()=>{
   if(!selected||selected.dead)return;
