@@ -12,6 +12,8 @@ Your dish **persists**: it auto-saves as you play, and when you come back it fas
 
 Running locally works too: open `index.html`. No dependencies, no build step.
 
+Works on phones too: the panels fold to their headers, tap to expand.
+
 - **🔍 inspect**: click any cell to read its genome; every creature has a name
 - **☄️ meteor / 🌿 bloom / 🧬 seed**: aim and click the dish
 - **🦠 plague / ❄️ ice age**: dish-wide catastrophes
@@ -20,6 +22,7 @@ Running locally works too: open `index.html`. No dependencies, no build step.
 - Watch the **TREE OF LIFE**: a live phylogeny streamgraph where branches split as lineages diverge and fade as they go extinct
 - **⇪ share / ⇩ import**: copy your world as a seed string and trade dishes with friends
 - **🔊 sound**: the dish has a quiet voice; mute it in the top row
+- **🌡 climate**: a warm end, a cold end, and a four minute year; creatures evolve their comfort zone
 
 ## Roadmap
 
