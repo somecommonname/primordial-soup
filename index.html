@@ -113,8 +113,8 @@
   </div>
   <div class="ptitle">DIALS</div>
   <div class="dial">
-    <label><span>☀️ food supply</span><b id="foodVal"></b></label>
-    <input type="range" id="foodRate" min="2" max="26" step="0.5" value="14">
+    <label><span>☀️ sunlight</span><b id="foodVal"></b></label>
+    <input type="range" id="foodRate" min="0.2" max="3" step="0.05" value="1">
   </div>
   <div class="dial">
     <label><span>☢️ radiation</span><b id="radVal"></b></label>
@@ -204,6 +204,8 @@ const GENES={
   rThresh:{min:0.55,max:0.95,sd:0.35},
   wiggle:{min:0.5,max:4,   sd:0.5},
   herd:  {min:0,  max:1,   sd:0.5},
+  spike: {min:0,  max:1,   sd:0.5, def:0.02},
+  shell: {min:0,  max:1,   sd:0.5, def:0.02},
 };
 let mutRate=0.10;
 function founderGenome(baseHue){
@@ -216,6 +218,8 @@ function founderGenome(baseHue){
     rThresh:clamp(0.78+gauss()*0.05, GENES.rThresh.min, GENES.rThresh.max),
     wiggle:clamp(2+gauss()*0.5, GENES.wiggle.min, GENES.wiggle.max),
     herd: clamp(0.1+Math.abs(gauss())*0.1, 0, 1),
+    spike: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
+    shell: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
@@ -233,11 +237,11 @@ function mutate(g){
 let creatures=[], algae=[], newborns=[], rocks=[], jets=[];
 let nextId=1, births=0, deaths=0, maxGen=1, simT=0;
 let sexBirths=0, cloneBirths=0;
+let dStarveYoung=0, dStarveAdult=0, dAge=0, dKill=0;
 let paused=false, speedMult=1, tool='inspect', selected=null;
 let iceUntil=-1, shake=0, extinctAt=-1, lastSpeciesN=1, lastSpeciesMsgT=0;
 let foodRate=11;
-const ALGAE_E=70, ALGAE_CAP=3000, POP_CAP=850;
-const blooms=[];
+const ALGAE_E=80, ALGAE_CAP=3000, POP_CAP=850;
 const events=[]; // visual rings {x,y,t0,dur,r0,r1,color,width}
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -291,23 +295,18 @@ function rockPush(o,s){
 function ping(x,y,color,r1=26,width=1.5,dur=0.6){ events.push({x,y,t0:simT,dur,r0:2,r1,color,width}); }
 
 function initWorld(){
-  creatures.length=0; algae.length=0; events.length=0; blooms.length=0;
+  creatures.length=0; algae.length=0; events.length=0;
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
   lastSample=-1; lastHud=-9; sexBirths=0; cloneBirths=0; lastSpeciesN=1; lastSpeciesMsgT=0;
+  dStarveYoung=0; dStarveAdult=0; dAge=0; dKill=0;
   hist.t=[];hist.pop=[];hist.alg=[];hist.size=[];hist.speed=[];hist.sense=[];hist.diet=[];
   lineages.clear(); linNext=1; treeT.length=0; treeDt=2; lastTreeSample=-1;
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
-  for(let i=0;i<5;i++){const [x,y]=randInDish(0.7); blooms.push({x,y});}
   for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
   const rootLin=newLineage(0,baseHue);
   for(const c of creatures)c.lin=rootLin;
-  for(let i=0;i<1600;i++){
-    if(Math.random()<0.55){const [x,y]=randInDish(); spawnAlgae(x,y);}
-    else{const b=blooms[(Math.random()*blooms.length)|0];
-      const x=b.x+gauss()*90,y=b.y+gauss()*90;
-      if((x-CX)**2+(y-CY)**2<R*R) spawnAlgae(x,y);}
-  }
+  for(let i=0;i<1800;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells');
   updateInspector();
 }
@@ -353,21 +352,10 @@ function step(dt){
   simT+=dt;
   const ice=simT<iceUntil;
   // food spawn
-  const rate=foodRate*(ice?0.15:1)*(1+0.6*clamp(1-algae.length/400,0,1));
-  let n=rate*dt; if(Math.random()<n%1)n++;
-  for(let i=0;i<(n|0);i++){
-    if(Math.random()<0.55){const [x,y]=randInDish(); spawnAlgae(x,y);}
-    else{const b=blooms[(Math.random()*blooms.length)|0];
-      const x=b.x+gauss()*90,y=b.y+gauss()*90;
-      if((x-CX)**2+(y-CY)**2<(R-6)**2) spawnAlgae(x,y);}
-  }
-  // blooms wander
-  for(const b of blooms){
-    b.x+=gauss()*8*dt*6; b.y+=gauss()*8*dt*6;
-    const dx=b.x-CX,dy=b.y-CY,d=Math.sqrt(dx*dx+dy*dy);
-    if(d>R*0.75){b.x=CX+dx/d*R*0.75;b.y=CY+dy/d*R*0.75;}
-    rockPush(b,20);
-  }
+  // spore rain: a thin drizzle, stronger over bare ground so deserts can recover
+  const rain=(3.0+3.0*clamp(1-algae.length/500,0,1))*(ice?0.3:1);
+  let n=rain*dt; if(Math.random()<n%1)n++;
+  for(let i=0;i<(n|0);i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   // algae drift with the currents, deflecting around rocks
   for(const a of algae){ flow(a.x,a.y,simT,_fl); a.x+=_fl[0]*dt; a.y+=_fl[1]*dt; rockPush(a,2); }
   // marine snow traces the currents
@@ -378,6 +366,21 @@ function step(dt){
   }
 
   const cGrid=buildGrid(creatures), aGrid=buildGrid(algae);
+  // plants spread: each alga may sprout a neighbor, crowding permitting
+  if(algae.length&&algae.length<ALGAE_CAP){
+    const G=0.28*foodRate*(ice?0.15:1);
+    let att=algae.length*G*dt; if(Math.random()<att%1)att++;
+    for(let i=0;i<(att|0);i++){
+      const p=algae[(Math.random()*algae.length)|0];
+      if(p.eaten)continue;
+      const x=p.x+gauss()*20,y=p.y+gauss()*20;
+      if((x-CX)**2+(y-CY)**2>=(R-4)**2)continue;
+      queryGrid(aGrid,x,y,18,_n1);
+      let near=0;
+      for(const o of _n1){if(!o.eaten&&(o.x-x)**2+(o.y-y)**2<324)near++;}
+      if(near<5)spawnAlgae(x,y);
+    }
+  }
   newborns.length=0;
 
   for(const c of creatures){
@@ -415,7 +418,7 @@ function step(dt){
       const d2=(o.x-c.x)**2+(o.y-c.y)**2;
       const hd=hueDist(o.g.hue,g.hue);
       const kin=hd<55;
-      if(hungry && g.diet>0.35 && o.g.size<g.size*0.83){
+      if(hungry && g.diet>0.35 && o.g.size*(1+0.55*o.g.shell)<g.size*0.83){
         if(!prey && d2<sense*sense && d2<preyD2){preyD2=d2;prey=o;}
         const br=g.size+o.g.size*0.3+3;
         if(d2<br*br && d2<biteD2){biteD2=d2;bite=o;}
@@ -495,7 +498,7 @@ function step(dt){
       c.dir+=gauss()*g.wiggle*dt;
     }
     // move
-    const sp=g.speed*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1);
+    const sp=g.speed*(1-0.28*g.shell)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1);
     flow(c.x,c.y,simT,_fl);
     const cf=clamp(0.85-g.size*0.05,0.15,0.8);
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
@@ -505,7 +508,7 @@ function step(dt){
     if(nr>R-g.size){c.x=CX+nx/nr*(R-g.size);c.y=CY+ny/nr*(R-g.size);}
     // metabolism
     const s2=g.size*g.size, vn=sp/60;
-    let burn=(0.12*s2*(1-0.25*g.diet) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense)*(simT<iceUntil?0.8:1);
+    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense)*(simT<iceUntil?0.8:1);
     c.energy-=burn*dt;
     // eat algae (graze everything within reach)
     if(g.diet<0.92&&c.energy<c.cap){
@@ -521,15 +524,21 @@ function step(dt){
     }
     // eat prey (bite whatever the jaws touch, else the locked chase target)
     const meal=bite||prey;
-    if(meal&&!meal.dead&&g.size>1.2*meal.g.size){
+    if(meal&&!meal.dead){
       const d2=(meal.x-c.x)**2+(meal.y-c.y)**2;
       const rr=(g.size+meal.g.size*0.3+3);
       if(d2<rr*rr){
-        meal.dead=true; meal.killed=true; deaths++; c.lock=null; c.lockT=0;
-        const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6));
-        c.energy=Math.min(c.cap,c.energy+flesh);
-        ping(meal.x,meal.y,'rgba(255,107,94,0.7)',meal.g.size*4,2,0.5);
-        if(selected===meal)selected=null;
+        if(g.size>1.2*meal.g.size*(1+0.55*meal.g.shell)){
+          meal.dead=true; meal.killed=true; deaths++; dKill++; c.lock=null; c.lockT=0;
+          const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6));
+          c.energy=Math.min(c.cap,c.energy+flesh);
+          if(meal.g.spike>0.05)c.energy-=meal.g.spike*meal.g.size*14;
+          ping(meal.x,meal.y,'rgba(255,107,94,0.7)',meal.g.size*4,2,0.5);
+          if(selected===meal)selected=null;
+        }else{
+          c.lock=null; c.lockT=0;
+          if(meal.g.spike>0.05)c.energy-=meal.g.spike*meal.g.size*7;
+        }
       }
     }
     // reproduce: sexual on contact with a ready kin mate; lonely fallback = self-clone
@@ -543,8 +552,8 @@ function step(dt){
         const mg=mutate(cg);
         const child=makeCreature(mg,(c.x+mate.x)/2,(c.y+mate.y)/2,null,Math.max(c.gen,mate.gen)+1);
         child.lin=lineageOf(c.lin,mg.hue);
-        child.energy=Math.min((c.energy+mate.energy)*0.28,child.cap);
-        c.energy*=0.68; mate.energy*=0.68;
+        child.energy=Math.min((c.energy+mate.energy)*0.34,child.cap);
+        c.energy*=0.63; mate.energy*=0.63;
         c.kids++; mate.kids++; c.lastRep=c.age; mate.lastRep=mate.age;
         c.mateT=0; mate.mateT=0;
         newborns.push(child); births++; sexBirths++;
@@ -566,6 +575,7 @@ function step(dt){
     }else c.mateT=0;
     // death
     if(c.energy<=0||c.age>c.lifespan){
+      if(c.energy<=0){if(c.age<12)dStarveYoung++;else dStarveAdult++;}else dAge++;
       c.dead=true; deaths++;
       const bits=Math.min(6,Math.floor(g.size*0.8));
       for(let i=0;i<bits;i++)spawnAlgae(c.x+gauss()*8,c.y+gauss()*8);
@@ -691,14 +701,14 @@ function render(){
     ctx.strokeStyle='hsla('+h+',70%,68%,0.55)';
     ctx.lineWidth=Math.max(1,s*0.16);
     ctx.beginPath();ctx.moveTo(bx,by);ctx.quadraticCurveTo(mx,my,tx,ty);ctx.stroke();
-    // spikes (carnivores)
-    if(g.diet>0.45){
+    // quills reflect the spike gene
+    if(g.spike>0.12){
       ctx.strokeStyle='hsla('+h+',85%,78%,0.8)';
       ctx.lineWidth=1.2;
       ctx.beginPath();
-      const len=s*(0.35+0.55*(g.diet-0.45)/0.55);
-      for(let i=0;i<7;i++){
-        const a=c.dir+i/7*TAU;
+      const len=s*(0.3+0.8*g.spike);
+      for(let i=0;i<9;i++){
+        const a=c.dir+i/9*TAU;
         ctx.moveTo(c.x+Math.cos(a)*s*0.9,c.y+Math.sin(a)*s*0.9);
         ctx.lineTo(c.x+Math.cos(a)*(s*0.9+len),c.y+Math.sin(a)*(s*0.9+len));
       }
@@ -709,11 +719,25 @@ function render(){
     ctx.beginPath();ctx.arc(c.x,c.y,s,0,TAU);ctx.fill();
     ctx.strokeStyle='hsla('+h+',80%,78%,0.7)';
     ctx.lineWidth=1;ctx.stroke();
+    if(g.shell>0.12){
+      ctx.strokeStyle='hsla('+h+',30%,85%,'+(0.25+0.55*g.shell).toFixed(2)+')';
+      ctx.lineWidth=1+2.2*g.shell;
+      ctx.beginPath();ctx.arc(c.x,c.y,s+1.5,0,TAU);ctx.stroke();
+    }
     // nucleus + eye
     ctx.fillStyle='hsla('+h+',60%,88%,0.9)';
     ctx.beginPath();ctx.arc(c.x-Math.cos(c.dir)*s*0.2,c.y-Math.sin(c.dir)*s*0.2,s*0.32,0,TAU);ctx.fill();
     ctx.fillStyle='rgba(8,14,26,0.9)';
     ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir)*s*0.5,c.y+Math.sin(c.dir)*s*0.5,Math.max(1,s*0.16),0,TAU);ctx.fill();
+    if(g.diet>0.5){
+      ctx.strokeStyle='rgba(255,107,94,0.85)';
+      ctx.lineWidth=1.1;
+      ctx.beginPath();
+      ctx.moveTo(c.x+Math.cos(c.dir+0.5)*s*0.8,c.y+Math.sin(c.dir+0.5)*s*0.8);
+      ctx.lineTo(c.x+Math.cos(c.dir)*s*1.25,c.y+Math.sin(c.dir)*s*1.25);
+      ctx.lineTo(c.x+Math.cos(c.dir-0.5)*s*0.8,c.y+Math.sin(c.dir-0.5)*s*0.8);
+      ctx.stroke();
+    }
   }
   ctx.globalAlpha=1;
   // event rings
@@ -841,6 +865,8 @@ function updateInspector(){
               ['vision',(g.sense-15)/195,g.sense.toFixed(0)],
               ['diet',g.diet,(g.diet<0.25?'herbivore':g.diet<0.55?'omnivore':'carnivore')],
               ['herding',g.herd,g.herd<0.25?'loner':g.herd<0.6?'social':'flocker'],
+              ['spikes',g.spike,g.spike<0.15?'':g.spike<0.5?'quilled':'porcupine'],
+              ['shell',g.shell,g.shell<0.15?'':g.shell<0.5?'plated':'fortress'],
               ['nerve',1-g.fear,g.fear<0.35?'bold':g.fear<0.65?'wary':'timid'],
               ['fertility',1-(g.rThresh-0.55)/0.4,'']];
   $('inspGenes').innerHTML=rows.map(([l,v,txt])=>
@@ -885,7 +911,7 @@ function seedCreature(x,y){
     size:rand(3.5,13), speed:rand(15,125), sense:rand(30,200),
     diet:Math.random()<0.5?rand(0,0.3):rand(0.3,1),
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
-    herd:rand(0,1), hue:rand(0,360),
+    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), hue:rand(0,360),
   };
   const p=makeCreature(g,x,y);
   p.lin=newLineage(0,g.hue);
@@ -940,7 +966,7 @@ $('inspClose').addEventListener('click',()=>{selected=null;updateInspector();});
 const foodEl=$('foodRate'),radEl=$('mutRate');
 function syncDials(){
   foodRate=+foodEl.value;mutRate=+radEl.value;
-  $('foodVal').textContent=foodRate.toFixed(1)+'/s';
+  $('foodVal').textContent='×'+foodRate.toFixed(2);
   $('radVal').textContent='×'+(mutRate/0.10).toFixed(1);
 }
 foodEl.addEventListener('input',syncDials);
@@ -964,7 +990,7 @@ function saveWorld(){
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
     store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
-      foodRate,mutRate,rocks,jets,blooms,cs,al,hist,
+      foodRate,mutRate,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt}));
   }catch(e){}
 }
@@ -979,19 +1005,18 @@ function loadWorld(){
   if(!s.cs||!s.cs.length||!s.dish||!s.dish.R)return false;
   const sc=R/s.dish.R, ox=s.dish.CX, oy=s.dish.CY;
   const tx=x=>CX+(x-ox)*sc, ty=y=>CY+(y-oy)*sc;
-  creatures.length=0;algae.length=0;events.length=0;blooms.length=0;rocks.length=0;jets.length=0;
+  creatures.length=0;algae.length=0;events.length=0;rocks.length=0;jets.length=0;
   for(const c of s.cs){
-    for(const k in GENES)if(typeof c.g[k]!=='number')c.g[k]=(GENES[k].min+GENES[k].max)/2;
+    for(const k in GENES)if(typeof c.g[k]!=='number')c.g[k]=GENES[k].def!==undefined?GENES[k].def:(GENES[k].min+GENES[k].max)/2;
     creatures.push({...c,x:tx(c.x),y:ty(c.y),dead:false,lock:null,lockT:0,mateT:0});
   }
   for(let i=0;i<s.al.length;i+=2)algae.push({x:tx(s.al[i]),y:ty(s.al[i+1]),eaten:false});
   for(const rk of s.rocks)rocks.push({x:tx(rk.x),y:ty(rk.y),r:rk.r*sc,spk:rk.spk||[]});
   for(const j of s.jets)jets.push({...j,off:j.off*sc,width:j.width*sc});
-  for(const b of s.blooms)blooms.push({x:tx(b.x),y:ty(b.y)});
   simT=s.simT;nextId=s.nextId;births=s.births;deaths=s.deaths;
   sexBirths=s.sexBirths||0;cloneBirths=s.cloneBirths||0;
   maxGen=s.maxGen;iceUntil=s.iceUntil??-1;lastSpeciesN=s.lastSpeciesN||1;
-  foodRate=s.foodRate;mutRate=s.mutRate;foodEl.value=foodRate;radEl.value=mutRate;syncDials();
+  foodRate=clamp(s.foodRate>3?1:s.foodRate,0.2,3);mutRate=s.mutRate;foodEl.value=foodRate;radEl.value=mutRate;syncDials();
   for(const k in hist)hist[k]=(s.hist&&Array.isArray(s.hist[k]))?s.hist[k]:[];
   lastSample=simT-1;lastHud=simT-1;lastSpeciesMsgT=simT;selected=null;extinctAt=-1;
   lineages=new Map((s.lins||[]).map(([id,L])=>[id,L]));

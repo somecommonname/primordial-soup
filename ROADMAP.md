@@ -45,12 +45,14 @@ Persistent worlds: the dish auto-saves every few seconds and resumes exactly whe
 A live phylogeny panel: every creature carries a lineage id, children inherit it until their color drifts past 30° from the lineage's founding hue, and that drift founds a branch. Seeded strangers found new roots. The tree renders as a streamgraph (band thickness is population, splits are speciation, fading bands are extinctions) and its envelope is the population curve itself. Adaptive downsampling keeps a week-old dish's whole history in bounded memory, dead twigs fold into their parents, and the tree survives save/load, so it grows across visits and through catch-up time.
 *Field notes:* a high-radiation test dish produced 81 lineages in eleven minutes, and the great famine appeared in the tree as a pinch in the stream. Lineage count and species count measure different things: the tree records history, the species counter records current gene flow.
 
+### v0.7 · Arms and gardens
+Two builds in one. Armor and weapons: spike and shell genes with honest costs. Shells raise the size advantage a predator needs to crack you but slow you 28% and cost metabolism; quills wound attackers on contact, sometimes fatally. Predators account for shells when choosing targets. Plants that spread: algae now reproduce locally with logistic crowding instead of raining from the sky, leaving only a thin spore drizzle that strengthens over bare ground so deserts can recover. Corpses and meteor debris act as seeds, and the sunlight dial now scales growth.
+*Field notes:* under seeded predation (157 kills), prey spikes nearly doubled and speed rose 22% in four minutes while shells rose only modestly. In a patchy-food world, defense that slows travel is too expensive, so evolution bought quills. Nobody designed that preference. The plant economy settled into a churn equilibrium where most deaths are adult starvation between patches: honest spatial ecology, fat patch-dwellers and dying travelers.
+
 ---
 
 ## Next (each ~a session)
 
-- **Armor & weapons genes**: spikes (defense vs. speed), shells (defense vs. metabolism). Opens coevolutionary arms races beyond speed.
-- **Plants that spread**: algae reproduce logistically instead of raining from heaven; grazing fronts, overgrazing deserts, succession after meteors.
 - **Dish seeds**: save/load/share a world as a seed string; trade ecosystems, replay famous dishes.
 - **Sound**: Web Audio bloops keyed to births, kills, courtship; the dish should be listenable.
 

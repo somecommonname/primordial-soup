@@ -2,7 +2,7 @@
 
 **A small evolving universe in one HTML file.**
 
-Creatures with real genomes (size, speed, vision, diet, fear, fertility, herding, and a color gene that marks their lineage) swim in a petri dish where they eat, hunt, court, breed with genetic crossover, and speciate. Nothing is scripted: predators, herds, jackal-omnivores, and couch-potato grazers all *evolved* in testing rather than being programmed. You play the environment: meteors, plagues, ice ages, radiation, food supply, rocks, and currents.
+Creatures with real genomes (size, speed, vision, diet, fear, fertility, herding, spikes, shell, and a color gene that marks their lineage) swim in a petri dish where they eat, hunt, court, breed with genetic crossover, and speciate. Nothing is scripted: predators, herds, jackal-omnivores, and couch-potato grazers all *evolved* in testing rather than being programmed. You play the environment: meteors, plagues, ice ages, radiation, sunlight, rocks, and currents.
 
 ## Play
 
@@ -15,7 +15,7 @@ Running locally works too: open `index.html`. No dependencies, no build step.
 - **🔍 inspect**: click any cell to read its genome; every creature has a name
 - **☄️ meteor / 🌿 bloom / 🧬 seed**: aim and click the dish
 - **🦠 plague / ❄️ ice age**: dish-wide catastrophes
-- **☀️ food / ☢️ radiation**: the slow dials of climate and mutation
+- **☀️ sunlight / ☢️ radiation**: the slow dials of climate and mutation
 - Watch the **DISH REPORT**: population waves, species count, sexual vs. cloned births, and live trait drift
 - Watch the **TREE OF LIFE**: a live phylogeny streamgraph where branches split as lineages diverge and fade as they go extinct
 
