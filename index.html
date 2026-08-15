@@ -24,9 +24,15 @@
   body{background:var(--abyss);color:var(--ink);font-family:var(--mono);overflow:hidden;
        font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
   canvas#dish{position:fixed;inset:0;display:block}
-  .panel{position:fixed;background:var(--panel);border:1px solid var(--line);border-radius:10px;
-         backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px);padding:14px 16px;
-         box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+  .panel{position:fixed;background:rgba(8,14,26,0.92);border:1px solid var(--line);border-radius:10px;
+         padding:14px 16px;box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+  @media (min-width:701px){
+    .panel{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
+  }
+  @supports (-webkit-touch-callout: none){
+    .panel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
+           background:rgba(8,14,26,0.94)!important}
+  }
   #tools{left:18px;top:18px;width:228px}
   #report{right:18px;top:18px;width:264px}
   h1{font-size:15px;font-weight:600;letter-spacing:0.28em;color:var(--cyan)}
