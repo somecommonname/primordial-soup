@@ -145,7 +145,7 @@
 
 <div class="panel" id="tools">
   <h1>PRIMORDIAL SOUP</h1>
-  <div class="sub">a small evolving universe</div>
+  <div class="sub">a small evolving universe · <span id="gv"></span></div>
   <div class="row">
     <button id="btnPause" title="space">⏸</button>
     <div class="seg" id="speedSeg">
@@ -1222,6 +1222,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
+const APP_V='1.4.1';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1596,10 +1597,12 @@ function sfx(kind){
   else if(kind==='seedc')beep(440,0.12,'square',0.028,520);
   else if(kind==='doom')beep(180,0.8,'sine',0.055,60);
 }
+if($('gv'))$('gv').textContent='v'+APP_V;
 $('btnSound').textContent=soundOn?'🔊':'🔇';
 $('btnSound').addEventListener('click',()=>{
   soundOn=!soundOn;
-  $('btnSound').textContent=soundOn?'🔊':'🔇';
+  if($('gv'))$('gv').textContent='v'+APP_V;
+$('btnSound').textContent=soundOn?'🔊':'🔇';
   store.set('soup.sound',soundOn?'1':'0');
   if(soundOn){initAudio();sfx('bloom');}
 });
@@ -1731,7 +1734,16 @@ syncDials();
 ctx.fillStyle='#050A14';ctx.fillRect(0,0,W,H);
 frame();
 if(location.protocol.indexOf('http')===0&&'serviceWorker' in navigator){
-  try{navigator.serviceWorker.register('./sw.js').catch(()=>{});}catch(e){}
+  try{
+    navigator.serviceWorker.register('./sw.js').catch(()=>{});
+    let swReloaded=false;
+    navigator.serviceWorker.addEventListener('controllerchange',()=>{
+      if(swReloaded)return;
+      swReloaded=true;
+      try{if(worldReady)saveWorld();}catch(e){}
+      location.reload();
+    });
+  }catch(e){}
 }
 </script>
 </body>
