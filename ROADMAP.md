@@ -98,6 +98,10 @@ Bodies leave the circle behind. Three shape genes with honest tradeoffs, all sta
 Three new genes, three ways to spend a life. Eggs: lay richer provisioned offspring that incubate helpless for fourteen seconds; eggs are food, so the egg thief is now a possible profession. Care: guard your nest (nobody raids while a parent stands watch within reach) and provision your hatchlings with energy transfers, paying for it with slower rebreeding. Torpor: when cold and starving, sleep; metabolism crashes and so does your ability to flee. All three start near zero. Winter, predators, and scarcity will decide who becomes a devoted mother, an egg thief, or a hibernator. Clutch and Winter Sleepers badges; the genome reaches 21 genes.
 *Field notes:* a tracked egg hatched on schedule with its provisioned energy intact, nest protection blocked raids while the parent stood watch, and torpor engaged exactly at the cold and hungry threshold. The ecology absorbed all of it at population 311.
 
+### v1.13 · Fungi and communion
+The third kingdom rises, and the plague learns mercy. Death now feeds fungi: corpses sprout violet decomposers that either become rich scavenger food for anyone willing, herbivore and hunter alike, or mature and burst into fresh algae, closing the loop from death back to life. Kill zones become feeding grounds; plagues and meteors leave mourning blooms. And symbiosis: a parasite whose virulence mutates below 0.12 crosses into mutualism, nearly free to carry, granting a digestion bonus, and occupying the niche so harmful strains cannot infect its host; premunition emerges for free from the one parasite per host rule. Evolution can now walk a plague all the way down into a partnership. Mycelium and Communion badges; 29 in the gallery.
+*Field notes:* death sprouted fungus, mature fungus burst into plants, and symbionts were counted and carried, all verified while a natural epidemic raged through the test dish, because the world no longer pauses for science. This closes the science ladder that began with the first evolvable brain.
+
 ---
 
 ## Next (each ~a session)
@@ -115,7 +119,7 @@ Three new genes, three ways to spend a life. Eggs: lay richer provisioned offspr
 
 Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world).
 
-Deeper evolution: decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
+Deeper evolution: and proto-culture: behavior spreading without genes once memory and signals exist.
 
 ## Frontier (the "how far can this go" answer)
 

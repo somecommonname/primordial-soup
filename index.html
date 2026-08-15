@@ -276,7 +276,8 @@
     <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
     <div class="gl">📣 A voice and ears; 🐜 scent trails on the floor; what they mean is not programmed, it must evolve</div>
     <div class="gl">🦔 Quills hurt attackers, shells resist teeth, both cost energy</div>
-    <div class="gl">🦠 They catch parasites, evolve immunity, infect each other</div>
+    <div class="gl">🦠 They catch parasites, evolve immunity, infect each other; gentle strains become helpful symbionts</div>
+    <div class="gl">🍄 Death feeds fungi; fungi feed scavengers or burst into new plants</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -449,6 +450,7 @@ let sexBirths=0, cloneBirths=0;
 let dStarveYoung=0, dStarveAdult=0, dAge=0, dKill=0, dPar=0, parasiteN=0;
 let calls=[], callsPrev=[], callCount=0, callRate=0, lastCallRateT=0;
 let eggs=[], eggNext=1;
+let fungi=[], symbioN=0;
 let scent=null, scentW=0, scentH=0;
 function initScent(){scentW=Math.max(1,Math.ceil(W/24));scentH=Math.max(1,Math.ceil(H/24));scent=new Float32Array(scentW*scentH);}
 function scentAt(x,y){
@@ -572,6 +574,7 @@ function initWorld(scn){
   dStarveYoung=0; dStarveAdult=0; dAge=0; dKill=0; dPar=0; parasiteN=0;
   calls.length=0; callsPrev.length=0; callCount=0; callRate=0; lastCallRateT=0;
   eggs.length=0; eggNext=1;
+  fungi.length=0; symbioN=0;
   hist.t=[];hist.pop=[];hist.alg=[];hist.size=[];hist.speed=[];hist.sense=[];hist.diet=[];
   lineages.clear(); linNext=1; treeT.length=0; treeDt=2; lastTreeSample=-1;
   chron=[]; yearN=0; yearB0=0; yearD0=0; followLin=0; followName=''; lineBestGen=0; lineWasAlive=false;
@@ -663,7 +666,7 @@ function step(dt){
     const h=creatures[(Math.random()*creatures.length)|0];
     if(h&&!h.dead){h.par={vir:0.3+rand(0,0.2)};say('🦠 a parasite finds its first host');logChron('🦠 A parasite found its first host');}
   }
-  parasiteN=0;
+  parasiteN=0;symbioN=0;
   for(let i=eggs.length-1;i>=0;i--){
     const eg=eggs[i];
     if(simT>=eg.hatch){
@@ -674,6 +677,15 @@ function step(dt){
       if(creatures.length<POP_CAP){creatures.push(child);births++;sexBirths++;sfx('birth');
         ping(eg.x,eg.y,'hsla('+eg.g.hue+',80%,70%,0.5)',14,1,0.6);}
       eggs.splice(i,1);
+    }
+  }
+  for(let i=fungi.length-1;i>=0;i--){
+    const f=fungi[i];
+    f.age+=dt;
+    if(f.age>18+(f.e%7)){
+      const n=3+(f.e/25|0);
+      for(let k=0;k<n;k++)spawnAlgae(f.x+gauss()*14,f.y+gauss()*14);
+      fungi.splice(i,1);
     }
   }
   callsPrev=calls; calls=[];
@@ -911,9 +923,10 @@ function step(dt){
     c.torpid=torpid;
     c.energy-=burn*dt;
     if(c.par){
-      parasiteN++;
-      c.energy-=(2+9*c.par.vir)*dt;
-      if(Math.random()<(0.01+0.12*g.immune)*dt)c.par=null;
+      const harmful=c.par.vir>=0.12;
+      if(harmful){parasiteN++;c.energy-=(2+9*c.par.vir)*dt;}
+      else{symbioN++;c.energy-=0.5*dt;}
+      if(Math.random()<(harmful?(0.01+0.12*g.immune):0.002)*dt)c.par=null;
     }
     // eat algae (graze everything within reach of the mouth)
     const noseX=c.x+Math.cos(c.dir)*g.size*g.elong*0.6;
@@ -924,8 +937,21 @@ function step(dt){
         if(a.eaten)continue;
         if((a.x-noseX)**2+(a.y-noseY)**2<rr){
           a.eaten=true;
-          c.energy+=ALGAE_E*(1-g.diet);
+          c.energy+=ALGAE_E*(1-g.diet)*((c.par&&c.par.vir<0.12)?1.06:1);
           if(c.energy>=c.cap){c.energy=c.cap;break;}
+        }
+      }
+    }
+    // scavenge fungus: death feeds anyone willing
+    if(c.energy<c.cap*0.92&&fungi.length){
+      for(let fi=fungi.length-1;fi>=0;fi--){
+        const f=fungi[fi];
+        const fdx=f.x-noseX;if(fdx>12||fdx<-12)continue;
+        const fdy=f.y-noseY;if(fdy>12||fdy<-12)continue;
+        if(fdx*fdx+fdy*fdy<(g.size+4)**2){
+          c.energy=Math.min(c.cap,c.energy+f.e*0.55);
+          fungi.splice(fi,1);
+          break;
         }
       }
     }
@@ -956,7 +982,7 @@ function step(dt){
       if(d2<rr*rr){
         if(g.size*(1+0.35*g.jaw)>1.2*meal.g.size*(1+0.55*meal.g.shell)){
           meal.dead=true; meal.killed=true; deaths++; dKill++; c.lock=null; c.lockT=0;
-          const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6));
+          const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6))*((c.par&&c.par.vir<0.12)?1.06:1);
           c.energy=Math.min(c.cap,c.energy+flesh);
           if(meal.g.spike>0.05)c.energy-=meal.g.spike*meal.g.size*14;
           if(meal.par&&!c.par&&Math.random()<0.75*(1-g.immune*0.7))c.par={vir:clamp(meal.par.vir+gauss()*0.08,0.05,1)};
@@ -1020,7 +1046,8 @@ function step(dt){
     if(c.energy<=0||c.age>c.lifespan){
       if(c.energy<=0){if(c.par)dPar++;else if(c.age<12)dStarveYoung++;else dStarveAdult++;}else dAge++;
       c.dead=true; deaths++;
-      const bits=Math.min(6,Math.floor(g.size*0.8));
+      if(fungi.length<400)fungi.push({x:c.x,y:c.y,e:20+g.size*4,age:0});
+      const bits=Math.min(3,Math.floor(g.size*0.4));
       for(let i=0;i<bits;i++)spawnAlgae(c.x+gauss()*8,c.y+gauss()*8);
       if(selected===c)selected=null;
     }
@@ -1137,6 +1164,13 @@ function render(){
   // algae
   ctx.fillStyle='rgba(111,224,138,0.85)';
   for(const a of algae)ctx.fillRect(a.x-1.1,a.y-1.1,2.2,2.2);
+  // fungi
+  for(const f of fungi){
+    ctx.fillStyle='rgba(190,150,255,'+(0.4+0.3*Math.min(1,f.age/10)).toFixed(2)+')';
+    ctx.beginPath();ctx.arc(f.x,f.y,2.6,0,TAU);ctx.fill();
+    ctx.fillStyle='rgba(120,90,180,0.5)';
+    ctx.fillRect(f.x-0.7,f.y,1.4,3);
+  }
   // eggs
   for(const eg of eggs){
     ctx.fillStyle='hsla('+eg.g.hue+',50%,85%,0.85)';
@@ -1221,7 +1255,7 @@ function render(){
       ctx.beginPath();ctx.arc(c.x,c.y,s+3,0,TAU);ctx.stroke();
     }
     if(c.par){
-      ctx.fillStyle='rgba(255,80,200,'+(0.45+0.35*Math.sin(simT*6+c.phase)).toFixed(2)+')';
+      ctx.fillStyle=c.par.vir<0.12?'rgba(90,230,190,0.8)':'rgba(255,80,200,'+(0.45+0.35*Math.sin(simT*6+c.phase)).toFixed(2)+')';
       ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir+2.4)*s*0.55,c.y+Math.sin(c.dir+2.4)*s*0.55,Math.max(1.4,s*0.2),0,TAU);ctx.fill();
     }
     if(g.diet>0.5||g.jaw>0.15){
@@ -1559,7 +1593,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.12.0';
+const APP_V='1.13.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1580,6 +1614,7 @@ function saveWorld(){
       foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt,
       eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10})),eggNext,
+      fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
       chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId}));
   }catch(e){}
 }
@@ -1619,6 +1654,7 @@ function loadWorld(){
   linNext=s.linNext||1; treeT=s.treeT||[]; treeDt=s.treeDt||2; lastTreeSample=simT;
   eggs=(Array.isArray(s.eggs)?s.eggs:[]).map(e=>({...e,x:tx(e.x),y:ty(e.y),hatch:simT+Math.max(0.5,e.hatch||5)}));
   eggNext=s.eggNext||1;
+  fungi=(Array.isArray(s.fungi)?s.fungi:[]).map(f=>({...f,x:tx(f.x),y:ty(f.y)}));
   chron=Array.isArray(s.chron)?s.chron:[];
   yearN=s.yearN||0; yearB0=s.yearB0||0; yearD0=s.yearD0||0;
   followLin=s.followLin||0; followName=s.followName||''; lineBestGen=s.lineBestGen||0;
@@ -1887,6 +1923,8 @@ const BADGES=[
  {id:'firstword',n:'First Word',d:'A people who speak: thirty calls a minute.',t:()=>callRate>=30&&creatures.length>=30},
  {id:'naturalist',n:'Naturalist',d:'Export the data of a living world.',t:()=>records.tools&&records.tools.export},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
+ {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
+ {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
  {id:'sleepers',n:'Winter Sleepers',d:'Ten creatures in torpor at once.',t:()=>{
    let n=0;for(const c of creatures)if(c.torpid)n++;return n>=10;}},
  {id:'shaped',n:'Shapeshifter',d:'A people whose bodies left the circle behind.',t:()=>{
@@ -2208,7 +2246,7 @@ function renderObs(){
   }
   let html='<div class="gh">VITAL SIGNS</div>'+
     '<div class="gl">population '+creatures.length+' · algae '+algae.length+' · avg energy '+Math.round(100*avgE/n)+'% · sick '+sick+
-    ' · sexual births '+sexPct+'% · calls '+callRate+'/m · year '+Math.floor(simT/SEASON_PERIOD)+'</div>';
+    ' · sexual births '+sexPct+'% · calls '+callRate+'/m · symbionts '+symbioN+' · fungi '+fungi.length+' · year '+Math.floor(simT/SEASON_PERIOD)+'</div>';
   html+='<div class="gh">SPECIES ('+sp.length+')</div><table class="obsT"><tr><th></th><th>pop</th><th>size</th><th>speed</th><th>diet</th><th>brain</th></tr>';
   for(const g of sp){
     html+='<tr><td><span class="sw" style="background:hsl('+g.hue+',70%,60%)"></span></td><td>'+g.n+'</td><td>'+g.size.toFixed(1)+'</td><td>'+Math.round(g.speed)+'</td><td>'+(g.diet<0.25?'herb':g.diet<0.55?'omni':'carn')+'</td><td>'+g.brain.toFixed(2)+'</td></tr>';
