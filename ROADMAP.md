@@ -70,7 +70,7 @@ Three systems in one build. Neural brains, the frontier groundwork: every creatu
 
 ## Later
 
-- **Global leaderboard**: longest dishes and deepest generations worldwide; needs a small backend, design to be discussed.
+- **Global leaderboard**: longest dishes and deepest generations worldwide; needs a small backend, design to be discussed. Design note from David: every dish gets a unique auto generated callsign (letters and numbers) as its identity, enabling tracking, per dish scores, and a running log; the social layer grows from there.
 - **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
 - **The menu-bar pet**: a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 
