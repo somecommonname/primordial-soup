@@ -65,6 +65,10 @@ Three systems in one build. Neural brains, the frontier groundwork: every creatu
 The badge gallery: seventeen named achievements built on the records system (Centenarian, Plague Survivor, Petty God, The Thinker, Ice Folk and friends), earned across dishes forever, opened by clicking the records line. The god tools reorganized into three blessings (bloom, seed, and the new elixir, which restores energy and cures parasites in an area) and three catastrophes (meteor, plague, ice age), with inspect standing alone. A brain trait sparkline joins the report.
 *Field notes:* the brain selection experiment delivered. Under seeded predation, average brain weight tripled from 0.05 to 0.148 in about three minutes of heavy hunting, then relaxed back toward baseline once the predators died out: evolution rented a brain when hunted and let the lease lapse in peacetime. Total weight magnitude also grew steadily, meaning brains grew structurally, not just in influence. Thought, in this dish, is a wartime expense.
 
+### v1.4 · Bloodlines and the Chronicle
+Name any creature (the ✎ button in the inspector) and follow its line (the ☆ button): the report then tracks your bloodline forever, celebrating each ten generations and mourning the line's end if it comes. The dish also writes its own history now: the Chronicle (📜 in the tools panel) records each year's births and deaths alongside meteors, plagues, ice ages, first infections, divergences, and badges, and it persists with the save. A Dynast badge honors any followed line that reaches generation 25.
+*Field notes:* in the first test, a founder named Adam was followed, produced 85 living descendants by generation 13, and died of old age during his own experiment. The feature works: it already hurts.
+
 ---
 
 ## Next (each ~a session)
@@ -81,7 +85,7 @@ The badge gallery: seventeen named achievements built on the records system (Cen
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
 
-Fun and attachment: bloodlines (name a creature, follow its descendants forever), the Chronicle (the dish auto-writes its own history), postcards (one tap shareable dish portraits), daily dish (one global seed per day, every copy diverges), scenario worlds (Ice World, Eden, Plaguelands), creature trading cards, finger painted terrain, dish versus dish (two seeds collide in a split world).
+Fun and attachment: postcards (one tap shareable dish portraits), daily dish (one global seed per day, every copy diverges), scenario worlds (Ice World, Eden, Plaguelands), creature trading cards, finger painted terrain, dish versus dish (two seeds collide in a split world).
 
 Deeper evolution: memory neurons (fear that lingers, remembered food), evolved signaling and hearing (alarm calls, and eventually lying), pheromone trails, morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
 
