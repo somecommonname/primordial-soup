@@ -25,7 +25,8 @@ Works on phones too: the panels fold to their headers, tap to expand.
 - **🌡 climate**: a warm end, a cold end, and a four minute year; creatures evolve their comfort zone
 - **🧠 brains**: an evolvable neural layer; behavior itself is in the genome now
 - **🦠 parasites**: epidemics with evolving virulence; immunity costs something
-- **🏆 records**: your best marks (longest dish, deepest generation) outlive every world
+- **🏆 records and badges**: your best marks and seventeen achievements outlive every world; click the trophy line
+- **🧪 elixir**: the merciful tool; restore energy and cure plagues where you point
 
 ## Roadmap
 

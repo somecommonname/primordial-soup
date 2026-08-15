@@ -61,12 +61,17 @@ The dish gets a warm end, a cold end, and a four minute year. Local temperature 
 Three systems in one build. Neural brains, the frontier groundwork: every creature now carries a 20 weight neural layer reading ten senses (food and threat bearings, energy, temperature, kin density) and outputting a steering nudge and thrust change, blended by a new brainW gene that starts near zero. Neural tissue costs real energy, so brains must earn their influence through selection; weights mutate and cross over like any gene. Evolving parasites: a second replicator living on hosts, one virulence gene governing both drain and spread, mutating at every transmission, countered by a new host immune gene with its own metabolic cost. Transmission by contact and by eating infected prey; patient zero arises naturally in any clean dish. Line of sight: rocks now block perception, so prey cannot fear what they cannot see, and predators remember hidden prey briefly and search. Also: persistent player records (longest dish, peak population, deepest generation, oldest creature) that survive across dishes, with ticker celebrations.
 *Field notes:* the first epidemic build saturated the dish in a minute (89 percent infected) thanks to a double scaled patient zero rate; cooled, outbreaks now come in waves separated by quiet minutes. Immunity drifted upward even without parasites until it was given a metabolic cost: free insurance always wins, so nothing in the dish is free anymore.
 
+### v1.3 · Trophies and the first thought
+The badge gallery: seventeen named achievements built on the records system (Centenarian, Plague Survivor, Petty God, The Thinker, Ice Folk and friends), earned across dishes forever, opened by clicking the records line. The god tools reorganized into three blessings (bloom, seed, and the new elixir, which restores energy and cures parasites in an area) and three catastrophes (meteor, plague, ice age), with inspect standing alone. A brain trait sparkline joins the report.
+*Field notes:* the brain selection experiment delivered. Under seeded predation, average brain weight tripled from 0.05 to 0.148 in about three minutes of heavy hunting, then relaxed back toward baseline once the predators died out: evolution rented a brain when hunted and let the lease lapse in peacetime. Total weight magnitude also grew steadily, meaning brains grew structurally, not just in influence. Thought, in this dish, is a wartime expense.
+
 ---
 
 ## Next (each ~a session)
 
-- **Badge gallery**: named achievements built on the records system (Centenarian, Plague Survivor, Speciation Witness); a trophy panel worth returning for.
-- **Brain selection experiments**: long runs probing when evolution pays for thought; the groundwork is live, the science begins.
+- **The Observatory**: deeper data views; per species stat tables, trait histories, tree tooltips, exportable dish data. Watching evolution should feel like science.
+- **Performance floor (WebGL)**: renderer rewrite, 1k to 10k creatures; a dedicated session.
+- **Leaderboard + callsign design session**: dish identities, per dish scores, the social layer; designed together with David before any backend exists.
 
 ## Later
 

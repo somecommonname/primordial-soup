@@ -43,6 +43,8 @@
   button.warn:hover{border-color:var(--danger);color:var(--danger)}
   button:disabled{opacity:0.4;cursor:default}
   .toolgrid{display:grid;grid-template-columns:1fr 1fr;gap:6px}
+  .toolgrid.three{grid-template-columns:1fr 1fr 1fr}
+  .toolgrid.three button{padding:6px 3px;font-size:9.5px;text-align:center}
   .toolgrid button,.wide{width:100%;text-align:left}
   .wide{margin-top:14px}
   .seg{display:flex;flex:1}
@@ -84,6 +86,19 @@
   #treeCv{width:100%;height:120px;display:block}
   #treeShow{position:fixed;left:18px;bottom:16px;display:none;font-size:14px;padding:6px 9px}
   @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
+  #badgePanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,92vw);display:none;z-index:35;
+              max-height:80vh;overflow-y:auto}
+  #badgePanel.show{display:block}
+  #badgePanel .close{position:absolute;right:8px;top:8px;border:none;background:none;color:var(--dim)}
+  #badgeGrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:6px}
+  .badge{border:1px solid var(--line);border-radius:8px;padding:8px 10px}
+  .badge .bn{font-size:11px;letter-spacing:0.06em;color:var(--dim)}
+  .badge .bd{font-size:9.5px;color:var(--dim);opacity:0.7;margin-top:2px}
+  .badge.earned{border-color:rgba(99,226,255,0.45);background:rgba(99,226,255,0.06)}
+  .badge.earned .bn{color:var(--cyan)}
+  .badge.earned .bd{color:var(--ink);opacity:0.85}
+  #stRecordsRow{cursor:pointer}
+  #stRecordsRow:hover b{color:var(--cyan)}
   #seedModal{left:50%;top:50%;transform:translate(-50%,-50%);width:min(480px,90vw);display:none;z-index:30}
   #seedModal.show{display:block}
   #seedText{width:100%;height:110px;background:rgba(5,10,20,0.85);border:1px solid var(--line);border-radius:7px;
@@ -127,16 +142,18 @@
     <button id="btnSound" title="sound">🔊</button>
   </div>
   <div class="ptitle" style="margin-top:14px">MEDDLE · CLICK THE DISH</div>
-  <div class="toolgrid" id="toolSeg">
-    <button data-tool="inspect" class="on">🔍 inspect</button>
-    <button data-tool="meteor">☄️ meteor</button>
+  <button class="wide on" data-tool="inspect" style="margin-top:0">🔍 inspect</button>
+  <div class="ptitle">BLESSINGS</div>
+  <div class="toolgrid three">
     <button data-tool="bloom">🌿 bloom</button>
     <button data-tool="seed">🧬 seed</button>
+    <button data-tool="elixir">🧪 elixir</button>
   </div>
   <div class="ptitle">CATASTROPHES</div>
-  <div class="row">
-    <button id="btnPlague" class="warn" style="flex:1">🦠 plague</button>
-    <button id="btnIce" class="warn" style="flex:1">❄️ ice age</button>
+  <div class="toolgrid three">
+    <button data-tool="meteor" class="warn">☄️ meteor</button>
+    <button id="btnPlague" class="warn">🦠 plague</button>
+    <button id="btnIce" class="warn">❄️ ice</button>
   </div>
   <div class="ptitle">DIALS</div>
   <div class="dial">
@@ -163,13 +180,14 @@
   </div>
   <div class="subnums">gen <b id="stGen">1</b> · species <b id="stSpecies">1</b> · strains <b id="stStrains">1</b> · <b id="stSeason"></b></div>
   <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b> · sick <b id="stSick">0</b></div>
-  <div class="subnums">🏆 <b id="stRecords"></b></div>
+  <div class="subnums" id="stRecordsRow" title="records and badges">🏆 <b id="stRecords"></b></div>
   <canvas id="popChart"></canvas>
   <div class="ptitle">TRAIT DRIFT</div>
   <div class="spark"><span class="lbl">size</span><canvas id="spSize"></canvas><span class="val" id="vSize"></span></div>
   <div class="spark"><span class="lbl">speed</span><canvas id="spSpeed"></canvas><span class="val" id="vSpeed"></span></div>
   <div class="spark"><span class="lbl">vision</span><canvas id="spSense"></canvas><span class="val" id="vSense"></span></div>
   <div class="spark"><span class="lbl">diet</span><canvas id="spDiet"></canvas><span class="val" id="vDiet"></span></div>
+  <div class="spark"><span class="lbl">brain</span><canvas id="spBrain"></canvas><span class="val" id="vBrain"></span></div>
 </div>
 
 <div class="panel" id="treePanel">
@@ -184,6 +202,12 @@
   <div class="meta" id="inspMeta"></div>
   <div class="ebar"><i id="inspEnergy"></i></div>
   <div id="inspGenes"></div>
+</div>
+
+<div class="panel" id="badgePanel">
+  <button class="close" id="badgeClose">✕</button>
+  <div class="ptitle">BADGES · <span id="badgeCount"></span></div>
+  <div id="badgeGrid"></div>
 </div>
 
 <div class="panel" id="seedModal">
@@ -736,22 +760,23 @@ function step(dt){
       const rl=newLineage(0,baseHue);
       for(const c of creatures)if(c.lin==null)c.lin=rl;
       say('spontaneous generation: life tries again');
+      sponFlag=true;
     }
   }else extinctAt=-1;
 }
 
 // ---------- stats history ----------
-const hist={t:[],pop:[],alg:[],size:[],speed:[],sense:[],diet:[]};
+const hist={t:[],pop:[],alg:[],size:[],speed:[],sense:[],diet:[],brain:[]};
 let lastSample=-1;
 function sample(){
   if(simT-lastSample<0.5)return;
   lastSample=simT;
-  let n=creatures.length,ms=0,mv=0,mn=0,md=0;
-  for(const c of creatures){ms+=c.g.size;mv+=c.g.speed;mn+=c.g.sense;md+=c.g.diet;}
+  let n=creatures.length,ms=0,mv=0,mn=0,md=0,mb=0;
+  for(const c of creatures){ms+=c.g.size;mv+=c.g.speed;mn+=c.g.sense;md+=c.g.diet;mb+=c.g.brainW;}
   hist.t.push(simT);
   hist.pop.push(n); hist.alg.push(algae.length);
   hist.size.push(n?ms/n:NaN); hist.speed.push(n?mv/n:NaN);
-  hist.sense.push(n?mn/n:NaN); hist.diet.push(n?md/n:NaN);
+  hist.sense.push(n?mn/n:NaN); hist.diet.push(n?md/n:NaN); hist.brain.push(n?mb/n:NaN);
   const MAX=260;
   for(const k in hist)if(hist[k].length>MAX)hist[k].shift();
   sampleTree();
@@ -931,7 +956,7 @@ let popC,spC={},treeC=null;
 function initCharts(){
   popC=setupChart('popChart');
   treeC=setupChart('treeCv');
-  spC={size:setupChart('spSize'),speed:setupChart('spSpeed'),sense:setupChart('spSense'),diet:setupChart('spDiet')};
+  spC={size:setupChart('spSize'),speed:setupChart('spSpeed'),sense:setupChart('spSense'),diet:setupChart('spDiet'),brain:setupChart('spBrain')};
 }
 function drawLine(g,w,h,data,color,vmax,vmin=0){
   const n=data.length;if(n<2)return;
@@ -955,7 +980,8 @@ function drawCharts(){
   const traits={size:[GENES.size.min,GENES.size.max,'#C9D8EA'],
                 speed:[GENES.speed.min,GENES.speed.max,'#63E2FF'],
                 sense:[GENES.sense.min,GENES.sense.max,'#B48CFF'],
-                diet:[0,1,'#FF6B5E']};
+                diet:[0,1,'#FF6B5E'],
+                brain:[0,1,'#FFD166']};
   for(const k in traits){
     const [mn,mx,col]=traits[k],c=spC[k];
     c.g.clearRect(0,0,c.w,c.h);
@@ -989,6 +1015,7 @@ function updateHud(){
   const spN=speciesCount();
   $('stSpecies').textContent=spN;
   checkRecords();
+  checkBadges();
   if(simT>20&&simT-lastSpeciesMsgT>10){
     if(spN>lastSpeciesN){say('🌱 divergence: '+spN+' species now share the dish');lastSpeciesMsgT=simT;}
     else if(spN<lastSpeciesN){say('a species has vanished from the dish');lastSpeciesMsgT=simT;}
@@ -1001,6 +1028,8 @@ function updateHud(){
     $('vSense').textContent=isNaN(hist.sense[L])?'·':hist.sense[L].toFixed(0);
     const d=hist.diet[L];
     $('vDiet').textContent=isNaN(d)?'·':(d<0.25?'herb':d<0.55?'omni':'carn')+' '+d.toFixed(2);
+    const bb=hist.brain[L];
+    $('vBrain').textContent=isNaN(bb)?'·':bb.toFixed(2);
   }
   drawCharts();
   updateInspector();
@@ -1044,6 +1073,7 @@ function meteor(x,y){
   shake=7;
   say('☄️ meteor strike: '+killed+' cells vaporised, nutrients scattered');
   sfx('meteor');
+  toolUsed('meteor');
 }
 function plague(){
   let killed=0;
@@ -1059,11 +1089,13 @@ function plague(){
   let w=0;for(const c of creatures)if(!c.dead)creatures[w++]=c;creatures.length=w;
   say('🦠 plague sweeps the dish: '+killed+' perished (crowds suffered most)');
   sfx('plague');
+  toolUsed('plague');
 }
 function iceAge(){
   iceUntil=simT+22;
   say('❄️ ice age: cold waters for 22s, scarce food, sluggish cells');
   sfx('ice');
+  toolUsed('ice');
 }
 function seedCreature(x,y){
   const g={
@@ -1079,6 +1111,25 @@ function seedCreature(x,y){
   ping(x,y,'hsla('+g.hue+',85%,70%,0.8)',30,1.5,0.8);
   say(g.diet>0.55?'🧬 a stranger with teeth slips into the dish':'🧬 a stranger arrives in the dish');
   sfx('seedc');
+  toolUsed('seed');
+}
+function elixirAt(x,y){
+  let healed=0,cured=0;
+  for(const c of creatures){
+    if((c.x-x)**2+(c.y-y)**2<110*110){
+      c.energy=Math.min(c.cap,c.energy+c.cap*0.4);healed++;
+      if(c.par){c.par=null;cured++;}
+    }
+  }
+  for(let i=0;i<20;i++){
+    const ax=x+gauss()*50,ay=y+gauss()*50;
+    if((ax-CX)**2+(ay-CY)**2<R*R)spawnAlgae(ax,ay);
+  }
+  records.cured=(records.cured||0)+cured;
+  ping(x,y,'rgba(255,215,130,0.7)',115,2,0.8);
+  say('🧪 elixir: '+healed+' cells restored'+(cured?', '+cured+' cured':''));
+  sfx('elixir');
+  toolUsed('elixir');
 }
 function bloomAt(x,y){
   for(let i=0;i<90;i++){
@@ -1088,6 +1139,7 @@ function bloomAt(x,y){
   ping(x,y,'rgba(111,224,138,0.6)',70,1.5,0.8);
   say('🌿 algae bloom seeded');
   sfx('bloom');
+  toolUsed('bloom');
 }
 
 // ---------- input ----------
@@ -1096,6 +1148,7 @@ cv.addEventListener('click',e=>{
   if((x-CX)**2+(y-CY)**2>R*R)return;
   if(tool==='meteor')return meteor(x,y);
   if(tool==='bloom')return bloomAt(x,y);
+  if(tool==='elixir')return elixirAt(x,y);
   if(tool==='seed')return seedCreature(x,y);
   let best=null,bd=26*26;
   for(const c of creatures){
@@ -1104,9 +1157,9 @@ cv.addEventListener('click',e=>{
   }
   selected=best;updateInspector();
 });
-document.querySelectorAll('#toolSeg button').forEach(b=>b.addEventListener('click',()=>{
+document.querySelectorAll('[data-tool]').forEach(b=>b.addEventListener('click',()=>{
   tool=b.dataset.tool;
-  document.querySelectorAll('#toolSeg button').forEach(o=>o.classList.toggle('on',o===b));
+  document.querySelectorAll('[data-tool]').forEach(o=>o.classList.toggle('on',o===b));
   cv.style.cursor=tool==='inspect'?'default':'crosshair';
 }));
 document.querySelectorAll('#speedSeg button').forEach(b=>b.addEventListener('click',()=>{
@@ -1329,6 +1382,61 @@ function checkRecords(){
   $('stRecords').textContent='dish '+Math.floor(records.dish/60)+'m · pop '+records.pop+' · gen '+records.gen+' · elder '+Math.floor(records.elder)+'s';
 }
 
+// ---------- badges: named achievements that outlive every dish ----------
+let earned=(()=>{try{return JSON.parse(store.get('primordialSoup.badges'))||{};}catch(e){return {};}})();
+let outbreakPeak=0, sponFlag=false;
+function toolUsed(t){records.tools=records.tools||{};if(!records.tools[t]){records.tools[t]=1;
+  try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}}
+const BADGES=[
+ {id:'primordial',n:'Primordial',d:'Begin. The rest is selection.',t:()=>simT>10},
+ {id:'centenarian',n:'Centenarian',d:'A creature lives 300 seconds.',t:()=>{for(const c of creatures)if(c.age>=300)return true;return false;}},
+ {id:'deeptime',n:'Deep Time',d:'One dish survives a full hour.',t:()=>simT>=3600},
+ {id:'metropolis',n:'Metropolis',d:'Population reaches 400.',t:()=>creatures.length>=400},
+ {id:'divergence',n:'Divergence',d:'Two species share the dish.',t:()=>lastSpeciesN>=2},
+ {id:'tangledbank',n:'Tangled Bank',d:'Four species at once.',t:()=>lastSpeciesN>=4},
+ {id:'dynasty',n:'Dynasty',d:'Generation 50.',t:()=>maxGen>=50},
+ {id:'ancestry',n:'Deep Ancestry',d:'Generation 100.',t:()=>maxGen>=100},
+ {id:'plague',n:'Plague Survivor',d:'An epidemic burns out; life goes on.',t:()=>{
+   const n=Math.max(1,creatures.length);
+   if(parasiteN/n>=0.15)outbreakPeak=Math.max(outbreakPeak,parasiteN/n);
+   if(outbreakPeak>=0.15&&parasiteN===0&&creatures.length>=20){outbreakPeak=0;return true;}
+   return false;}},
+ {id:'genesis2',n:'Genesis II',d:'Witness spontaneous generation.',t:()=>sponFlag},
+ {id:'pettygod',n:'Petty God',d:'Use every tool of blessing and ruin.',t:()=>{
+   const u=records.tools||{};return u.meteor&&u.plague&&u.ice&&u.bloom&&u.seed&&u.elixir;}},
+ {id:'healer',n:'Healer',d:'Cure 25 infections with elixir.',t:()=>(records.cured||0)>=25},
+ {id:'gardener',n:'Gardener',d:'Export a dish seed.',t:()=>records.tools&&records.tools.share},
+ {id:'transplant',n:'Transplant Surgeon',d:'Import a foreign dish.',t:()=>records.tools&&records.tools.import},
+ {id:'thinker',n:'The Thinker',d:'Average brain weight passes 0.25.',t:()=>{
+   if(creatures.length<30)return false;let b=0;for(const c of creatures)b+=c.g.brainW;return b/creatures.length>=0.25;}},
+ {id:'porcupine',n:'Porcupine Country',d:'Average spikes pass 0.35.',t:()=>{
+   if(creatures.length<30)return false;let b=0;for(const c of creatures)b+=c.g.spike;return b/creatures.length>=0.35;}},
+ {id:'icefolk',n:'Ice Folk',d:'A cold-adapted people (avg warmth under 0.25).',t:()=>{
+   if(creatures.length<30)return false;let b=0;for(const c of creatures)b+=c.g.warmth;return b/creatures.length<=0.25;}},
+];
+function renderBadges(){
+  $('badgeCount').textContent=Object.keys(earned).length+' of '+BADGES.length;
+  $('badgeGrid').innerHTML=BADGES.map(b=>
+    '<div class="badge'+(earned[b.id]?' earned':'')+'"><div class="bn">'+(earned[b.id]?'🏅 ':'')+b.n+'</div><div class="bd">'+b.d+'</div></div>').join('');
+}
+function checkBadges(){
+  let won=null;
+  for(const b of BADGES){
+    if(earned[b.id])continue;
+    let hit=false;
+    try{hit=b.t();}catch(e){}
+    if(hit){earned[b.id]=Date.now();won=b;break;}
+  }
+  if(won){
+    try{store.set('primordialSoup.badges',JSON.stringify(earned));}catch(e){}
+    say('🏅 badge earned: '+won.n);
+    sfx('mate');
+    if($('badgePanel').classList.contains('show'))renderBadges();
+  }
+}
+$('stRecordsRow').addEventListener('click',()=>{renderBadges();$('badgePanel').classList.add('show');});
+$('badgeClose').addEventListener('click',()=>$('badgePanel').classList.remove('show'));
+
 // ---------- sound ----------
 let audioCtx=null, soundOn=store.get('soup.sound')!=='0';
 const sfxLast={};
@@ -1365,6 +1473,7 @@ function sfx(kind){
   else if(kind==='plague')beep(310,0.45,'triangle',0.055,150);
   else if(kind==='ice'){beep(1250,0.6,'sine',0.035);beep(1257,0.6,'sine',0.035);}
   else if(kind==='bloom')beep(660,0.12,'sine',0.045,720);
+  else if(kind==='elixir'){beep(660,0.1,'sine',0.04,880);beep(990,0.14,'sine',0.03,1320);}
   else if(kind==='seedc')beep(440,0.12,'square',0.028,520);
   else if(kind==='doom')beep(180,0.8,'sine',0.055,60);
 }
@@ -1409,6 +1518,7 @@ $('btnShare').addEventListener('click',async()=>{
   $('seedModal').classList.add('show');
   const seed=await packSeed();
   $('seedText').value=seed;
+  toolUsed('share');
   let msg=Math.round(seed.length/1024)+'KB · paste into import on any copy of the game';
   try{await navigator.clipboard.writeText(seed);msg+=' · copied';}catch(e){}
   $('seedMsg').textContent=msg;
@@ -1435,6 +1545,7 @@ $('seedLoad').addEventListener('click',async()=>{
     catchupLeft=0;
     $('seedModal').classList.remove('show');
     say('a foreign dish takes hold');
+    toolUsed('import');
     sfx('bloom');
   }catch(e){$('seedMsg').textContent='that seed would not germinate';}
 });
