@@ -75,6 +75,10 @@ The 📷 postcard button composes a shareable image of your dish: the living wor
 ### v1.6 · Names for worlds, worlds to choose
 Every dish now has a callsign, a unique identity like SOUP-K7F3-9Q, shown in the report, written into the Chronicle at birth, and stamped on postcards and creature cards along with the date and season. New dish now opens a world picker: Classic, Ice World (endless winter), Eden (lush and gentle), or Plaguelands (the sickness is endemic), each persisted with the save. A 🪨 rock tool joins the panel: tap water to raise a rock, tap a rock to crumble it, and reshape the geography of evolution by hand. An Iceborn badge honors keeping an Ice World alive to year 2. Postcards gained the richer information line requested by David.
 
+### v1.7 · Memory
+The brain grows from a 20 weight reflex sheet into a 48 weight recurrent circuit with two memory cells: slow inner states with a roughly three second half life that the brain can write to and read from. All memory circuitry starts at zero, in founders and in migrated dishes alike: evolution must discover remembering on its own and pay for it, since active weights cost energy. Old brains migrate losslessly into the new architecture. A Rememberer badge waits for the first population whose memory circuits carry real weight.
+*Field notes:* the substrate verified in a controlled scare: a wired memory cell charged to half strength within a second of threat exposure and, after the threat was removed, faded smoothly over seven seconds. Fear that outlasts its cause is now physically possible in the dish; whether evolution buys it is the experiment that never stops running. Also recorded for honesty: the first test subject was eaten by its own test apparatus, a predator placed too close and too hungry. Lab safety improved.
+
 ---
 
 ## Next (each ~a session)
@@ -93,7 +97,7 @@ Every dish now has a callsign, a unique identity like SOUP-K7F3-9Q, shown in the
 
 Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world).
 
-Deeper evolution: memory neurons (fear that lingers, remembered food), evolved signaling and hearing (alarm calls, and eventually lying), pheromone trails, morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
+Deeper evolution: evolved signaling and hearing (alarm calls, and eventually lying), pheromone trails, morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
 
 ## Frontier (the "how far can this go" answer)
 
