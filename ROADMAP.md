@@ -79,6 +79,12 @@ The badge gallery: seventeen named achievements built on the records system (Cen
 - **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
 - **The menu-bar pet**: a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 
+## Greenhouse (ideas under consideration, not yet scheduled)
+
+Fun and attachment: bloodlines (name a creature, follow its descendants forever), the Chronicle (the dish auto-writes its own history), postcards (one tap shareable dish portraits), daily dish (one global seed per day, every copy diverges), scenario worlds (Ice World, Eden, Plaguelands), creature trading cards, finger painted terrain, dish versus dish (two seeds collide in a split world).
+
+Deeper evolution: memory neurons (fear that lingers, remembered food), evolved signaling and hearing (alarm calls, and eventually lying), pheromone trails, morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
+
 ## Frontier (the "how far can this go" answer)
 
 - **Neural brains.** Replace the fixed seek/flee/wander program with a tiny evolvable network (inputs: food/threat/kin vectors, energy; outputs: turn, thrust). Behavior itself then evolves: ambush, migration, hoarding, deception could appear *unprogrammed*. This is the jump from tuning an animal to growing one.
