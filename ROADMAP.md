@@ -90,6 +90,10 @@ A scent field lives on the dish floor: a coarse grid costing six kilobytes of me
 ### v1.10 · The Observatory
 Watching evolution now feels like science. The 🔭 observe panel holds a live species census (color, population, average size, speed, diet, and brain per species), dish vital signs, and the record holders (fastest, largest, eldest, brainiest), each one tap from visiting the creature itself. The tree of life answers questions now: hover or tap any band to identify the lineage, its current and peak population, its birth year, and whether it has ended. And the whole world exports as clean JSON: dish identity, records, badges, species statistics, full trait histories, and the entire Chronicle, ready for anyone's graphs. A Naturalist badge for the first export.
 
+### v1.11 · Morphology
+Bodies leave the circle behind. Three shape genes with honest tradeoffs, all starting near zero so evolution sculpts its own anatomy. Elongation: a streamlined ellipse with cheaper straight line travel and a mouth at the nose, but slower turning. Fins: more thrust and resistance to the currents, at higher burn. Jaws: crack bigger and better shelled prey, for a standing metabolic cost. Rendering follows the genome: eels, sailfins, and crushers are now visibly different animals, on creature cards too. A Shapeshifter badge honors the first population whose bodies truly leave the circle.
+*Field notes:* max jaws lower the size ratio needed to crack a full shell from 1.79 to 1.36; armor stays formidable but no longer absolute. The ecology absorbed all three genes without a tremor, and the genome now counts 18 genes plus 108 brain weights.
+
 ---
 
 ## Next (each ~a session)
@@ -107,7 +111,7 @@ Watching evolution now feels like science. The 🔭 observe panel holds a live s
 
 Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world).
 
-Deeper evolution: morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
+Deeper evolution: lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
 
 ## Frontier (the "how far can this go" answer)
 

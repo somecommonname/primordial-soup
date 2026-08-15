@@ -270,7 +270,7 @@
   <div class="ptitle">FIELD GUIDE</div>
   <div id="guideBody">
     <div class="gh">THE CREATURES</div>
-    <div class="gl">🧬 15 genes each: size, speed, vision, diet, fear, fertility, herding, spikes, shell, comfort, immunity, brain</div>
+    <div class="gl">🧬 18 genes each: size, speed, vision, diet, fear, fertility, herding, spikes, shell, comfort, immunity, brain, body shape, fins, jaws</div>
     <div class="gl">💕 They court and breed; babies mix both parents' genes</div>
     <div class="gl">🌈 Color is family; drift too far apart and they become separate species</div>
     <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
@@ -400,6 +400,9 @@ const GENES={
   warmth:{min:0,  max:1,   sd:0.5, def:0.5},
   immune:{min:0,  max:1,   sd:0.5, def:0.03},
   brainW:{min:0,  max:1,   sd:0.5, def:0},
+  elong: {min:0,  max:1,   sd:0.5, def:0.05},
+  fin:   {min:0,  max:1,   sd:0.5, def:0.05},
+  jaw:   {min:0,  max:1,   sd:0.5, def:0.05},
 };
 let mutRate=0.10;
 function founderGenome(baseHue){
@@ -417,6 +420,9 @@ function founderGenome(baseHue){
     warmth: clamp(0.5+gauss()*0.1, 0, 1),
     immune: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
     brainW: clamp(0.02+Math.abs(gauss())*0.02, 0, 1),
+    elong: clamp(0.05+Math.abs(gauss())*0.04, 0, 1),
+    fin: clamp(0.05+Math.abs(gauss())*0.04, 0, 1),
+    jaw: clamp(0.05+Math.abs(gauss())*0.04, 0, 1),
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
@@ -848,15 +854,15 @@ function step(dt){
     // steer
     if(want!=null){
       let d=want-c.dir; while(d>Math.PI)d-=TAU; while(d<-Math.PI)d+=TAU;
-      const tr=hunting?10:6;
+      const tr=(hunting?10:6)*(1-0.35*g.elong);
       c.dir+=clamp(d,-tr*dt,tr*dt);
     }else{
       c.dir+=gauss()*g.wiggle*dt;
     }
     // move
-    const sp=g.speed*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1);
+    const sp=g.speed*(1+0.35*g.fin)*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1);
     flow(c.x,c.y,simT,_fl);
-    const cf=clamp(0.85-g.size*0.05,0.15,0.8);
+    const cf=clamp(0.85-g.size*0.05,0.15,0.8)*(1-0.3*g.fin);
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
     c.y+=Math.sin(c.dir)*sp*dt+_fl[1]*cf*dt;
     rockPush(c,g.size);
@@ -864,19 +870,21 @@ function step(dt){
     if(nr>R-g.size){c.x=CX+nx/nr*(R-g.size);c.y=CY+ny/nr*(R-g.size);}
     // metabolism
     const s2=g.size*g.size, vn=sp/60;
-    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike+0.14*g.immune) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense + 0.009*s2*(c.wsum||0)*g.brainW)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1);
+    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike+0.14*g.immune+0.2*g.jaw) + 0.10*s2*vn*vn*(1-0.15*g.diet)*(1+0.5*g.fin)*(1-0.25*g.elong) + 8e-5*sense*sense + 0.009*s2*(c.wsum||0)*g.brainW)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1);
     c.energy-=burn*dt;
     if(c.par){
       parasiteN++;
       c.energy-=(2+9*c.par.vir)*dt;
       if(Math.random()<(0.01+0.12*g.immune)*dt)c.par=null;
     }
-    // eat algae (graze everything within reach)
+    // eat algae (graze everything within reach of the mouth)
+    const noseX=c.x+Math.cos(c.dir)*g.size*g.elong*0.6;
+    const noseY=c.y+Math.sin(c.dir)*g.size*g.elong*0.6;
     if(g.diet<0.92&&c.energy<c.cap){
       const rr=(g.size+4)**2;
       for(const a of _n1){
         if(a.eaten)continue;
-        if((a.x-c.x)**2+(a.y-c.y)**2<rr){
+        if((a.x-noseX)**2+(a.y-noseY)**2<rr){
           a.eaten=true;
           c.energy+=ALGAE_E*(1-g.diet);
           if(c.energy>=c.cap){c.energy=c.cap;break;}
@@ -886,10 +894,10 @@ function step(dt){
     // eat prey (bite whatever the jaws touch, else the locked chase target)
     const meal=bite||prey;
     if(meal&&!meal.dead){
-      const d2=(meal.x-c.x)**2+(meal.y-c.y)**2;
+      const d2=(meal.x-noseX)**2+(meal.y-noseY)**2;
       const rr=(g.size+meal.g.size*0.3+3);
       if(d2<rr*rr){
-        if(g.size>1.2*meal.g.size*(1+0.55*meal.g.shell)){
+        if(g.size*(1+0.35*g.jaw)>1.2*meal.g.size*(1+0.55*meal.g.shell)){
           meal.dead=true; meal.killed=true; deaths++; dKill++; c.lock=null; c.lockT=0;
           const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6));
           c.energy=Math.min(c.cap,c.energy+flesh);
@@ -1101,9 +1109,24 @@ function render(){
       }
       ctx.stroke();
     }
+    // fins
+    if(g.fin>0.12){
+      const fl=s*(0.6+1.1*g.fin);
+      ctx.fillStyle='hsla('+h+',65%,55%,0.7)';
+      for(const sgn of [1,-1]){
+        const fa=c.dir+Math.PI+sgn*0.55;
+        ctx.beginPath();
+        ctx.moveTo(c.x-Math.cos(c.dir)*s*0.6,c.y-Math.sin(c.dir)*s*0.6);
+        ctx.lineTo(c.x+Math.cos(fa)*fl,c.y+Math.sin(fa)*fl);
+        ctx.lineTo(c.x-Math.cos(c.dir)*s*0.9,c.y-Math.sin(c.dir)*s*0.9);
+        ctx.closePath();ctx.fill();
+      }
+    }
     // body
     ctx.fillStyle='hsla('+h+',72%,60%,0.92)';
-    ctx.beginPath();ctx.arc(c.x,c.y,s,0,TAU);ctx.fill();
+    ctx.beginPath();
+    ctx.ellipse(c.x,c.y,s*(1+0.9*g.elong)*0.5+s*0.5,s*(1-0.35*g.elong),c.dir,0,TAU);
+    ctx.fill();
     ctx.strokeStyle='hsla('+h+',80%,78%,0.7)';
     ctx.lineWidth=1;ctx.stroke();
     if(g.shell>0.12){
@@ -1120,13 +1143,14 @@ function render(){
       ctx.fillStyle='rgba(255,80,200,'+(0.45+0.35*Math.sin(simT*6+c.phase)).toFixed(2)+')';
       ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir+2.4)*s*0.55,c.y+Math.sin(c.dir+2.4)*s*0.55,Math.max(1.4,s*0.2),0,TAU);ctx.fill();
     }
-    if(g.diet>0.5){
-      ctx.strokeStyle='rgba(255,107,94,0.85)';
-      ctx.lineWidth=1.1;
+    if(g.diet>0.5||g.jaw>0.15){
+      const jk=1+0.8*g.jaw;
+      ctx.strokeStyle=g.diet>0.5?'rgba(255,107,94,0.85)':'hsla('+h+',70%,75%,0.7)';
+      ctx.lineWidth=1.1+g.jaw;
       ctx.beginPath();
-      ctx.moveTo(c.x+Math.cos(c.dir+0.5)*s*0.8,c.y+Math.sin(c.dir+0.5)*s*0.8);
-      ctx.lineTo(c.x+Math.cos(c.dir)*s*1.25,c.y+Math.sin(c.dir)*s*1.25);
-      ctx.lineTo(c.x+Math.cos(c.dir-0.5)*s*0.8,c.y+Math.sin(c.dir-0.5)*s*0.8);
+      ctx.moveTo(c.x+Math.cos(c.dir+0.5)*s*0.8*jk,c.y+Math.sin(c.dir+0.5)*s*0.8*jk);
+      ctx.lineTo(c.x+Math.cos(c.dir)*s*1.25*jk,c.y+Math.sin(c.dir)*s*1.25*jk);
+      ctx.lineTo(c.x+Math.cos(c.dir-0.5)*s*0.8*jk,c.y+Math.sin(c.dir-0.5)*s*0.8*jk);
       ctx.stroke();
     }
   }
@@ -1273,6 +1297,9 @@ function updateInspector(){
               ['comfort',g.warmth,g.warmth<0.35?'cold-blooded':g.warmth<0.65?'temperate':'heat-lover'],
               ['immune',g.immune,g.immune<0.15?'':g.immune<0.5?'hardy':'iron-blooded'],
               ['brain',g.brainW,g.brainW<0.1?'instinct':g.brainW<0.45?'hybrid':'cerebral'],
+              ['body',g.elong,g.elong<0.2?'round':g.elong<0.55?'oval':'eel'],
+              ['fins',g.fin,g.fin<0.15?'':g.fin<0.5?'finned':'sailfin'],
+              ['jaws',g.jaw,g.jaw<0.15?'':g.jaw<0.5?'toothy':'crusher'],
               ['nerve',1-g.fear,g.fear<0.35?'bold':g.fear<0.65?'wary':'timid'],
               ['fertility',1-(g.rThresh-0.55)/0.4,'']];
   $('inspGenes').innerHTML=rows.map(([l,v,txt])=>
@@ -1326,7 +1353,8 @@ function seedCreature(x,y){
     size:rand(3.5,13), speed:rand(15,125), sense:rand(30,200),
     diet:Math.random()<0.5?rand(0,0.3):rand(0.3,1),
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
-    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), immune:rand(0,0.6), brainW:rand(0,0.7), hue:rand(0,360),
+    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), immune:rand(0,0.6), brainW:rand(0,0.7),
+    elong:rand(0,0.7), fin:rand(0,0.7), jaw:rand(0,0.7), hue:rand(0,360),
   };
   const p=makeCreature(g,x,y);
   p.br=freshBrain(0.3);p.wsum=brainSum(p.br);
@@ -1445,7 +1473,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.10.0';
+const APP_V='1.11.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1769,6 +1797,10 @@ const BADGES=[
    return bw/creatures.length>0.12&&mw/(creatures.length*30)>0.08;}},
  {id:'firstword',n:'First Word',d:'A people who speak: thirty calls a minute.',t:()=>callRate>=30&&creatures.length>=30},
  {id:'naturalist',n:'Naturalist',d:'Export the data of a living world.',t:()=>records.tools&&records.tools.export},
+ {id:'shaped',n:'Shapeshifter',d:'A people whose bodies left the circle behind.',t:()=>{
+   if(creatures.length<30)return false;
+   let t=0;for(const c of creatures)t+=c.g.elong+c.g.fin+c.g.jaw;
+   return t/creatures.length>0.45;}},
  {id:'trailblazer',n:'Trailblazer',d:'A people who leave trails worth following.',t:()=>{
    if(creatures.length<30||!scent)return false;
    let tot=0;for(let i=0;i<scent.length;i++)tot+=scent[i];
@@ -1886,7 +1918,7 @@ function drawMini(g,c,px,py,k){
   }
 }
 function makeCard(c){
-  const Wc=640,Hc=900;
+  const Wc=640,Hc=990;
   const cc=document.createElement('canvas');cc.width=Wc;cc.height=Hc;
   const g=cc.getContext('2d');
   g.fillStyle='#050A14';g.fillRect(0,0,Wc,Hc);
@@ -1900,7 +1932,8 @@ function makeCard(c){
   g.textAlign='left';
   const rows=[['size',(c.g.size-3)/11],['speed',(c.g.speed-8)/122],['vision',(c.g.sense-15)/195],
     ['diet',c.g.diet],['herding',c.g.herd],['spikes',c.g.spike],['shell',c.g.shell],
-    ['comfort',c.g.warmth],['immune',c.g.immune],['brain',c.g.brainW]];
+    ['comfort',c.g.warmth],['immune',c.g.immune],['brain',c.g.brainW],
+    ['body',c.g.elong],['fins',c.g.fin],['jaws',c.g.jaw]];
   g.font='20px ui-monospace,monospace';
   rows.forEach((r,i)=>{
     const y=556+i*29;
