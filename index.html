@@ -194,6 +194,9 @@
   </div>
   <div class="row" style="margin-top:8px">
     <button id="btnChron" style="flex:1">📜 chronicle</button>
+    <button id="btnBadges" style="flex:1">🏅 badges</button>
+  </div>
+  <div class="row" style="margin-top:8px">
     <button id="btnPost" style="flex:1">📷 postcard</button>
     <button id="btnGuide" style="flex:1">❓ guide</button>
   </div>
@@ -265,7 +268,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 22 badges survive every world; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 22 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
     <div class="gl">📷 Postcards and 🎴 creature cards, straight to your share sheet</div>
@@ -1373,7 +1376,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.8.1';
+const APP_V='1.8.2';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1618,6 +1621,7 @@ function updateLine(){
 $('btnChron').addEventListener('click',()=>{renderChron();$('chronPanel').classList.add('show');});
 $('chronClose').addEventListener('click',()=>$('chronPanel').classList.remove('show'));
 $('btnGuide').addEventListener('click',()=>$('guidePanel').classList.add('show'));
+$('btnBadges').addEventListener('click',()=>{renderBadges();$('badgePanel').classList.add('show');});
 $('guideClose').addEventListener('click',()=>$('guidePanel').classList.remove('show'));
 $('welcomeGuide').addEventListener('click',()=>$('guidePanel').classList.add('show'));
 $('inspRename').addEventListener('click',()=>{
