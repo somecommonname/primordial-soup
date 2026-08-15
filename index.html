@@ -226,7 +226,7 @@
     <div class="alg"><span id="stAlgae">0</span><label>ALGAE</label></div>
   </div>
   <div class="subnums">gen <b id="stGen">1</b> · species <b id="stSpecies">1</b> · strains <b id="stStrains">1</b> · <b id="stSeason"></b></div>
-  <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b> · sick <b id="stSick">0</b> · calls <b id="stCalls">0</b>/m</div>
+  <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b> · sick <b id="stSick">0</b> · calls <b id="stCalls">0</b>/m · eggs <b id="stEggs">0</b></div>
   <div class="subnums" id="stRecordsRow" title="records and badges">🏆 <b id="stRecords"></b></div>
   <div class="subnums" id="stLineRow" style="display:none">☆ <b id="stLine"></b></div>
   <canvas id="popChart"></canvas>
@@ -270,7 +270,7 @@
   <div class="ptitle">FIELD GUIDE</div>
   <div id="guideBody">
     <div class="gh">THE CREATURES</div>
-    <div class="gl">🧬 18 genes each: size, speed, vision, diet, fear, fertility, herding, spikes, shell, comfort, immunity, brain, body shape, fins, jaws</div>
+    <div class="gl">🧬 21 genes each, from size and speed to body shape, jaws, egg laying, parental care, and hibernation</div>
     <div class="gl">💕 They court and breed; babies mix both parents' genes</div>
     <div class="gl">🌈 Color is family; drift too far apart and they become separate species</div>
     <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
@@ -403,6 +403,9 @@ const GENES={
   elong: {min:0,  max:1,   sd:0.5, def:0.05},
   fin:   {min:0,  max:1,   sd:0.5, def:0.05},
   jaw:   {min:0,  max:1,   sd:0.5, def:0.05},
+  eggy:  {min:0,  max:1,   sd:0.5, def:0.03},
+  care:  {min:0,  max:1,   sd:0.5, def:0.03},
+  torpor:{min:0,  max:1,   sd:0.5, def:0.03},
 };
 let mutRate=0.10;
 function founderGenome(baseHue){
@@ -423,6 +426,9 @@ function founderGenome(baseHue){
     elong: clamp(0.05+Math.abs(gauss())*0.04, 0, 1),
     fin: clamp(0.05+Math.abs(gauss())*0.04, 0, 1),
     jaw: clamp(0.05+Math.abs(gauss())*0.04, 0, 1),
+    eggy: clamp(0.03+Math.abs(gauss())*0.03, 0, 1),
+    care: clamp(0.03+Math.abs(gauss())*0.03, 0, 1),
+    torpor: clamp(0.03+Math.abs(gauss())*0.03, 0, 1),
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
@@ -442,6 +448,7 @@ let nextId=1, births=0, deaths=0, maxGen=1, simT=0;
 let sexBirths=0, cloneBirths=0;
 let dStarveYoung=0, dStarveAdult=0, dAge=0, dKill=0, dPar=0, parasiteN=0;
 let calls=[], callsPrev=[], callCount=0, callRate=0, lastCallRateT=0;
+let eggs=[], eggNext=1;
 let scent=null, scentW=0, scentH=0;
 function initScent(){scentW=Math.max(1,Math.ceil(W/24));scentH=Math.max(1,Math.ceil(H/24));scent=new Float32Array(scentW*scentH);}
 function scentAt(x,y){
@@ -499,6 +506,7 @@ function makeCreature(g,x,y,energy,gen){
   return {id:nextId++, g, x, y, dir:rand(0,TAU), energy:energy??cap*0.65, cap,
           age:0, gen:gen||1, kids:0, lifespan:Math.max(70,130+gauss()*25),
           dead:false, phase:rand(0,TAU), lock:null, lockT:0, lastRep:-99, mateT:0, par:null,
+          guardId:0, guardEgg:0, guardUntil:-1,
           br:freshBrain(0.05), wsum:0, thrustMod:1, m0:0, m1:0, lastCall:0};
 }
 function randInDish(f=1){
@@ -563,6 +571,7 @@ function initWorld(scn){
   lastSample=-1; lastHud=-9; sexBirths=0; cloneBirths=0; lastSpeciesN=1; lastSpeciesMsgT=0;
   dStarveYoung=0; dStarveAdult=0; dAge=0; dKill=0; dPar=0; parasiteN=0;
   calls.length=0; callsPrev.length=0; callCount=0; callRate=0; lastCallRateT=0;
+  eggs.length=0; eggNext=1;
   hist.t=[];hist.pop=[];hist.alg=[];hist.size=[];hist.speed=[];hist.sense=[];hist.diet=[];
   lineages.clear(); linNext=1; treeT.length=0; treeDt=2; lastTreeSample=-1;
   chron=[]; yearN=0; yearB0=0; yearD0=0; followLin=0; followName=''; lineBestGen=0; lineWasAlive=false;
@@ -655,6 +664,18 @@ function step(dt){
     if(h&&!h.dead){h.par={vir:0.3+rand(0,0.2)};say('🦠 a parasite finds its first host');logChron('🦠 A parasite found its first host');}
   }
   parasiteN=0;
+  for(let i=eggs.length-1;i>=0;i--){
+    const eg=eggs[i];
+    if(simT>=eg.hatch){
+      const child=makeCreature(eg.g,eg.x,eg.y,null,eg.gen);
+      child.br=eg.br;child.wsum=brainSum(eg.br);
+      child.energy=Math.min(eg.energy,child.cap);
+      child.lin=eg.lin;
+      if(creatures.length<POP_CAP){creatures.push(child);births++;sexBirths++;sfx('birth');
+        ping(eg.x,eg.y,'hsla('+eg.g.hue+',80%,70%,0.5)',14,1,0.6);}
+      eggs.splice(i,1);
+    }
+  }
   callsPrev=calls; calls=[];
   if(!scent)initScent();
   for(let i=0;i<scent.length;i++)scent[i]*=0.9986;
@@ -703,7 +724,7 @@ function step(dt){
         else c.lock=null;
       }
     }
-    const ready=c.energy>g.rThresh*c.cap && c.age>6 && c.age-c.lastRep>9;
+    const ready=c.energy>g.rThresh*c.cap && c.age>6 && c.age-c.lastRep>9+g.care*8;
     let mate=null,mateD2=1e12,mateScore=-1;
     let kinN=0,kinX=0,kinY=0,kinCos=0,kinSin=0;
     const herdR2=sense*sense*0.72;
@@ -773,6 +794,20 @@ function step(dt){
         if(Math.abs(rdx)<rk.r+g.size+24&&Math.abs(rdy)<rk.r+g.size+24&&
            rdx*rdx+rdy*rdy<(rk.r+g.size+24)**2){want=Math.atan2(rdy,rdx);break;}
       }
+    }
+    // parental care: stand watch, provision the young
+    if(c.guardUntil>c.age&&!threat){
+      let gx=null,gy=null,tgt=null;
+      if(c.guardId){tgt=creatures.find(o=>o.id===c.guardId&&!o.dead);if(tgt){gx=tgt.x;gy=tgt.y;}}
+      else if(c.guardEgg){const eg=eggs.find(e=>e.id===c.guardEgg);if(eg){gx=eg.x;gy=eg.y;}}
+      if(gx!=null){
+        const gd=Math.hypot(gx-c.x,gy-c.y);
+        if(gd>34){want=Math.atan2(gy-c.y,gx-c.x);arrive=clamp(gd/40,0.4,1);hunting=false;}
+        if(tgt&&gd<40&&c.energy>c.cap*0.4&&tgt.energy<tgt.cap*0.8){
+          const feed=Math.min(2*g.care*dt*60/60,c.energy-c.cap*0.35);
+          if(feed>0){c.energy-=feed;tgt.energy=Math.min(tgt.cap,tgt.energy+feed);}
+        }
+      }else{c.guardUntil=-1;}
     }
     // herd: drift toward the kin school (cohesion+alignment), never mid-hunt or mid-flee
     if(g.herd>0.15 && kinN>=2 && !hunting && !threat){
@@ -860,7 +895,7 @@ function step(dt){
       c.dir+=gauss()*g.wiggle*dt;
     }
     // move
-    const sp=g.speed*(1+0.35*g.fin)*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1);
+    const sp=g.speed*(1+0.35*g.fin)*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1)*(c.torpid?(1-0.8*g.torpor):1);
     flow(c.x,c.y,simT,_fl);
     const cf=clamp(0.85-g.size*0.05,0.15,0.8)*(1-0.3*g.fin);
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
@@ -871,6 +906,9 @@ function step(dt){
     // metabolism
     const s2=g.size*g.size, vn=sp/60;
     let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike+0.14*g.immune+0.2*g.jaw) + 0.10*s2*vn*vn*(1-0.15*g.diet)*(1+0.5*g.fin)*(1-0.25*g.elong) + 8e-5*sense*sense + 0.009*s2*(c.wsum||0)*g.brainW)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1);
+    const torpid=g.torpor>0.1&&c.energy<c.cap*0.3&&Tc<0.35;
+    if(torpid)burn*=(1-0.7*g.torpor);
+    c.torpid=torpid;
     c.energy-=burn*dt;
     if(c.par){
       parasiteN++;
@@ -888,6 +926,25 @@ function step(dt){
           a.eaten=true;
           c.energy+=ALGAE_E*(1-g.diet);
           if(c.energy>=c.cap){c.energy=c.cap;break;}
+        }
+      }
+    }
+    // raid nests: eggs are rich, unless a parent stands watch
+    if(hungry&&g.diet>0.35&&eggs.length){
+      for(let ei=eggs.length-1;ei>=0;ei--){
+        const eg=eggs[ei];
+        const dx=eg.x-noseX;if(dx>14||dx<-14)continue;
+        const dy=eg.y-noseY;if(dy>14||dy<-14)continue;
+        if(dx*dx+dy*dy<(g.size+5)**2){
+          let watched=false;
+          for(const o of creatures){
+            if(!o.dead&&o.guardEgg===eg.id&&o.guardUntil>o.age&&Math.hypot(o.x-eg.x,o.y-eg.y)<60){watched=true;break;}
+          }
+          if(!watched){
+            c.energy=Math.min(c.cap,c.energy+eg.energy*0.9);
+            eggs.splice(ei,1);
+            ping(eg.x,eg.y,'rgba(255,180,120,0.6)',12,1,0.5);
+          }
         }
       }
     }
@@ -920,17 +977,29 @@ function step(dt){
         for(const k in GENES)cg[k]=Math.random()<0.5?g[k]:mate.g[k];
         cg.hue=Math.random()<0.5?g.hue:mate.g.hue;
         const mg=mutate(cg);
-        const child=makeCreature(mg,(c.x+mate.x)/2,(c.y+mate.y)/2,null,Math.max(c.gen,mate.gen)+1);
-        child.br=mutateBrain(crossBrain(c.br||freshBrain(0.05),mate.br||freshBrain(0.05)));
-        child.wsum=brainSum(child.br);
-        child.lin=lineageOf(c.lin,mg.hue);
-        child.energy=Math.min((c.energy+mate.energy)*0.34,child.cap);
+        const invested=(c.energy+mate.energy)*0.34;
+        const asEgg=Math.random()<(g.eggy+mate.g.eggy)/2;
+        const childLin=lineageOf(c.lin,mg.hue);
+        const childBr=mutateBrain(crossBrain(c.br||freshBrain(0.05),mate.br||freshBrain(0.05)));
         c.energy*=0.63; mate.energy*=0.63;
         c.kids++; mate.kids++; c.lastRep=c.age; mate.lastRep=mate.age;
         c.mateT=0; mate.mateT=0;
-        newborns.push(child); births++; sexBirths++; sfx('birth');
-        if(child.gen>maxGen)maxGen=child.gen;
+        if(asEgg){
+          const eg={id:eggNext++,x:(c.x+mate.x)/2,y:(c.y+mate.y)/2,g:mg,br:childBr,
+            lin:childLin,gen:Math.max(c.gen,mate.gen)+1,energy:invested*1.35,hatch:simT+14};
+          eggs.push(eg);
+          if(g.care>0.15){c.guardEgg=eg.id;c.guardId=0;c.guardUntil=c.age+8+g.care*15;}
+          sfx('mate');
+        }else{
+          const child=makeCreature(mg,(c.x+mate.x)/2,(c.y+mate.y)/2,null,Math.max(c.gen,mate.gen)+1);
+          child.br=childBr;child.wsum=brainSum(child.br);
+          child.lin=childLin;
+          child.energy=Math.min(invested,child.cap);
+          newborns.push(child); births++; sexBirths++; sfx('birth');
+          if(g.care>0.15){c.guardId=child.id;c.guardEgg=0;c.guardUntil=c.age+8+g.care*15;}
+        }
         ping((c.x+mate.x)/2,(c.y+mate.y)/2,'rgba(255,255,255,0.55)',g.size*3,1,0.6);
+        if(c.gen+1>maxGen)maxGen=c.gen+1;
       }else c.mateT+=dt;
     }else if(ready&&room){
       c.mateT+=dt;
@@ -1068,6 +1137,13 @@ function render(){
   // algae
   ctx.fillStyle='rgba(111,224,138,0.85)';
   for(const a of algae)ctx.fillRect(a.x-1.1,a.y-1.1,2.2,2.2);
+  // eggs
+  for(const eg of eggs){
+    ctx.fillStyle='hsla('+eg.g.hue+',50%,85%,0.85)';
+    ctx.beginPath();ctx.arc(eg.x,eg.y,3.5,0,TAU);ctx.fill();
+    ctx.fillStyle='hsla('+eg.g.hue+',70%,55%,0.9)';
+    ctx.beginPath();ctx.arc(eg.x+1,eg.y-0.5,1.2,0,TAU);ctx.fill();
+  }
   // rocks
   for(const rk of rocks){
     ctx.fillStyle='#0B1322';
@@ -1139,6 +1215,11 @@ function render(){
     ctx.beginPath();ctx.arc(c.x-Math.cos(c.dir)*s*0.2,c.y-Math.sin(c.dir)*s*0.2,s*0.32,0,TAU);ctx.fill();
     ctx.fillStyle='rgba(8,14,26,0.9)';
     ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir)*s*0.5,c.y+Math.sin(c.dir)*s*0.5,Math.max(1,s*0.16),0,TAU);ctx.fill();
+    if(c.torpid){
+      ctx.strokeStyle='rgba(140,190,255,0.55)';
+      ctx.lineWidth=1;
+      ctx.beginPath();ctx.arc(c.x,c.y,s+3,0,TAU);ctx.stroke();
+    }
     if(c.par){
       ctx.fillStyle='rgba(255,80,200,'+(0.45+0.35*Math.sin(simT*6+c.phase)).toFixed(2)+')';
       ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir+2.4)*s*0.55,c.y+Math.sin(c.dir+2.4)*s*0.55,Math.max(1.4,s*0.2),0,TAU);ctx.fill();
@@ -1250,6 +1331,7 @@ function updateHud(){
   $('stDeaths').textContent=deaths;
   $('stSick').textContent=parasiteN;
   $('stCalls').textContent=callRate;
+  $('stEggs').textContent=eggs.length;
   $('stSex').textContent=sexBirths;
   $('stClone').textContent=cloneBirths;
   const q=(simT/SEASON_PERIOD)%1;
@@ -1300,6 +1382,9 @@ function updateInspector(){
               ['body',g.elong,g.elong<0.2?'round':g.elong<0.55?'oval':'eel'],
               ['fins',g.fin,g.fin<0.15?'':g.fin<0.5?'finned':'sailfin'],
               ['jaws',g.jaw,g.jaw<0.15?'':g.jaw<0.5?'toothy':'crusher'],
+              ['eggs',g.eggy,g.eggy<0.2?'live-bearer':g.eggy<0.6?'mixed':'egg-layer'],
+              ['care',g.care,g.care<0.15?'':g.care<0.5?'watchful':'devoted'],
+              ['torpor',g.torpor,g.torpor<0.15?'':g.torpor<0.5?'drowsy':'hibernator'],
               ['nerve',1-g.fear,g.fear<0.35?'bold':g.fear<0.65?'wary':'timid'],
               ['fertility',1-(g.rThresh-0.55)/0.4,'']];
   $('inspGenes').innerHTML=rows.map(([l,v,txt])=>
@@ -1354,7 +1439,8 @@ function seedCreature(x,y){
     diet:Math.random()<0.5?rand(0,0.3):rand(0.3,1),
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
     herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), immune:rand(0,0.6), brainW:rand(0,0.7),
-    elong:rand(0,0.7), fin:rand(0,0.7), jaw:rand(0,0.7), hue:rand(0,360),
+    elong:rand(0,0.7), fin:rand(0,0.7), jaw:rand(0,0.7),
+    eggy:rand(0,0.7), care:rand(0,0.7), torpor:rand(0,0.7), hue:rand(0,360),
   };
   const p=makeCreature(g,x,y);
   p.br=freshBrain(0.3);p.wsum=brainSum(p.br);
@@ -1473,7 +1559,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.11.0';
+const APP_V='1.12.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1493,6 +1579,7 @@ function saveWorld(){
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
       foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt,
+      eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10})),eggNext,
       chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId}));
   }catch(e){}
 }
@@ -1530,6 +1617,8 @@ function loadWorld(){
   lastSample=simT-1;lastHud=simT-1;lastSpeciesMsgT=simT;selected=null;extinctAt=-1;
   lineages=new Map((s.lins||[]).map(([id,L])=>[id,L]));
   linNext=s.linNext||1; treeT=s.treeT||[]; treeDt=s.treeDt||2; lastTreeSample=simT;
+  eggs=(Array.isArray(s.eggs)?s.eggs:[]).map(e=>({...e,x:tx(e.x),y:ty(e.y),hatch:simT+Math.max(0.5,e.hatch||5)}));
+  eggNext=s.eggNext||1;
   chron=Array.isArray(s.chron)?s.chron:[];
   yearN=s.yearN||0; yearB0=s.yearB0||0; yearD0=s.yearD0||0;
   followLin=s.followLin||0; followName=s.followName||''; lineBestGen=s.lineBestGen||0;
@@ -1797,6 +1886,9 @@ const BADGES=[
    return bw/creatures.length>0.12&&mw/(creatures.length*30)>0.08;}},
  {id:'firstword',n:'First Word',d:'A people who speak: thirty calls a minute.',t:()=>callRate>=30&&creatures.length>=30},
  {id:'naturalist',n:'Naturalist',d:'Export the data of a living world.',t:()=>records.tools&&records.tools.export},
+ {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
+ {id:'sleepers',n:'Winter Sleepers',d:'Ten creatures in torpor at once.',t:()=>{
+   let n=0;for(const c of creatures)if(c.torpid)n++;return n>=10;}},
  {id:'shaped',n:'Shapeshifter',d:'A people whose bodies left the circle behind.',t:()=>{
    if(creatures.length<30)return false;
    let t=0;for(const c of creatures)t+=c.g.elong+c.g.fin+c.g.jaw;

@@ -94,6 +94,10 @@ Watching evolution now feels like science. The 🔭 observe panel holds a live s
 Bodies leave the circle behind. Three shape genes with honest tradeoffs, all starting near zero so evolution sculpts its own anatomy. Elongation: a streamlined ellipse with cheaper straight line travel and a mouth at the nose, but slower turning. Fins: more thrust and resistance to the currents, at higher burn. Jaws: crack bigger and better shelled prey, for a standing metabolic cost. Rendering follows the genome: eels, sailfins, and crushers are now visibly different animals, on creature cards too. A Shapeshifter badge honors the first population whose bodies truly leave the circle.
 *Field notes:* max jaws lower the size ratio needed to crack a full shell from 1.79 to 1.36; armor stays formidable but no longer absolute. The ecology absorbed all three genes without a tremor, and the genome now counts 18 genes plus 108 brain weights.
 
+### v1.12 · Lifecycles
+Three new genes, three ways to spend a life. Eggs: lay richer provisioned offspring that incubate helpless for fourteen seconds; eggs are food, so the egg thief is now a possible profession. Care: guard your nest (nobody raids while a parent stands watch within reach) and provision your hatchlings with energy transfers, paying for it with slower rebreeding. Torpor: when cold and starving, sleep; metabolism crashes and so does your ability to flee. All three start near zero. Winter, predators, and scarcity will decide who becomes a devoted mother, an egg thief, or a hibernator. Clutch and Winter Sleepers badges; the genome reaches 21 genes.
+*Field notes:* a tracked egg hatched on schedule with its provisioned energy intact, nest protection blocked raids while the parent stood watch, and torpor engaged exactly at the cold and hungry threshold. The ecology absorbed all of it at population 311.
+
 ---
 
 ## Next (each ~a session)
@@ -111,7 +115,7 @@ Bodies leave the circle behind. Three shape genes with honest tradeoffs, all sta
 
 Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world).
 
-Deeper evolution: lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
+Deeper evolution: decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
 
 ## Frontier (the "how far can this go" answer)
 
