@@ -32,6 +32,8 @@ Works on phones too: the panels fold to their headers, tap to expand.
 
 The plan (shipped versions with field notes, what's next, and the honest answer to "how far can this go") lives in [ROADMAP.md](ROADMAP.md) (rendered at [roadmap.html](roadmap.html)).
 
+Have an idea for the dish? Open an issue; the roadmap's Greenhouse section is where suggestions grow into versions.
+
 ## Field notes
 
 This project's best moments were diagnoses: creatures that orbited their food and starved amid plenty, a predator that stood touching its prey while starving because it was locked onto an uncatchable rabbit, and a dish rim that was accidentally a predator-proof carousel. The debugging stories are preserved in the roadmap: bugs are field notes.

@@ -251,7 +251,7 @@
     <div class="gl">💕 They court and breed; babies mix both parents' genes</div>
     <div class="gl">🌈 Color is family; drift too far apart and they become separate species</div>
     <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
-    <div class="gl">📣 A voice and ears; what calls mean is not programmed, it must evolve</div>
+    <div class="gl">📣 A voice and ears; 🐜 scent trails on the floor; what they mean is not programmed, it must evolve</div>
     <div class="gl">🦔 Quills hurt attackers, shells resist teeth, both cost energy</div>
     <div class="gl">🦠 They catch parasites, evolve immunity, infect each other</div>
     <div class="gh">THE WORLD</div>
@@ -412,6 +412,14 @@ let nextId=1, births=0, deaths=0, maxGen=1, simT=0;
 let sexBirths=0, cloneBirths=0;
 let dStarveYoung=0, dStarveAdult=0, dAge=0, dKill=0, dPar=0, parasiteN=0;
 let calls=[], callsPrev=[], callCount=0, callRate=0, lastCallRateT=0;
+let scent=null, scentW=0, scentH=0;
+function initScent(){scentW=Math.max(1,Math.ceil(W/24));scentH=Math.max(1,Math.ceil(H/24));scent=new Float32Array(scentW*scentH);}
+function scentAt(x,y){
+  if(!scent)return 0;
+  const cx=(x/24)|0, cy=(y/24)|0;
+  if(cx<0||cy<0||cx>=scentW||cy>=scentH)return 0;
+  return scent[cy*scentW+cx];
+}
 let paused=false, speedMult=1, tool='inspect', selected=null;
 let iceUntil=-1, shake=0, extinctAt=-1, lastSpeciesN=1, lastSpeciesMsgT=0;
 let foodRate=11;
@@ -422,11 +430,11 @@ const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const SYL=['blo','gur','mip','zor','vel','tik','osh','ree','dal','umo','kai','pex','nur','ova','glim','fen','qua','bim'];
 const nameOf=c=>{if(c.cname)return c.cname;const a=SYL[c.id%18],b=SYL[(c.id*7+3)%18];return a[0].toUpperCase()+a.slice(1)+b;};
 
-const BRAIN_N=75;
+const BRAIN_N=108;
 function freshBrain(spread){
   const b=new Array(BRAIN_N).fill(0);
   for(let i=0;i<10;i++)b[i]=gauss()*(spread||0.05);
-  for(let i=15;i<25;i++)b[i]=gauss()*(spread||0.05);
+  for(let i=18;i<28;i++)b[i]=gauss()*(spread||0.05);
   return b;
 }
 function migrateBrain(old){
@@ -436,8 +444,13 @@ function migrateBrain(old){
     for(let i=0;i<10;i++)t[12+i]=old[10+i]||0;
     old=t;
   }
+  if(old.length===48){
+    const t=new Array(75).fill(0);
+    for(let r=0;r<4;r++)for(let i=0;i<12;i++)t[r*15+i]=old[r*12+i]||0;
+    old=t;
+  }
   const b=new Array(BRAIN_N).fill(0);
-  for(let r=0;r<4;r++)for(let i=0;i<12;i++)b[r*15+i]=old[r*12+i]||0;
+  for(let r=0;r<5;r++)for(let i=0;i<15;i++)b[r*18+i]=old[r*15+i]||0;
   return b;
 }
 function brainSum(b){let t=0;for(let i=0;i<BRAIN_N;i++)t+=Math.abs(b[i]);return t;}
@@ -613,6 +626,8 @@ function step(dt){
   }
   parasiteN=0;
   callsPrev=calls; calls=[];
+  if(!scent)initScent();
+  for(let i=0;i<scent.length;i++)scent[i]*=0.9986;
   if(simT-lastCallRateT>10){callRate=callCount*6;callCount=0;lastCallRateT=simT;}
   const cGrid=buildGrid(creatures), aGrid=buildGrid(algae);
   // plants spread: each alga may sprout a neighbor, crowding permitting
@@ -751,19 +766,38 @@ function step(dt){
         hS+=Math.sin(qa)*qw;hC+=Math.cos(qa)*qw;hI+=qw;
       }
       if(hI>1)hI=1;
-      const inp=[fS,fC,fN,tS,tC,tN,c.energy/c.cap,Tc,clamp(kinN/6,0,1),1,c.m0,c.m1,hS,hC,hI];
+      const s0=scentAt(c.x,c.y);
+      const gx=scentAt(c.x+20,c.y)-scentAt(c.x-20,c.y);
+      const gy=scentAt(c.x,c.y+20)-scentAt(c.x,c.y-20);
+      let sS=0,sC=0;
+      if(Math.abs(gx)+Math.abs(gy)>0.001){
+        const ga=Math.atan2(gy,gx)-c.dir;
+        const gm=Math.min(1,Math.hypot(gx,gy)*2);
+        sS=Math.sin(ga)*gm;sC=Math.cos(ga)*gm;
+      }
+      const sI=Math.min(1,s0/1.5);
+      const inp=[fS,fC,fN,tS,tC,tN,c.energy/c.cap,Tc,clamp(kinN/6,0,1),1,c.m0,c.m1,hS,hC,hI,sI,sS,sC];
       const b=c.br;
-      let o0=0,o1=0,w0=0,w1=0,vc=0;
-      for(let i=0;i<15;i++){
+      let o0=0,o1=0,w0=0,w1=0,vc=0,vs=0;
+      for(let i=0;i<18;i++){
         o0+=inp[i]*b[i];
-        o1+=inp[i]*b[15+i];
-        w0+=inp[i]*b[30+i];
-        w1+=inp[i]*b[45+i];
-        vc+=inp[i]*b[60+i];
+        o1+=inp[i]*b[18+i];
+        w0+=inp[i]*b[36+i];
+        w1+=inp[i]*b[54+i];
+        vc+=inp[i]*b[72+i];
+        vs+=inp[i]*b[90+i];
       }
       o0=Math.tanh(o0);o1=Math.tanh(o1);
       c.m0=clamp(c.m0*0.9944+0.03*Math.tanh(w0),-1,1);
       c.m1=clamp(c.m1*0.9944+0.03*Math.tanh(w1),-1,1);
+      if(Math.tanh(vs)>0.5&&c.energy>8&&scent){
+        const scx=(c.x/24)|0, scy=(c.y/24)|0;
+        if(scx>=0&&scy>=0&&scx<scentW&&scy<scentH){
+          const si=scy*scentW+scx;
+          scent[si]=Math.min(3,scent[si]+0.06);
+          c.energy-=0.05;
+        }
+      }
       if(Math.tanh(vc)>0.5&&simT-c.lastCall>0.5&&c.energy>10&&calls.length<40){
         c.lastCall=simT;
         c.energy-=1.5;
@@ -989,6 +1023,16 @@ function render(){
   ctx.beginPath();
   for(const p of snow){ctx.moveTo(p.x,p.y);ctx.lineTo(p.x-p.vx*0.5,p.y-p.vy*0.5);}
   ctx.stroke();
+  // scent ghosts
+  if(scent){
+    for(let sy=0;sy<scentH;sy++)for(let sx=0;sx<scentW;sx++){
+      const v=scent[sy*scentW+sx];
+      if(v>0.08){
+        ctx.fillStyle='rgba(120,220,200,'+Math.min(0.09,v*0.045).toFixed(3)+')';
+        ctx.fillRect(sx*24,sy*24,24,24);
+      }
+    }
+  }
   // algae
   ctx.fillStyle='rgba(111,224,138,0.85)';
   for(const a of algae)ctx.fillRect(a.x-1.1,a.y-1.1,2.2,2.2);
@@ -1376,7 +1420,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.8.2';
+const APP_V='1.9.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1414,7 +1458,7 @@ function loadWorld(){
   for(const c of s.cs){
     for(const k in GENES)if(typeof c.g[k]!=='number')c.g[k]=GENES[k].def!==undefined?GENES[k].def:(GENES[k].min+GENES[k].max)/2;
     let br=Array.isArray(c.br)?c.br:freshBrain(0.05);
-    if(br.length===20||br.length===48)br=migrateBrain(br);
+    if(br.length===20||br.length===48||br.length===75)br=migrateBrain(br);
     if(br.length!==BRAIN_N)br=freshBrain(0.05);
     const mm=Array.isArray(c.m)?c.m:[0,0];
     creatures.push({...c,x:tx(c.x),y:ty(c.y),dead:false,lock:null,lockT:0,mateT:0,
@@ -1698,6 +1742,11 @@ const BADGES=[
    }
    return bw/creatures.length>0.12&&mw/(creatures.length*30)>0.08;}},
  {id:'firstword',n:'First Word',d:'A people who speak: thirty calls a minute.',t:()=>callRate>=30&&creatures.length>=30},
+ {id:'trailblazer',n:'Trailblazer',d:'A people who leave trails worth following.',t:()=>{
+   if(creatures.length<30||!scent)return false;
+   let tot=0;for(let i=0;i<scent.length;i++)tot+=scent[i];
+   let dw=0;for(const c of creatures)if(c.br)for(let i=90;i<108;i++)dw+=Math.abs(c.br[i]);
+   return tot>25&&dw/(creatures.length*18)>0.08;}},
  {id:'gardener',n:'Gardener',d:'Export a dish seed.',t:()=>records.tools&&records.tools.share},
  {id:'transplant',n:'Transplant Surgeon',d:'Import a foreign dish.',t:()=>records.tools&&records.tools.import},
  {id:'thinker',n:'The Thinker',d:'Average brain weight passes 0.25.',t:()=>{

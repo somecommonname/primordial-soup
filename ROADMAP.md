@@ -2,7 +2,7 @@
 
 *A small evolving universe in one HTML file. No dependencies, no scripts telling creatures what to become, just genomes, physics, and selection.*
 
-**Play:** open `index.html`, or the published artifact. **Source:** everything lives in one file, on purpose: the whole universe should stay readable in one sitting.
+**Play:** open `index.html`, or the published artifact. **Source:** everything lives in one file, on purpose: the whole universe should stay readable in one sitting. **Ideas:** open a GitHub issue; the Greenhouse below is the public garden of what might grow next.
 
 ---
 
@@ -83,6 +83,10 @@ The brain grows from a 20 weight reflex sheet into a 48 weight recurrent circuit
 Creatures gain a voice and ears, and nothing else is given. A fifth brain output emits a visible pulse that costs real energy and is rate limited; three new hearing inputs carry the direction and intensity of nearby calls. What a call means is defined nowhere in the code: meaning must evolve. If alarm calls appear, it is because kin who fled at the sound survived; if false alarms appear, it is because scattering the competition paid. The brain grows to 75 weights with all new circuitry at zero, old brains migrate losslessly, calls per minute joins the report, and a First Word badge waits for the first population that truly speaks.
 *Field notes:* the channel verified end to end: a wired speaker emitted on schedule, the calls hung in the water for their moment, and a wired listener turned toward every one. Sound made, sound heard, behavior changed. The dish now waits for its first honest word, and for its first lie. Also in v1.8.1: a Field Guide panel (❓ in the tools) teaching new players everything the dish can do in plain scannable bullets, born from David's request; it is also linked from the welcome card.
 
+### v1.9 · Pheromones
+A scent field lives on the dish floor: a coarse grid costing six kilobytes of memory, fading over about fifteen seconds. A sixth brain output deposits scent at real energy cost; three new senses smell the local intensity and the direction of the gradient. Trails render as faint teal ghosts. As with calls, meaning is scripted nowhere: whether trails become roads to food, territorial markings, or lures is evolution's decision. The brain grows to 108 weights, every migration remains lossless, and a Trailblazer badge waits for the first people who leave trails worth following.
+*Field notes:* a wired depositor painted its wandering across the floor and the field held its shape as designed. Performance stayed light on purpose, per David's rule that the dish must never be heavy: 0.6 milliseconds per simulation step at a population of 117.
+
 ---
 
 ## Next (each ~a session)
@@ -101,7 +105,7 @@ Creatures gain a voice and ears, and nothing else is given. A fifth brain output
 
 Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world).
 
-Deeper evolution: pheromone trails, morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
+Deeper evolution: morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
 
 ## Frontier (the "how far can this go" answer)
 
