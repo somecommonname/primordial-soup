@@ -78,6 +78,14 @@
   #treeCv{width:100%;height:120px;display:block}
   #treeShow{position:fixed;left:18px;bottom:16px;display:none;font-size:14px;padding:6px 9px}
   @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
+  #seedModal{left:50%;top:50%;transform:translate(-50%,-50%);width:min(480px,90vw);display:none;z-index:30}
+  #seedModal.show{display:block}
+  #seedText{width:100%;height:110px;background:rgba(5,10,20,0.85);border:1px solid var(--line);border-radius:7px;
+            color:var(--ink);font-family:var(--mono);font-size:9px;padding:8px;resize:none}
+  #seedMsg{font-size:10px;color:var(--dim);margin-top:6px;min-height:14px}
+  #welcome{left:50%;top:50%;transform:translate(-50%,-50%);width:min(410px,88vw);z-index:40;display:none}
+  #welcome.show{display:block}
+  #welcome p{font-size:11.5px;color:var(--ink);margin:10px 0;line-height:1.65}
   #ticker div{margin-top:4px;animation:tick 9s forwards}
   @keyframes tick{0%{opacity:0;transform:translateY(4px)}5%{opacity:1;transform:none}75%{opacity:1}100%{opacity:0}}
   #hint{position:fixed;bottom:16px;right:18px;font-size:9.5px;letter-spacing:0.14em;color:var(--dim);opacity:0.75}
@@ -98,6 +106,7 @@
     <div class="seg" id="speedSeg">
       <button data-sp="1" class="on">1×</button><button data-sp="2">2×</button><button data-sp="4">4×</button>
     </div>
+    <button id="btnSound" title="sound">🔊</button>
   </div>
   <div class="ptitle" style="margin-top:14px">MEDDLE · CLICK THE DISH</div>
   <div class="toolgrid" id="toolSeg">
@@ -121,6 +130,10 @@
     <input type="range" id="mutRate" min="0.005" max="0.25" step="0.005" value="0.10">
   </div>
   <button class="wide" id="btnReset">↻ new dish</button>
+  <div class="row" style="margin-top:8px">
+    <button id="btnShare" style="flex:1">⇪ share</button>
+    <button id="btnImport" style="flex:1">⇩ import</button>
+  </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
 
@@ -152,6 +165,26 @@
   <div class="meta" id="inspMeta"></div>
   <div class="ebar"><i id="inspEnergy"></i></div>
   <div id="inspGenes"></div>
+</div>
+
+<div class="panel" id="seedModal">
+  <div class="ptitle" id="seedTitle">DISH SEED</div>
+  <textarea id="seedText" spellcheck="false"></textarea>
+  <div class="row" style="margin-top:8px">
+    <button id="seedCopy" style="flex:1">copy</button>
+    <button id="seedLoad" style="flex:1">germinate</button>
+    <button id="seedClose" style="flex:1">close</button>
+  </div>
+  <div id="seedMsg"></div>
+</div>
+
+<div class="panel" id="welcome">
+  <h1 style="font-size:13px">PRIMORDIAL SOUP</h1>
+  <p>Every glowing cell carries a genome. They eat, hunt, court, breed, and mutate. Nothing is scripted; whatever survives, survives.</p>
+  <p>You play the environment: hurl meteors, seed plagues and strangers, turn the dials of sunlight and radiation.</p>
+  <p>Click any creature to meet it. Watch the tree of life branch as species split.</p>
+  <p>The dish saves itself. Leave, and evolution carries on without you.</p>
+  <button class="wide" id="welcomeGo">begin</button>
 </div>
 
 <div id="ticker"></div>
@@ -533,7 +566,7 @@ function step(dt){
           const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6));
           c.energy=Math.min(c.cap,c.energy+flesh);
           if(meal.g.spike>0.05)c.energy-=meal.g.spike*meal.g.size*14;
-          ping(meal.x,meal.y,'rgba(255,107,94,0.7)',meal.g.size*4,2,0.5);
+          ping(meal.x,meal.y,'rgba(255,107,94,0.7)',meal.g.size*4,2,0.5); sfx('kill');
           if(selected===meal)selected=null;
         }else{
           c.lock=null; c.lockT=0;
@@ -556,7 +589,7 @@ function step(dt){
         c.energy*=0.63; mate.energy*=0.63;
         c.kids++; mate.kids++; c.lastRep=c.age; mate.lastRep=mate.age;
         c.mateT=0; mate.mateT=0;
-        newborns.push(child); births++; sexBirths++;
+        newborns.push(child); births++; sexBirths++; sfx('birth');
         if(child.gen>maxGen)maxGen=child.gen;
         ping((c.x+mate.x)/2,(c.y+mate.y)/2,'rgba(255,255,255,0.55)',g.size*3,1,0.6);
       }else c.mateT+=dt;
@@ -568,7 +601,7 @@ function step(dt){
         child.lin=lineageOf(c.lin,cg.hue);
         child.energy=Math.min(c.energy*0.45,child.cap);
         c.energy*=0.45; c.kids++; c.lastRep=c.age; c.mateT=0;
-        newborns.push(child); births++; cloneBirths++;
+        newborns.push(child); births++; cloneBirths++; sfx('birth');
         if(child.gen>maxGen)maxGen=child.gen;
         ping(c.x,c.y,'hsla('+cg.hue+',80%,70%,0.5)',g.size*3,1,0.6);
       }
@@ -592,7 +625,7 @@ function step(dt){
 
   // extinction watch → spontaneous generation
   if(creatures.length===0){
-    if(extinctAt<0){extinctAt=simT; say('extinction. the dish falls silent');}
+    if(extinctAt<0){extinctAt=simT; say('extinction. the dish falls silent'); sfx('doom');}
     else if(simT-extinctAt>5){
       extinctAt=-1;
       const baseHue=rand(0,360);
@@ -887,6 +920,7 @@ function meteor(x,y){
   ping(x,y,'rgba(255,107,94,0.6)',115,1.5,1.1);
   shake=7;
   say('☄️ meteor strike: '+killed+' cells vaporised, nutrients scattered');
+  sfx('meteor');
 }
 function plague(){
   let killed=0;
@@ -901,10 +935,12 @@ function plague(){
   }
   let w=0;for(const c of creatures)if(!c.dead)creatures[w++]=c;creatures.length=w;
   say('🦠 plague sweeps the dish: '+killed+' perished (crowds suffered most)');
+  sfx('plague');
 }
 function iceAge(){
   iceUntil=simT+22;
-  say('❄️ ice age: cold waters for 22s: scarce food, sluggish cells');
+  say('❄️ ice age: cold waters for 22s, scarce food, sluggish cells');
+  sfx('ice');
 }
 function seedCreature(x,y){
   const g={
@@ -918,6 +954,7 @@ function seedCreature(x,y){
   creatures.push(p);
   ping(x,y,'hsla('+g.hue+',85%,70%,0.8)',30,1.5,0.8);
   say(g.diet>0.55?'🧬 a stranger with teeth slips into the dish':'🧬 a stranger arrives in the dish');
+  sfx('seedc');
 }
 function bloomAt(x,y){
   for(let i=0;i<90;i++){
@@ -926,6 +963,7 @@ function bloomAt(x,y){
   }
   ping(x,y,'rgba(111,224,138,0.6)',70,1.5,0.8);
   say('🌿 algae bloom seeded');
+  sfx('bloom');
 }
 
 // ---------- input ----------
@@ -1138,6 +1176,125 @@ $('treeShow').addEventListener('click',()=>{
   treeC=setupChart('treeCv');drawTree();
 });
 if(store.get('soup.tree')==='0'){treeOpen=false;$('treePanel').style.display='none';$('treeShow').style.display='block';}
+
+// ---------- sound ----------
+let audioCtx=null, soundOn=store.get('soup.sound')!=='0';
+const sfxLast={};
+function initAudio(){
+  if(!audioCtx){try{audioCtx=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}
+  if(audioCtx&&audioCtx.state==='suspended')audioCtx.resume().catch(()=>{});
+}
+window.addEventListener('pointerdown',initAudio);
+window.addEventListener('keydown',initAudio);
+function beep(freq,dur,type,vol,glide){
+  if(!soundOn||!audioCtx)return;
+  try{
+    const t=audioCtx.currentTime;
+    const o=audioCtx.createOscillator(),g=audioCtx.createGain();
+    o.type=type||'sine';o.frequency.setValueAtTime(freq,t);
+    if(glide)o.frequency.exponentialRampToValueAtTime(Math.max(20,glide),t+dur);
+    g.gain.setValueAtTime(0.0001,t);
+    g.gain.linearRampToValueAtTime(vol,t+0.012);
+    g.gain.exponentialRampToValueAtTime(0.0001,t+dur);
+    o.connect(g);g.connect(audioCtx.destination);
+    o.start(t);o.stop(t+dur+0.05);
+  }catch(e){}
+}
+function sfx(kind){
+  if(!soundOn||!audioCtx)return;
+  const now=performance.now();
+  const min=kind==='birth'?160:kind==='kill'?120:kind==='mate'?160:0;
+  if(min&&sfxLast[kind]&&now-sfxLast[kind]<min)return;
+  sfxLast[kind]=now;
+  if(kind==='birth')beep(520,0.09,'sine',0.045,660);
+  else if(kind==='mate')beep(840,0.07,'sine',0.035,980);
+  else if(kind==='kill')beep(140,0.14,'triangle',0.06,70);
+  else if(kind==='meteor')beep(220,0.5,'sawtooth',0.08,38);
+  else if(kind==='plague')beep(310,0.45,'triangle',0.055,150);
+  else if(kind==='ice'){beep(1250,0.6,'sine',0.035);beep(1257,0.6,'sine',0.035);}
+  else if(kind==='bloom')beep(660,0.12,'sine',0.045,720);
+  else if(kind==='seedc')beep(440,0.12,'square',0.028,520);
+  else if(kind==='doom')beep(180,0.8,'sine',0.055,60);
+}
+$('btnSound').textContent=soundOn?'🔊':'🔇';
+$('btnSound').addEventListener('click',()=>{
+  soundOn=!soundOn;
+  $('btnSound').textContent=soundOn?'🔊':'🔇';
+  store.set('soup.sound',soundOn?'1':'0');
+  if(soundOn){initAudio();sfx('bloom');}
+});
+
+// ---------- dish seeds: a world as a string ----------
+function b64url(u8){let t='';for(let i=0;i<u8.length;i+=0x8000)t+=String.fromCharCode.apply(null,u8.subarray(i,i+0x8000));return btoa(t).replace(/\+/g,'-').replace(/\//g,'_').replace(/=+$/,'');}
+function unb64url(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const bin=atob(t);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
+async function packSeed(){
+  saveWorld();
+  const raw=store.get(SAVE_KEY)||'';
+  try{
+    if(window.CompressionStream){
+      const buf=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer();
+      return 'D1.'+b64url(new Uint8Array(buf));
+    }
+  }catch(e){}
+  return 'P0.'+b64url(new TextEncoder().encode(raw));
+}
+async function unpackSeed(t){
+  t=t.trim();
+  const dot=t.indexOf('.');
+  if(dot<1)throw new Error('bad seed');
+  const tag=t.slice(0,dot), bytes=unb64url(t.slice(dot+1));
+  if(tag==='D1'){
+    const buf=await new Response(new Blob([bytes]).stream().pipeThrough(new DecompressionStream('deflate'))).arrayBuffer();
+    return new TextDecoder().decode(buf);
+  }
+  if(tag==='P0')return new TextDecoder().decode(bytes);
+  throw new Error('bad seed');
+}
+$('btnShare').addEventListener('click',async()=>{
+  $('seedTitle').textContent='DISH SEED · COPY AND SHARE';
+  $('seedText').value='growing seed...';
+  $('seedMsg').textContent='';
+  $('seedModal').classList.add('show');
+  const seed=await packSeed();
+  $('seedText').value=seed;
+  let msg=Math.round(seed.length/1024)+'KB · paste into import on any copy of the game';
+  try{await navigator.clipboard.writeText(seed);msg+=' · copied';}catch(e){}
+  $('seedMsg').textContent=msg;
+});
+$('btnImport').addEventListener('click',()=>{
+  $('seedTitle').textContent='GERMINATE A SEED · PASTE BELOW';
+  $('seedText').value='';
+  $('seedMsg').textContent='';
+  $('seedModal').classList.add('show');
+  $('seedText').focus();
+});
+$('seedCopy').addEventListener('click',async()=>{
+  try{await navigator.clipboard.writeText($('seedText').value);$('seedMsg').textContent='copied';}
+  catch(e){$('seedMsg').textContent='select and copy manually';}
+});
+$('seedLoad').addEventListener('click',async()=>{
+  try{
+    const raw=await unpackSeed($('seedText').value);
+    const sv=JSON.parse(raw);
+    if(!sv||sv.v!==GAME_V||!sv.cs||!sv.cs.length)throw new Error('bad');
+    sv.savedAt=Date.now();
+    store.set(SAVE_KEY,JSON.stringify(sv));
+    if(!loadWorld())throw new Error('bad');
+    catchupLeft=0;
+    $('seedModal').classList.remove('show');
+    say('a foreign dish takes hold');
+    sfx('bloom');
+  }catch(e){$('seedMsg').textContent='that seed would not germinate';}
+});
+$('seedClose').addEventListener('click',()=>$('seedModal').classList.remove('show'));
+
+// ---------- first visit ----------
+if(!store.get('soup.seen'))$('welcome').classList.add('show');
+$('welcomeGo').addEventListener('click',()=>{
+  $('welcome').classList.remove('show');
+  store.set('soup.seen','1');
+  initAudio();
+});
 
 // ---------- main loop ----------
 let lastT=performance.now(),acc=0;

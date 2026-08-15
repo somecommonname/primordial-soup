@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file.**
+**A small evolving universe in one HTML file. Now v1.0.**
 
 Creatures with real genomes (size, speed, vision, diet, fear, fertility, herding, spikes, shell, and a color gene that marks their lineage) swim in a petri dish where they eat, hunt, court, breed with genetic crossover, and speciate. Nothing is scripted: predators, herds, jackal-omnivores, and couch-potato grazers all *evolved* in testing rather than being programmed. You play the environment: meteors, plagues, ice ages, radiation, sunlight, rocks, and currents.
 
@@ -18,6 +18,8 @@ Running locally works too: open `index.html`. No dependencies, no build step.
 - **☀️ sunlight / ☢️ radiation**: the slow dials of climate and mutation
 - Watch the **DISH REPORT**: population waves, species count, sexual vs. cloned births, and live trait drift
 - Watch the **TREE OF LIFE**: a live phylogeny streamgraph where branches split as lineages diverge and fade as they go extinct
+- **⇪ share / ⇩ import**: copy your world as a seed string and trade dishes with friends
+- **🔊 sound**: the dish has a quiet voice; mute it in the top row
 
 ## Roadmap
 

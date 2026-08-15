@@ -49,17 +49,19 @@ A live phylogeny panel: every creature carries a lineage id, children inherit it
 Two builds in one. Armor and weapons: spike and shell genes with honest costs. Shells raise the size advantage a predator needs to crack you but slow you 28% and cost metabolism; quills wound attackers on contact, sometimes fatally. Predators account for shells when choosing targets. Plants that spread: algae now reproduce locally with logistic crowding instead of raining from the sky, leaving only a thin spore drizzle that strengthens over bare ground so deserts can recover. Corpses and meteor debris act as seeds, and the sunlight dial now scales growth.
 *Field notes:* under seeded predation (157 kills), prey spikes nearly doubled and speed rose 22% in four minutes while shells rose only modestly. In a patchy-food world, defense that slows travel is too expensive, so evolution bought quills. Nobody designed that preference. The plant economy settled into a churn equilibrium where most deaths are adult starvation between patches: honest spatial ecology, fat patch-dwellers and dying travelers.
 
+### v1.0 · A finished game
+Dish seeds: export any world as a compact compressed seed string and import someone else's; trade ecosystems, replay famous dishes, watch alien life take hold in your own dish. Sound: a quiet Web Audio voice for the dish (births blip, kills thud, meteors rumble, ice shimmers) with a mute toggle and a limiter so busy dishes stay gentle. A first-visit welcome card explains the game in four lines. Together with the tree of life, persistent worlds, and the living plant ecology, this closes the v1.0 milestone: a polished toy a stranger can enjoy with no explanation.
+*Field notes:* a seed is the save format itself, so sharing a dish shares its whole fossil record: terrain, genomes, and family tree arrive intact.
+
 ---
 
 ## Next (each ~a session)
 
-- **Dish seeds**: save/load/share a world as a seed string; trade ecosystems, replay famous dishes.
-- **Sound**: Web Audio bloops keyed to births, kills, courtship; the dish should be listenable.
+- **Temperature zones + seasons**: warm shallows, cold deeps; metabolism scaled by local temperature → migration pressure, seasonal booms.
+- **Geographic speciation watch**: with rocks/currents partitioning the dish, test whether isolated pockets diverge past the 40° mate barrier in place.
 
 ## Later
 
-- **Temperature zones + seasons**: warm shallows, cold deeps; metabolism scaled by local temperature → migration pressure, seasonal booms.
-- **Geographic speciation watch**: with rocks/currents partitioning the dish, test whether isolated pockets diverge past the 40° mate barrier *in situ* (the machinery exists; terrain may already make it happen).
 - **Evolving parasites**: a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
 - **Sensory honesty**: line-of-sight blocked by rocks; ambush predation becomes real.
 - **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
