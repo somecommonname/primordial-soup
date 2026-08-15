@@ -111,6 +111,8 @@
   .gh{font-size:9px;letter-spacing:0.22em;color:var(--cyan);margin:12px 0 5px}
   .gl{font-size:11px;color:var(--ink);padding:2px 0;line-height:1.5}
   #scenModal{left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,88vw);display:none;z-index:36}
+  #seedInput{width:100%;margin-top:8px;background:rgba(5,10,20,0.85);border:1px solid var(--line);
+             border-radius:7px;color:var(--ink);font-family:var(--mono);font-size:10px;padding:7px 9px}
   #scenModal.show{display:block}
   #chronPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,92vw);display:none;z-index:35;
               max-height:80vh;overflow-y:auto}
@@ -304,6 +306,7 @@
 
 <div class="panel" id="scenModal">
   <div class="ptitle">CHOOSE A WORLD</div>
+  <input id="seedInput" placeholder="seed (optional, share to replay a start)" spellcheck="false">
   <div class="toolgrid" style="margin-top:8px">
     <button data-scen="classic">🌍 classic</button>
     <button data-scen="ice">❄ ice world</button>
@@ -353,9 +356,16 @@
 'use strict';
 // ---------- utilities ----------
 const TAU = Math.PI*2;
-const rand=(a,b)=>a+Math.random()*(b-a);
+let rngS=0;
+function rnd(){
+  rngS=rngS+0x6D2B79F5|0;
+  let t=Math.imul(rngS^rngS>>>15,1|rngS);
+  t=t+Math.imul(t^t>>>7,61|t)^t;
+  return ((t^t>>>14)>>>0)/4294967296;
+}
+const rand=(a,b)=>a+rnd()*(b-a);
 const clamp=(v,a,b)=>v<a?a:v>b?b:v;
-function gauss(){let u=0,v=0;while(!u)u=Math.random();while(!v)v=Math.random();
+function gauss(){let u=0,v=0;while(!u)u=rnd();while(!v)v=rnd();
   return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v);}
 const lerp=(a,b,t)=>a+(b-a)*t;
 const hueDist=(a,b)=>{const d=Math.abs(a-b)%360;return d>180?360-d:d;};
@@ -500,7 +510,7 @@ function mutateBrain(b){
 }
 function crossBrain(a,b){
   const c=new Array(BRAIN_N);
-  for(let i=0;i<BRAIN_N;i++)c[i]=Math.random()<0.5?a[i]:b[i];
+  for(let i=0;i<BRAIN_N;i++)c[i]=rnd()<0.5?a[i]:b[i];
   return c;
 }
 function makeCreature(g,x,y,energy,gen){
@@ -512,7 +522,7 @@ function makeCreature(g,x,y,energy,gen){
           br:freshBrain(0.05), wsum:0, thrustMod:1, m0:0, m1:0, lastCall:0};
 }
 function randInDish(f=1){
-  const a=rand(0,TAU), r=Math.sqrt(Math.random())*R*f;
+  const a=rand(0,TAU), r=Math.sqrt(rnd())*R*f;
   return [CX+Math.cos(a)*r, CY+Math.sin(a)*r];
 }
 function spawnAlgae(x,y){
@@ -522,25 +532,25 @@ function spawnAlgae(x,y){
 }
 function genTerrain(){
   rocks.length=0; jets.length=0;
-  const nR=5+((Math.random()*4)|0);
+  const nR=5+((rnd()*4)|0);
   for(let i=0;i<nR;i++){
     for(let t=0;t<24;t++){
-      const r=rand(24,62), a=rand(0,TAU), d=Math.sqrt(Math.random())*(R-r-48);
+      const r=rand(24,62), a=rand(0,TAU), d=Math.sqrt(rnd())*(R-r-48);
       const x=CX+Math.cos(a)*d, y=CY+Math.sin(a)*d;
       let ok=true;
       for(const o of rocks){if(Math.hypot(o.x-x,o.y-y)<o.r+r+28){ok=false;break;}}
       if(ok){
         const spk=[];
-        for(let s=0;s<r/4;s++){const sa=rand(0,TAU),sd=Math.sqrt(Math.random())*r*0.8;
+        for(let s=0;s<r/4;s++){const sa=rand(0,TAU),sd=Math.sqrt(rnd())*r*0.8;
           spk.push([Math.cos(sa)*sd,Math.sin(sa)*sd]);}
         rocks.push({x,y,r,spk});break;
       }
     }
   }
   tempAng=rand(0,TAU);
-  const nJ=2+((Math.random()*2)|0);
+  const nJ=2+((rnd()*2)|0);
   for(let i=0;i<nJ;i++)jets.push({ang:rand(0,TAU), off:rand(-R*0.5,R*0.5), width:rand(70,120),
-    strength:rand(14,26)*(Math.random()<0.5?-1:1), drift:rand(-0.003,0.003)});
+    strength:rand(14,26)*(rnd()<0.5?-1:1), drift:rand(-0.003,0.003)});
 }
 function losClear(x1,y1,x2,y2){
   for(const rk of rocks){
@@ -565,8 +575,10 @@ function rockPush(o,s){
 }
 function ping(x,y,color,r1=26,width=1.5,dur=0.6){ events.push({x,y,t0:simT,dur,r0:2,r1,color,width}); }
 
-function initWorld(scn){
+function initWorld(scn,seed){
   if(scn)scenario=scn;
+  dishSeed=(seed!=null?seed:((Math.random()*4294967296)>>>0))>>>0;
+  rngS=dishSeed|0;
   dishId=makeCallsign();
   creatures.length=0; algae.length=0; events.length=0;
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
@@ -587,7 +599,7 @@ function initWorld(scn){
   for(let i=0;i<algN;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   if(scenario==='eden'){foodRate=1.5;foodEl.value=1.5;syncDials();}
   if(scenario==='plague'){
-    for(let i=0;i<6;i++){const h=creatures[(Math.random()*creatures.length)|0];if(h)h.par={vir:0.3+rand(0,0.2)};}
+    for(let i=0;i<6;i++){const h=creatures[(rnd()*creatures.length)|0];if(h)h.par={vir:0.3+rand(0,0.2)};}
   }
   const scLabel={classic:'',ice:' · endless winter',eden:' · a gentle world',plague:' · the sickness is endemic'}[scenario]||'';
   say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells'+scLabel);
@@ -616,10 +628,10 @@ function queryGrid(grid,x,y,r,out){
 }
 
 // ---------- climate: a warm end, a cold end, and a slow year ----------
-let tempAng=0, season=0, scenario='classic', dishId='';
+let tempAng=0, season=0, scenario='classic', dishId='', dishSeed=0;
 const CALLCHARS='ABCDEFGHJKMNPQRSTVWXYZ23456789';
 function makeCallsign(){
-  const pick=n=>{let t='';for(let i=0;i<n;i++)t+=CALLCHARS[(Math.random()*CALLCHARS.length)|0];return t;};
+  const pick=n=>{let t='';for(let i=0;i<n;i++)t+=CALLCHARS[(rnd()*CALLCHARS.length)|0];return t;};
   return 'SOUP-'+pick(4)+'-'+pick(2);
 }
 const SEASON_PERIOD=240;
@@ -651,7 +663,7 @@ function step(dt){
   // food spawn
   // spore rain: a thin drizzle, stronger over bare ground so deserts can recover
   const rain=(3.0+3.0*clamp(1-algae.length/500,0,1))*(ice?0.3:1)*(0.75+0.25*(season+1));
-  let n=rain*dt; if(Math.random()<n%1)n++;
+  let n=rain*dt; if(rnd()<n%1)n++;
   for(let i=0;i<(n|0);i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   // algae drift with the currents, deflecting around rocks
   for(const a of algae){ flow(a.x,a.y,simT,_fl); a.x+=_fl[0]*dt; a.y+=_fl[1]*dt; rockPush(a,2); }
@@ -662,8 +674,8 @@ function step(dt){
     if(p.x<0)p.x+=W; if(p.x>W)p.x-=W; if(p.y<0)p.y+=H; if(p.y>H)p.y-=H;
   }
 
-  if(parasiteN===0&&creatures.length>40&&Math.random()<(scenario==='plague'?0.12:0.008)*dt){
-    const h=creatures[(Math.random()*creatures.length)|0];
+  if(parasiteN===0&&creatures.length>40&&rnd()<(scenario==='plague'?0.12:0.008)*dt){
+    const h=creatures[(rnd()*creatures.length)|0];
     if(h&&!h.dead){h.par={vir:0.3+rand(0,0.2)};say('🦠 a parasite finds its first host');logChron('🦠 A parasite found its first host');}
   }
   parasiteN=0;symbioN=0;
@@ -696,16 +708,16 @@ function step(dt){
   // plants spread: each alga may sprout a neighbor, crowding permitting
   if(algae.length&&algae.length<ALGAE_CAP){
     const G=0.34*foodRate*(ice?0.15:1);
-    let att=algae.length*G*dt; if(Math.random()<att%1)att++;
+    let att=algae.length*G*dt; if(rnd()<att%1)att++;
     for(let i=0;i<(att|0);i++){
-      const p=algae[(Math.random()*algae.length)|0];
+      const p=algae[(rnd()*algae.length)|0];
       if(p.eaten)continue;
       const x=p.x+gauss()*20,y=p.y+gauss()*20;
       if((x-CX)**2+(y-CY)**2>=(R-4)**2)continue;
       queryGrid(aGrid,x,y,18,_n1);
       let near=0;
       for(const o of _n1){if(!o.eaten&&(o.x-x)**2+(o.y-y)**2<324)near++;}
-      if(near<5&&Math.random()<clamp(0.2+1.6*tempAt(x,y),0,1))spawnAlgae(x,y);
+      if(near<5&&rnd()<clamp(0.2+1.6*tempAt(x,y),0,1))spawnAlgae(x,y);
     }
   }
   newborns.length=0;
@@ -757,7 +769,7 @@ function step(dt){
         if(sc>mateScore){mateScore=sc;mateD2=d2;mate=o;}
       }
       if(kin && g.herd>0.15 && d2<herdR2){kinN++;kinX+=o.x;kinY+=o.y;kinCos+=Math.cos(o.dir);kinSin+=Math.sin(o.dir);}
-      if(c.par&&!o.par&&d2<(g.size+o.g.size+6)**2&&Math.random()<c.par.vir*0.12*dt&&Math.random()>o.g.immune*0.7){
+      if(c.par&&!o.par&&d2<(g.size+o.g.size+6)**2&&rnd()<c.par.vir*0.12*dt&&rnd()>o.g.immune*0.7){
         o.par={vir:clamp(c.par.vir+gauss()*0.08,0.05,1)};
       }
       if(o.g.size>g.size*1.15 && o.g.diet>0.4 && d2<fleeRange*fleeRange && d2<thrD2){thrD2=d2;threat=o;}
@@ -926,7 +938,7 @@ function step(dt){
       const harmful=c.par.vir>=0.12;
       if(harmful){parasiteN++;c.energy-=(2+9*c.par.vir)*dt;}
       else{symbioN++;c.energy-=0.5*dt;}
-      if(Math.random()<(harmful?(0.01+0.12*g.immune):0.002)*dt)c.par=null;
+      if(rnd()<(harmful?(0.01+0.12*g.immune):0.002)*dt)c.par=null;
     }
     // eat algae (graze everything within reach of the mouth)
     const noseX=c.x+Math.cos(c.dir)*g.size*g.elong*0.6;
@@ -985,7 +997,7 @@ function step(dt){
           const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6))*((c.par&&c.par.vir<0.12)?1.06:1);
           c.energy=Math.min(c.cap,c.energy+flesh);
           if(meal.g.spike>0.05)c.energy-=meal.g.spike*meal.g.size*14;
-          if(meal.par&&!c.par&&Math.random()<0.75*(1-g.immune*0.7))c.par={vir:clamp(meal.par.vir+gauss()*0.08,0.05,1)};
+          if(meal.par&&!c.par&&rnd()<0.75*(1-g.immune*0.7))c.par={vir:clamp(meal.par.vir+gauss()*0.08,0.05,1)};
           ping(meal.x,meal.y,'rgba(255,107,94,0.7)',meal.g.size*4,2,0.5); sfx('kill');
           if(selected===meal)selected=null;
         }else{
@@ -1000,11 +1012,11 @@ function step(dt){
       const mr=(g.size+mate.g.size)*0.9;
       if(mateD2<mr*mr){
         const cg={};
-        for(const k in GENES)cg[k]=Math.random()<0.5?g[k]:mate.g[k];
-        cg.hue=Math.random()<0.5?g.hue:mate.g.hue;
+        for(const k in GENES)cg[k]=rnd()<0.5?g[k]:mate.g[k];
+        cg.hue=rnd()<0.5?g.hue:mate.g.hue;
         const mg=mutate(cg);
         const invested=(c.energy+mate.energy)*0.34;
-        const asEgg=Math.random()<(g.eggy+mate.g.eggy)/2;
+        const asEgg=rnd()<(g.eggy+mate.g.eggy)/2;
         const childLin=lineageOf(c.lin,mg.hue);
         const childBr=mutateBrain(crossBrain(c.br||freshBrain(0.05),mate.br||freshBrain(0.05)));
         c.energy*=0.63; mate.energy*=0.63;
@@ -1270,6 +1282,20 @@ function render(){
     }
   }
   ctx.globalAlpha=1;
+  // armed tool reticle: see what you are about to do
+  if(tool!=='inspect'&&mX>=0&&(mX-CX)**2+(mY-CY)**2<R*R){
+    const RT={meteor:['rgba(255,120,90,0.8)',115],elixir:['rgba(255,215,130,0.8)',110],
+      bloom:['rgba(111,224,138,0.8)',55],seed:['rgba(190,140,255,0.8)',20],rock:['rgba(170,195,230,0.8)',32]}[tool];
+    if(RT){
+      ctx.strokeStyle=RT[0];
+      ctx.lineWidth=1.4;
+      ctx.setLineDash([6,6]);
+      ctx.lineDashOffset=-simT*30;
+      ctx.beginPath();ctx.arc(mX,mY,RT[1],0,TAU);ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath();ctx.moveTo(mX-7,mY);ctx.lineTo(mX+7,mY);ctx.moveTo(mX,mY-7);ctx.lineTo(mX,mY+7);ctx.stroke();
+    }
+  }
   // event rings
   for(let i=events.length-1;i>=0;i--){
     const e=events[i],t=(simT-e.t0)/e.dur;
@@ -1449,7 +1475,7 @@ function plague(){
   for(const c of creatures){
     queryGrid(grid,c.x,c.y,60,near);
     const density=clamp((near.length-1)/8,0,1);
-    if(Math.random()<0.4+0.35*density){c.dead=true;killed++;deaths++;
+    if(rnd()<0.4+0.35*density){c.dead=true;killed++;deaths++;
       spawnAlgae(c.x+gauss()*6,c.y+gauss()*6);spawnAlgae(c.x+gauss()*6,c.y+gauss()*6);
       ping(c.x,c.y,'rgba(180,140,255,0.4)',c.g.size*3,1,0.7);
       if(selected===c)selected=null;}
@@ -1470,7 +1496,7 @@ function iceAge(){
 function seedCreature(x,y){
   const g={
     size:rand(3.5,13), speed:rand(15,125), sense:rand(30,200),
-    diet:Math.random()<0.5?rand(0,0.3):rand(0.3,1),
+    diet:rnd()<0.5?rand(0,0.3):rand(0.3,1),
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
     herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), immune:rand(0,0.6), brainW:rand(0,0.7),
     elong:rand(0,0.7), fin:rand(0,0.7), jaw:rand(0,0.7),
@@ -1500,7 +1526,7 @@ function rockAt(x,y){
   const r=rand(24,40);
   if((x-CX)**2+(y-CY)**2>(R-r-30)**2){say('🪨 too close to the rim');return;}
   const spk=[];
-  for(let i=0;i<r/4;i++){const a=rand(0,TAU),d=Math.sqrt(Math.random())*r*0.8;
+  for(let i=0;i<r/4;i++){const a=rand(0,TAU),d=Math.sqrt(rnd())*r*0.8;
     spk.push([Math.cos(a)*d,Math.sin(a)*d]);}
   rocks.push({x,y,r,spk});
   for(const c of creatures)rockPush(c,c.g.size);
@@ -1539,6 +1565,9 @@ function bloomAt(x,y){
 }
 
 // ---------- input ----------
+let mX=-1,mY=-1;
+cv.addEventListener('pointermove',e=>{mX=e.clientX;mY=e.clientY;});
+cv.addEventListener('pointerleave',()=>{mX=-1;mY=-1;});
 cv.addEventListener('click',e=>{
   if(modalJustClosed){modalJustClosed=false;return;}
   const x=e.clientX,y=e.clientY;
@@ -1575,10 +1604,19 @@ $('btnReset').addEventListener('click',()=>{
   else{resetArm=n;$('btnReset').textContent='⚠ erase this world?';
     setTimeout(()=>{if(performance.now()-resetArm>=2900){$('btnReset').textContent='↻ new dish';resetArm=0;}},3100);}
 });
+function parseSeed(t){
+  t=(t||'').trim();
+  if(!t)return null;
+  if(/^\d+$/.test(t))return parseInt(t,10)>>>0;
+  let h=5381;
+  for(let i=0;i<t.length;i++)h=((h<<5)+h+t.charCodeAt(i))|0;
+  return h>>>0;
+}
 document.querySelectorAll('[data-scen]').forEach(b=>b.addEventListener('click',()=>{
   $('scenModal').classList.remove('show');
   store.del(SAVE_KEY);catchupLeft=0;
-  initWorld(b.dataset.scen);
+  initWorld(b.dataset.scen,parseSeed($('seedInput').value));
+  $('seedInput').value='';
 }));
 $('scenCancel').addEventListener('click',()=>$('scenModal').classList.remove('show'));
 $('inspClose').addEventListener('click',()=>{selected=null;updateInspector();});
@@ -1593,7 +1631,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.13.0';
+const APP_V='1.14.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1615,7 +1653,7 @@ function saveWorld(){
       lins:[...lineages.entries()],linNext,treeT,treeDt,
       eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10})),eggNext,
       fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
-      chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId}));
+      chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS}));
   }catch(e){}
 }
 function loadWorld(){
@@ -1659,6 +1697,7 @@ function loadWorld(){
   yearN=s.yearN||0; yearB0=s.yearB0||0; yearD0=s.yearD0||0;
   followLin=s.followLin||0; followName=s.followName||''; lineBestGen=s.lineBestGen||0;
   scenario=s.scenario||'classic'; dishId=s.dishId||makeCallsign();
+  dishSeed=s.dishSeed>>>0||0; if(typeof s.rngS==='number')rngS=s.rngS|0;
   lineWasAlive=followLin?true:false;
   initSnow();
   const away=(Date.now()-s.savedAt)/1000;
@@ -2246,7 +2285,7 @@ function renderObs(){
   }
   let html='<div class="gh">VITAL SIGNS</div>'+
     '<div class="gl">population '+creatures.length+' · algae '+algae.length+' · avg energy '+Math.round(100*avgE/n)+'% · sick '+sick+
-    ' · sexual births '+sexPct+'% · calls '+callRate+'/m · symbionts '+symbioN+' · fungi '+fungi.length+' · year '+Math.floor(simT/SEASON_PERIOD)+'</div>';
+    ' · sexual births '+sexPct+'% · calls '+callRate+'/m · symbionts '+symbioN+' · fungi '+fungi.length+' · year '+Math.floor(simT/SEASON_PERIOD)+' · seed '+dishSeed+'</div>';
   html+='<div class="gh">SPECIES ('+sp.length+')</div><table class="obsT"><tr><th></th><th>pop</th><th>size</th><th>speed</th><th>diet</th><th>brain</th></tr>';
   for(const g of sp){
     html+='<tr><td><span class="sw" style="background:hsl('+g.hue+',70%,60%)"></span></td><td>'+g.n+'</td><td>'+g.size.toFixed(1)+'</td><td>'+Math.round(g.speed)+'</td><td>'+(g.diet<0.25?'herb':g.diet<0.55?'omni':'carn')+'</td><td>'+g.brain.toFixed(2)+'</td></tr>';

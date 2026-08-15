@@ -102,6 +102,9 @@ Three new genes, three ways to spend a life. Eggs: lay richer provisioned offspr
 The third kingdom rises, and the plague learns mercy. Death now feeds fungi: corpses sprout violet decomposers that either become rich scavenger food for anyone willing, herbivore and hunter alike, or mature and burst into fresh algae, closing the loop from death back to life. Kill zones become feeding grounds; plagues and meteors leave mourning blooms. And symbiosis: a parasite whose virulence mutates below 0.12 crosses into mutualism, nearly free to carry, granting a digestion bonus, and occupying the niche so harmful strains cannot infect its host; premunition emerges for free from the one parasite per host rule. Evolution can now walk a plague all the way down into a partnership. Mycelium and Communion badges; 29 in the gallery.
 *Field notes:* death sprouted fungus, mature fungus burst into plants, and symbionts were counted and carried, all verified while a natural epidemic raged through the test dish, because the world no longer pauses for science. This closes the science ladder that began with the first evolvable brain.
 
+### v1.14 · Destiny seeds
+Every roll of fate now flows through one seeded generator, so a dish is perfectly reproducible: the new dish picker accepts an optional seed (a number, or any phrase, hashed), and the same seed builds the same world down to every rock, founder genome, and brain weight, with the same callsign. Verified beyond the requirement: two runs of the same seed matched even after ten simulated seconds of evolution. This is the foundation the social tier stands on: a daily dish where the whole world shares one morning seed, and dish versus dish. Also: armed tools now show a live reticle at the cursor with their true blast radius in their own color, so meteor and elixir can never be confused again.
+
 ---
 
 ## Next (each ~a session)
@@ -117,7 +120,7 @@ The third kingdom rises, and the plague learns mercy. Death now feeds fungi: cor
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
 
-Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world).
+Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world). Amber: a cosmetic prestige idea from David, rewards for dish longevity such as patinas, honorifics, and postcard flourishes, deliberately without blockchain or money; to be designed in the leaderboard phase.
 
 Deeper evolution: and proto-culture: behavior spreading without genes once memory and signals exist.
 
