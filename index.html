@@ -92,6 +92,12 @@
   #treeCv{width:100%;height:120px;display:block}
   #treeShow{position:fixed;left:18px;bottom:16px;display:none;font-size:14px;padding:6px 9px}
   @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
+  #guidePanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);display:none;z-index:37;
+              max-height:84vh;overflow-y:auto}
+  #guidePanel.show{display:block}
+  #guidePanel .close{position:absolute;right:8px;top:8px;border:none;background:none;color:var(--dim)}
+  .gh{font-size:9px;letter-spacing:0.22em;color:var(--cyan);margin:12px 0 5px}
+  .gl{font-size:11px;color:var(--ink);padding:2px 0;line-height:1.5}
   #scenModal{left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,88vw);display:none;z-index:36}
   #scenModal.show{display:block}
   #chronPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,92vw);display:none;z-index:35;
@@ -189,6 +195,7 @@
   <div class="row" style="margin-top:8px">
     <button id="btnChron" style="flex:1">📜 chronicle</button>
     <button id="btnPost" style="flex:1">📷 postcard</button>
+    <button id="btnGuide" style="flex:1">❓ guide</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -232,6 +239,41 @@
   <div id="inspGenes"></div>
 </div>
 
+<div class="panel" id="guidePanel">
+  <button class="close" id="guideClose">✕</button>
+  <div class="ptitle">FIELD GUIDE</div>
+  <div id="guideBody">
+    <div class="gh">THE CREATURES</div>
+    <div class="gl">🧬 15 genes each: size, speed, vision, diet, fear, fertility, herding, spikes, shell, comfort, immunity, brain</div>
+    <div class="gl">💕 They court and breed; babies mix both parents' genes</div>
+    <div class="gl">🌈 Color is family; drift too far apart and they become separate species</div>
+    <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
+    <div class="gl">📣 A voice and ears; what calls mean is not programmed, it must evolve</div>
+    <div class="gl">🦔 Quills hurt attackers, shells resist teeth, both cost energy</div>
+    <div class="gl">🦠 They catch parasites, evolve immunity, infect each other</div>
+    <div class="gh">THE WORLD</div>
+    <div class="gl">🌿 Plants grow and spread themselves in patches</div>
+    <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
+    <div class="gl">🌊 Currents sweep the small; the big resist</div>
+    <div class="gl">🌡 A warm end, a cold end, a four minute year with seasons</div>
+    <div class="gl">🌍 Four worlds: Classic, Ice World, Eden, Plaguelands</div>
+    <div class="gh">YOU</div>
+    <div class="gl">🔍 Inspect any creature; ✎ name it; ☆ follow its bloodline forever</div>
+    <div class="gl">🌿 bloom, 🧬 seed strangers, 🧪 elixir heals and cures</div>
+    <div class="gl">☄️ meteor, 🦠 plague, ❄️ ice age</div>
+    <div class="gl">🪨 Sculpt terrain by hand; ☀️ and ☢️ turn the dials of fate</div>
+    <div class="gh">IT REMEMBERS</div>
+    <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
+    <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
+    <div class="gl">🏆 Records and 22 badges survive every world; 🆔 every dish has a callsign</div>
+    <div class="gh">SHARING</div>
+    <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
+    <div class="gl">📷 Postcards and 🎴 creature cards, straight to your share sheet</div>
+    <div class="gh">EVOLVED ON ITS OWN, NOBODY PROGRAMMED THESE</div>
+    <div class="gl">Couch potatoes, jackals, quills over armor, cold-adapted peoples, brains that tripled under predation then shrank in peacetime</div>
+  </div>
+</div>
+
 <div class="panel" id="scenModal">
   <div class="ptitle">CHOOSE A WORLD</div>
   <div class="toolgrid" style="margin-top:8px">
@@ -272,6 +314,7 @@
   <p>You play the environment: hurl meteors, seed plagues and strangers, turn the dials of sunlight and radiation.</p>
   <p>Click any creature to meet it. Watch the tree of life branch as species split.</p>
   <p>The dish saves itself. Leave, and evolution carries on without you.</p>
+  <button class="wide" id="welcomeGuide" style="margin-top:6px">📖 what can this dish do?</button>
   <button class="wide" id="welcomeGo">begin</button>
 </div>
 
@@ -1330,7 +1373,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.8.0';
+const APP_V='1.8.1';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1574,6 +1617,9 @@ function updateLine(){
 }
 $('btnChron').addEventListener('click',()=>{renderChron();$('chronPanel').classList.add('show');});
 $('chronClose').addEventListener('click',()=>$('chronPanel').classList.remove('show'));
+$('btnGuide').addEventListener('click',()=>$('guidePanel').classList.add('show'));
+$('guideClose').addEventListener('click',()=>$('guidePanel').classList.remove('show'));
+$('welcomeGuide').addEventListener('click',()=>$('guidePanel').classList.add('show'));
 $('inspRename').addEventListener('click',()=>{
   if(!selected||selected.dead)return;
   const n=prompt('name this creature',nameOf(selected));

@@ -81,7 +81,7 @@ The brain grows from a 20 weight reflex sheet into a 48 weight recurrent circuit
 
 ### v1.8 · Signals
 Creatures gain a voice and ears, and nothing else is given. A fifth brain output emits a visible pulse that costs real energy and is rate limited; three new hearing inputs carry the direction and intensity of nearby calls. What a call means is defined nowhere in the code: meaning must evolve. If alarm calls appear, it is because kin who fled at the sound survived; if false alarms appear, it is because scattering the competition paid. The brain grows to 75 weights with all new circuitry at zero, old brains migrate losslessly, calls per minute joins the report, and a First Word badge waits for the first population that truly speaks.
-*Field notes:* the channel verified end to end: a wired speaker emitted on schedule, the calls hung in the water for their moment, and a wired listener turned toward every one. Sound made, sound heard, behavior changed. The dish now waits for its first honest word, and for its first lie.
+*Field notes:* the channel verified end to end: a wired speaker emitted on schedule, the calls hung in the water for their moment, and a wired listener turned toward every one. Sound made, sound heard, behavior changed. The dish now waits for its first honest word, and for its first lie. Also in v1.8.1: a Field Guide panel (❓ in the tools) teaching new players everything the dish can do in plain scannable bullets, born from David's request; it is also linked from the welcome card.
 
 ---
 
