@@ -87,11 +87,13 @@ Creatures gain a voice and ears, and nothing else is given. A fifth brain output
 A scent field lives on the dish floor: a coarse grid costing six kilobytes of memory, fading over about fifteen seconds. A sixth brain output deposits scent at real energy cost; three new senses smell the local intensity and the direction of the gradient. Trails render as faint teal ghosts. As with calls, meaning is scripted nowhere: whether trails become roads to food, territorial markings, or lures is evolution's decision. The brain grows to 108 weights, every migration remains lossless, and a Trailblazer badge waits for the first people who leave trails worth following.
 *Field notes:* a wired depositor painted its wandering across the floor and the field held its shape as designed. Performance stayed light on purpose, per David's rule that the dish must never be heavy: 0.6 milliseconds per simulation step at a population of 117.
 
+### v1.10 · The Observatory
+Watching evolution now feels like science. The 🔭 observe panel holds a live species census (color, population, average size, speed, diet, and brain per species), dish vital signs, and the record holders (fastest, largest, eldest, brainiest), each one tap from visiting the creature itself. The tree of life answers questions now: hover or tap any band to identify the lineage, its current and peak population, its birth year, and whether it has ended. And the whole world exports as clean JSON: dish identity, records, badges, species statistics, full trait histories, and the entire Chronicle, ready for anyone's graphs. A Naturalist badge for the first export.
+
 ---
 
 ## Next (each ~a session)
 
-- **The Observatory**: deeper data views; per species stat tables, trait histories, tree tooltips, exportable dish data. Watching evolution should feel like science.
 - **Performance floor (WebGL)**: renderer rewrite, 1k to 10k creatures; a dedicated session.
 - **Leaderboard + callsign design session**: dish identities, per dish scores, the social layer; designed together with David before any backend exists.
 

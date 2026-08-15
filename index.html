@@ -92,6 +92,18 @@
   #treeCv{width:100%;height:120px;display:block}
   #treeShow{position:fixed;left:18px;bottom:16px;display:none;font-size:14px;padding:6px 9px}
   @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
+  #obsPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);display:none;z-index:37;
+            max-height:84vh;overflow-y:auto}
+  #obsPanel.show{display:block}
+  #obsPanel .close{position:absolute;right:8px;top:8px;border:none;background:none;color:var(--dim)}
+  .obsT{width:100%;border-collapse:collapse;font-size:10.5px;margin:6px 0 12px}
+  .obsT th{color:var(--dim);text-align:left;font-weight:400;letter-spacing:0.08em;font-size:9px;padding:3px 6px}
+  .obsT td{padding:4px 6px;border-top:1px solid rgba(99,140,190,0.1);color:var(--ink)}
+  .obsT tr.click{cursor:pointer}
+  .obsT tr.click:hover td{color:var(--cyan)}
+  .sw{display:inline-block;width:10px;height:10px;border-radius:5px;vertical-align:-1px}
+  #treeTip{position:fixed;display:none;z-index:50;background:rgba(8,14,26,0.95);border:1px solid var(--line);
+           border-radius:7px;padding:6px 9px;font-size:10px;color:var(--ink);pointer-events:none;font-family:var(--mono)}
   #guidePanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);display:none;z-index:37;
               max-height:84vh;overflow-y:auto}
   #guidePanel.show{display:block}
@@ -198,6 +210,9 @@
   </div>
   <div class="row" style="margin-top:8px">
     <button id="btnPost" style="flex:1">📷 postcard</button>
+    <button id="btnObs" style="flex:1">🔭 observe</button>
+  </div>
+  <div class="row" style="margin-top:8px">
     <button id="btnGuide" style="flex:1">❓ guide</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
@@ -242,6 +257,14 @@
   <div id="inspGenes"></div>
 </div>
 
+<div class="panel" id="obsPanel">
+  <button class="close" id="obsClose">✕</button>
+  <div class="ptitle">THE OBSERVATORY</div>
+  <div id="obsBody"></div>
+  <button class="wide" id="obsExport">⬇ export dish data (json)</button>
+</div>
+<div id="treeTip"></div>
+
 <div class="panel" id="guidePanel">
   <button class="close" id="guideClose">✕</button>
   <div class="ptitle">FIELD GUIDE</div>
@@ -268,7 +291,8 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 22 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 24 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
     <div class="gl">📷 Postcards and 🎴 creature cards, straight to your share sheet</div>
@@ -1421,7 +1445,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.9.1';
+const APP_V='1.10.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1566,6 +1590,7 @@ function drawTree(){
     for(let i=0;i<n;i++)totals[i]+=c[i]||0;
   }
   let maxTot=1;for(const t of totals)if(t>maxTot)maxTot=t;
+  treeMaxTot=maxTot;
   const sc=(h-14)/maxTot, X=i=>i/(n-1)*w;
   const acc=new Array(n);
   for(let i=0;i<n;i++)acc[i]=(h-6-totals[i]*sc)/2;
@@ -1743,6 +1768,7 @@ const BADGES=[
    }
    return bw/creatures.length>0.12&&mw/(creatures.length*30)>0.08;}},
  {id:'firstword',n:'First Word',d:'A people who speak: thirty calls a minute.',t:()=>callRate>=30&&creatures.length>=30},
+ {id:'naturalist',n:'Naturalist',d:'Export the data of a living world.',t:()=>records.tools&&records.tools.export},
  {id:'trailblazer',n:'Trailblazer',d:'A people who leave trails worth following.',t:()=>{
    if(creatures.length<30||!scent)return false;
    let tot=0;for(let i=0;i<scent.length;i++)tot+=scent[i];
@@ -2021,8 +2047,133 @@ $('seedClose').addEventListener('click',()=>$('seedModal').classList.remove('sho
   mq.addEventListener('change',applyFold);
 }
 
+// ---------- the observatory ----------
+function speciesClusters(){
+  const n=creatures.length;
+  if(!n)return [];
+  const arr=creatures.map(c=>({h:c.g.hue,c}));
+  arr.sort((a,b)=>a.h-b.h);
+  const groups=[];let cur=[arr[0]];
+  for(let i=1;i<n;i++){
+    if(arr[i].h-arr[i-1].h<40)cur.push(arr[i]);
+    else{groups.push(cur);cur=[arr[i]];}
+  }
+  groups.push(cur);
+  if(groups.length>1&&(360-arr[n-1].h+arr[0].h)<40)groups[0]=groups[0].concat(groups.pop());
+  return groups.filter(g=>g.length>=3).map(g=>{
+    const cs=g.map(o=>o.c);
+    const m=k=>cs.reduce((t,c)=>t+c.g[k],0)/cs.length;
+    let hx=0,hy=0;for(const o of g){hx+=Math.cos(o.h*Math.PI/180);hy+=Math.sin(o.h*Math.PI/180);}
+    return {hue:Math.round((Math.atan2(hy,hx)*180/Math.PI+360)%360),n:cs.length,
+      size:m('size'),speed:m('speed'),diet:m('diet'),brain:m('brainW')};
+  }).sort((a,b)=>b.n-a.n);
+}
+function renderObs(){
+  const sp=speciesClusters();
+  let avgE=0,sick=0;
+  for(const c of creatures){avgE+=c.energy/c.cap;if(c.par)sick++;}
+  const n=Math.max(1,creatures.length);
+  const sexPct=births?Math.round(100*sexBirths/Math.max(1,sexBirths+cloneBirths)):0;
+  let ext={};
+  for(const c of creatures){
+    if(!ext.fast||c.g.speed>ext.fast.g.speed)ext.fast=c;
+    if(!ext.big||c.g.size>ext.big.g.size)ext.big=c;
+    if(!ext.old||c.age>ext.old.age)ext.old=c;
+    if(!ext.brainy||c.g.brainW>ext.brainy.g.brainW)ext.brainy=c;
+  }
+  let html='<div class="gh">VITAL SIGNS</div>'+
+    '<div class="gl">population '+creatures.length+' · algae '+algae.length+' · avg energy '+Math.round(100*avgE/n)+'% · sick '+sick+
+    ' · sexual births '+sexPct+'% · calls '+callRate+'/m · year '+Math.floor(simT/SEASON_PERIOD)+'</div>';
+  html+='<div class="gh">SPECIES ('+sp.length+')</div><table class="obsT"><tr><th></th><th>pop</th><th>size</th><th>speed</th><th>diet</th><th>brain</th></tr>';
+  for(const g of sp){
+    html+='<tr><td><span class="sw" style="background:hsl('+g.hue+',70%,60%)"></span></td><td>'+g.n+'</td><td>'+g.size.toFixed(1)+'</td><td>'+Math.round(g.speed)+'</td><td>'+(g.diet<0.25?'herb':g.diet<0.55?'omni':'carn')+'</td><td>'+g.brain.toFixed(2)+'</td></tr>';
+  }
+  html+='</table><div class="gh">RECORD HOLDERS · TAP TO VISIT</div><table class="obsT">';
+  const row=(label,c,val)=>c?'<tr class="click" data-cid="'+c.id+'"><td>'+label+'</td><td>'+nameOf(c)+'</td><td>'+val+'</td></tr>':'';
+  html+=row('fastest',ext.fast,Math.round(ext.fast?ext.fast.g.speed:0));
+  html+=row('largest',ext.big,(ext.big?ext.big.g.size.toFixed(1):0));
+  html+=row('eldest',ext.old,Math.floor(ext.old?ext.old.age:0)+'s');
+  html+=row('brainiest',ext.brainy,(ext.brainy?ext.brainy.g.brainW.toFixed(2):0));
+  html+='</table>';
+  $('obsBody').innerHTML=html;
+  $('obsBody').querySelectorAll('tr.click').forEach(tr=>tr.addEventListener('click',()=>{
+    const c=creatures.find(x=>x.id==tr.dataset.cid);
+    if(c){selected=c;updateInspector();$('obsPanel').classList.remove('show');}
+  }));
+}
+function r2(v){return typeof v==='number'?Math.round(v*100)/100:v;}
+async function exportData(){
+  const data={dish:dishId,scenario,version:APP_V,exportedAt:new Date().toISOString(),
+    simSeconds:Math.round(simT),records,badges:Object.keys(earned),
+    population:creatures.length,algae:algae.length,
+    species:speciesClusters().map(g=>({hue:g.hue,count:g.n,avgSize:r2(g.size),avgSpeed:r2(g.speed),avgDiet:r2(g.diet),avgBrain:r2(g.brain)})),
+    traitHistory:{t:hist.t.map(v=>Math.round(v)),pop:hist.pop,algae:hist.alg,
+      size:hist.size.map(r2),speed:hist.speed.map(r2),vision:hist.sense.map(r2),diet:hist.diet.map(r2),brain:hist.brain.map(r2)},
+    chronicle:chron};
+  const blob=new Blob([JSON.stringify(data,null,1)],{type:'application/json'});
+  toolUsed('export');
+  try{
+    const file=new File([blob],dishId+'.json',{type:'application/json'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Primordial Soup data'});
+      return;
+    }
+  }catch(e){}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=dishId+'.json';
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+$('btnObs').addEventListener('click',()=>{renderObs();$('obsPanel').classList.add('show');});
+$('obsClose').addEventListener('click',()=>$('obsPanel').classList.remove('show'));
+$('obsExport').addEventListener('click',exportData);
+
+// tree tooltips: hover or tap a band to identify the lineage
+let treeMaxTot=1;
+function lineageAtTreePoint(px,py){
+  if(!treeC||!treeT.length||treeT.length<2)return null;
+  const {w,h}=treeC, n=treeT.length;
+  const col=Math.max(0,Math.min(n-1,Math.round(px/w*(n-1))));
+  const kids=new Map();
+  for(const [id,L] of lineages){
+    if(!kids.has(L.parent))kids.set(L.parent,[]);
+    kids.get(L.parent).push(id);
+  }
+  const order=[];
+  (function dfs(p){
+    const arr=(kids.get(p)||[]).sort((a,b)=>lineages.get(a).t0-lineages.get(b).t0);
+    for(const id of arr){order.push(id);dfs(id);}
+  })(0);
+  let tot=0;
+  for(const id of order)tot+=lineages.get(id).counts[col]||0;
+  const sc=(h-14)/treeMaxTot;
+  let acc=(h-6-tot*sc)/2;
+  for(const id of order){
+    const L=lineages.get(id);
+    const v=(L.counts[col]||0)*sc;
+    if(v>0&&py>=acc&&py<=acc+v)return {id,L,count:L.counts[col]||0};
+    acc+=v;
+  }
+  return null;
+}
+function showTreeTip(e){
+  const cvEl=$('treeCv');
+  const r=cvEl.getBoundingClientRect();
+  const hit=lineageAtTreePoint(e.clientX-r.left,e.clientY-r.top);
+  const tip=$('treeTip');
+  if(!hit){tip.style.display='none';return;}
+  let peak=0;for(const v of hit.L.counts)if(v>peak)peak=v;
+  tip.innerHTML='<span class="sw" style="background:hsl('+hit.L.hue+',70%,60%)"></span> lineage · pop '+hit.count+' · peak '+Math.round(peak)+' · born y'+Math.floor(hit.L.t0/SEASON_PERIOD)+(hit.L.t1!=null?' · extinct':'');
+  tip.style.left=Math.min(window.innerWidth-190,e.clientX+12)+'px';
+  tip.style.top=(e.clientY-34)+'px';
+  tip.style.display='block';
+}
+$('treeCv').addEventListener('pointermove',showTreeTip);
+$('treeCv').addEventListener('pointerdown',showTreeTip);
+$('treeCv').addEventListener('pointerleave',()=>$('treeTip').style.display='none');
+
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;
