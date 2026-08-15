@@ -6,6 +6,12 @@
 <title>Primordial Soup</title>
 <link rel="manifest" href="manifest.webmanifest">
 <meta name="theme-color" content="#050A14">
+<meta name="description" content="A small evolving universe in one HTML file.">
+<meta property="og:title" content="Primordial Soup">
+<meta property="og:description" content="Creatures with real genomes eat, court, mutate, and speciate while you play the environment: meteors, plagues, ice ages, seasons.">
+<meta property="og:type" content="website">
+<meta property="og:url" content="https://somecommonname.github.io/primordial-soup/">
+<meta name="twitter:card" content="summary">
 <style>
   :root{
     --abyss:#050A14; --deep:#04070F; --ink:#C9D8EA; --dim:#5F7391;
@@ -93,6 +99,18 @@
            color:var(--dim);text-decoration:none;transition:color .15s}
   #mapLink:hover{color:var(--cyan)}
   @media (prefers-reduced-motion: reduce){ #ticker div{animation:none} }
+  .folded>*:not(:first-child){display:none}
+  @media (max-width:700px){
+    #tools{left:8px;top:8px;width:148px;padding:8px 10px}
+    #report{right:8px;top:8px;width:158px;padding:8px 10px}
+    .spark,#hint{display:none}
+    .bignums span{font-size:19px}
+    button{font-size:10px;padding:5px 6px}
+    #popChart{height:44px}
+    h1{font-size:12px}
+    #inspector{width:min(320px,92vw)}
+    #ticker{left:8px;bottom:8px}
+  }
 </style>
 </head>
 <body>
@@ -143,7 +161,7 @@
     <div><span id="stPop">0</span><label>CELLS</label></div>
     <div class="alg"><span id="stAlgae">0</span><label>ALGAE</label></div>
   </div>
-  <div class="subnums">gen <b id="stGen">1</b> · species <b id="stSpecies">1</b> · strains <b id="stStrains">1</b></div>
+  <div class="subnums">gen <b id="stGen">1</b> · species <b id="stSpecies">1</b> · strains <b id="stStrains">1</b> · <b id="stSeason"></b></div>
   <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b></div>
   <canvas id="popChart"></canvas>
   <div class="ptitle">TRAIT DRIFT</div>
@@ -239,6 +257,7 @@ const GENES={
   herd:  {min:0,  max:1,   sd:0.5},
   spike: {min:0,  max:1,   sd:0.5, def:0.02},
   shell: {min:0,  max:1,   sd:0.5, def:0.02},
+  warmth:{min:0,  max:1,   sd:0.5, def:0.5},
 };
 let mutRate=0.10;
 function founderGenome(baseHue){
@@ -253,6 +272,7 @@ function founderGenome(baseHue){
     herd: clamp(0.1+Math.abs(gauss())*0.1, 0, 1),
     spike: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
     shell: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
+    warmth: clamp(0.5+gauss()*0.1, 0, 1),
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
@@ -313,6 +333,7 @@ function genTerrain(){
       }
     }
   }
+  tempAng=rand(0,TAU);
   const nJ=2+((Math.random()*2)|0);
   for(let i=0;i<nJ;i++)jets.push({ang:rand(0,TAU), off:rand(-R*0.5,R*0.5), width:rand(70,120),
     strength:rand(14,26)*(Math.random()<0.5?-1:1), drift:rand(-0.003,0.003)});
@@ -364,6 +385,13 @@ function queryGrid(grid,x,y,r,out){
   return out;
 }
 
+// ---------- climate: a warm end, a cold end, and a slow year ----------
+let tempAng=0, season=0;
+const SEASON_PERIOD=240;
+function tempAt(x,y){
+  const proj=(Math.cos(tempAng)*(x-CX)+Math.sin(tempAng)*(y-CY))/Math.max(1,R);
+  return clamp(0.5+0.35*proj+0.25*season+(simT<iceUntil?-0.35:0),0.05,0.95);
+}
 // ---------- flow field: gentle gyre + wandering jet currents ----------
 function flow(x,y,t,out){
   const dx=x-CX,dy=y-CY,r=Math.sqrt(dx*dx+dy*dy)||1;
@@ -383,10 +411,11 @@ function flow(x,y,t,out){
 const _n1=[],_n2=[],_fl=[0,0];
 function step(dt){
   simT+=dt;
+  season=Math.sin(TAU*simT/SEASON_PERIOD);
   const ice=simT<iceUntil;
   // food spawn
   // spore rain: a thin drizzle, stronger over bare ground so deserts can recover
-  const rain=(3.0+3.0*clamp(1-algae.length/500,0,1))*(ice?0.3:1);
+  const rain=(3.0+3.0*clamp(1-algae.length/500,0,1))*(ice?0.3:1)*(0.75+0.25*(season+1));
   let n=rain*dt; if(Math.random()<n%1)n++;
   for(let i=0;i<(n|0);i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   // algae drift with the currents, deflecting around rocks
@@ -401,7 +430,7 @@ function step(dt){
   const cGrid=buildGrid(creatures), aGrid=buildGrid(algae);
   // plants spread: each alga may sprout a neighbor, crowding permitting
   if(algae.length&&algae.length<ALGAE_CAP){
-    const G=0.28*foodRate*(ice?0.15:1);
+    const G=0.34*foodRate*(ice?0.15:1);
     let att=algae.length*G*dt; if(Math.random()<att%1)att++;
     for(let i=0;i<(att|0);i++){
       const p=algae[(Math.random()*algae.length)|0];
@@ -411,7 +440,7 @@ function step(dt){
       queryGrid(aGrid,x,y,18,_n1);
       let near=0;
       for(const o of _n1){if(!o.eaten&&(o.x-x)**2+(o.y-y)**2<324)near++;}
-      if(near<5)spawnAlgae(x,y);
+      if(near<5&&Math.random()<clamp(0.2+1.6*tempAt(x,y),0,1))spawnAlgae(x,y);
     }
   }
   newborns.length=0;
@@ -531,7 +560,8 @@ function step(dt){
       c.dir+=gauss()*g.wiggle*dt;
     }
     // move
-    const sp=g.speed*(1-0.28*g.shell)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1);
+    const Tc=tempAt(c.x,c.y);
+    const sp=g.speed*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1);
     flow(c.x,c.y,simT,_fl);
     const cf=clamp(0.85-g.size*0.05,0.15,0.8);
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
@@ -541,7 +571,7 @@ function step(dt){
     if(nr>R-g.size){c.x=CX+nx/nr*(R-g.size);c.y=CY+ny/nr*(R-g.size);}
     // metabolism
     const s2=g.size*g.size, vn=sp/60;
-    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense)*(simT<iceUntil?0.8:1);
+    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1);
     c.energy-=burn*dt;
     // eat algae (graze everything within reach)
     if(g.diet<0.92&&c.energy<c.cap){
@@ -697,6 +727,15 @@ function render(){
   ctx.fillRect(0,0,W,H);
   ctx.save();
   if(shake>0&&!reduceMotion){ctx.translate(gauss()*shake,gauss()*shake);shake=Math.max(0,shake-0.5);}
+  // temperature wash: amber warmth, blue cold, swinging with the season
+  {
+    const gx=Math.cos(tempAng),gy=Math.sin(tempAng);
+    const tg=ctx.createLinearGradient(CX-gx*R,CY-gy*R,CX+gx*R,CY+gy*R);
+    tg.addColorStop(0,'rgba(90,140,255,'+Math.max(0,0.055-0.035*season).toFixed(3)+')');
+    tg.addColorStop(1,'rgba(255,160,60,'+Math.max(0,0.055+0.035*season).toFixed(3)+')');
+    ctx.fillStyle=tg;
+    ctx.beginPath();ctx.arc(CX,CY,Math.max(1,R),0,TAU);ctx.fill();
+  }
   // marine snow streaks trace the currents
   ctx.strokeStyle='rgba(160,200,240,0.10)';
   ctx.lineWidth=1;
@@ -867,6 +906,8 @@ function updateHud(){
   $('stDeaths').textContent=deaths;
   $('stSex').textContent=sexBirths;
   $('stClone').textContent=cloneBirths;
+  const q=(simT/SEASON_PERIOD)%1;
+  $('stSeason').textContent=q<0.25?'🌱 spring':q<0.5?'☀ summer':q<0.75?'🍂 autumn':'❄ winter';
   const spN=speciesCount();
   $('stSpecies').textContent=spN;
   if(simT>20&&simT-lastSpeciesMsgT>10){
@@ -900,6 +941,7 @@ function updateInspector(){
               ['herding',g.herd,g.herd<0.25?'loner':g.herd<0.6?'social':'flocker'],
               ['spikes',g.spike,g.spike<0.15?'':g.spike<0.5?'quilled':'porcupine'],
               ['shell',g.shell,g.shell<0.15?'':g.shell<0.5?'plated':'fortress'],
+              ['comfort',g.warmth,g.warmth<0.35?'cold-blooded':g.warmth<0.65?'temperate':'heat-lover'],
               ['nerve',1-g.fear,g.fear<0.35?'bold':g.fear<0.65?'wary':'timid'],
               ['fertility',1-(g.rThresh-0.55)/0.4,'']];
   $('inspGenes').innerHTML=rows.map(([l,v,txt])=>
@@ -947,7 +989,7 @@ function seedCreature(x,y){
     size:rand(3.5,13), speed:rand(15,125), sense:rand(30,200),
     diet:Math.random()<0.5?rand(0,0.3):rand(0.3,1),
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
-    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), hue:rand(0,360),
+    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), hue:rand(0,360),
   };
   const p=makeCreature(g,x,y);
   p.lin=newLineage(0,g.hue);
@@ -1028,7 +1070,7 @@ function saveWorld(){
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
     store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
-      foodRate,mutRate,rocks,jets,cs,al,hist,
+      foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt}));
   }catch(e){}
 }
@@ -1054,7 +1096,7 @@ function loadWorld(){
   simT=s.simT;nextId=s.nextId;births=s.births;deaths=s.deaths;
   sexBirths=s.sexBirths||0;cloneBirths=s.cloneBirths||0;
   maxGen=s.maxGen;iceUntil=s.iceUntil??-1;lastSpeciesN=s.lastSpeciesN||1;
-  foodRate=clamp(s.foodRate>3?1:s.foodRate,0.2,3);mutRate=s.mutRate;foodEl.value=foodRate;radEl.value=mutRate;syncDials();
+  foodRate=clamp(s.foodRate>3?1:s.foodRate,0.2,3);mutRate=s.mutRate;tempAng=s.tempAng??rand(0,TAU);foodEl.value=foodRate;radEl.value=mutRate;syncDials();
   for(const k in hist)hist[k]=(s.hist&&Array.isArray(s.hist[k]))?s.hist[k]:[];
   lastSample=simT-1;lastHud=simT-1;lastSpeciesMsgT=simT;selected=null;extinctAt=-1;
   lineages=new Map((s.lins||[]).map(([id,L])=>[id,L]));
@@ -1287,6 +1329,20 @@ $('seedLoad').addEventListener('click',async()=>{
   }catch(e){$('seedMsg').textContent='that seed would not germinate';}
 });
 $('seedClose').addEventListener('click',()=>$('seedModal').classList.remove('show'));
+
+// ---------- panels fold to their headers; phones start folded ----------
+{
+  const mq=matchMedia('(max-width:700px)');
+  for(const id of ['tools','report']){
+    const p=$(id);
+    const head=p.querySelector('h1,.ptitle');
+    head.style.cursor='pointer';
+    head.addEventListener('click',()=>p.classList.toggle('folded'));
+  }
+  const applyFold=()=>{for(const id of ['tools','report'])$(id).classList.toggle('folded',mq.matches);};
+  applyFold();
+  mq.addEventListener('change',applyFold);
+}
 
 // ---------- first visit ----------
 if(!store.get('soup.seen'))$('welcome').classList.add('show');

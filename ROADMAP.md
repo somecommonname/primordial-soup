@@ -53,17 +53,19 @@ Two builds in one. Armor and weapons: spike and shell genes with honest costs. S
 Dish seeds: export any world as a compact compressed seed string and import someone else's; trade ecosystems, replay famous dishes, watch alien life take hold in your own dish. Sound: a quiet Web Audio voice for the dish (births blip, kills thud, meteors rumble, ice shimmers) with a mute toggle and a limiter so busy dishes stay gentle. A first-visit welcome card explains the game in four lines. Together with the tree of life, persistent worlds, and the living plant ecology, this closes the v1.0 milestone: a polished toy a stranger can enjoy with no explanation.
 *Field notes:* a seed is the save format itself, so sharing a dish shares its whole fossil record: terrain, genomes, and family tree arrive intact.
 
+### v1.1 · Climate
+The dish gets a warm end, a cold end, and a four minute year. Local temperature scales plant growth, metabolism, and movement speed: warm water is fast rich living, cold water is a slow larder. A twelfth gene, warmth, sets each creature's comfort zone with a discomfort cost for living outside it. Seasons swing the whole dish through spring, summer, autumn, and winter, shown in the report and as an amber and blue wash over the water. Also in this build: a real mobile layout with panels that fold to their headers, and link preview tags so shared links unfurl nicely.
+*Field notes:* the warm side gets grazed bare by fast living creatures while the cold side accumulates standing algae, tropics and poles in miniature; nobody designed that. An eighteen minute geographic speciation watch found no sympatric split (gene flow wins while creatures roam freely) but strong local adaptation: the population's warmth gene tracked its habitat from 0.6 down to 0.31 as it settled the cold larder, with the warm side subpopulation consistently warmer adapted than the cold side. Adaptation is easy; speciation needs isolation.
+
 ---
 
 ## Next (each ~a session)
 
-- **Temperature zones + seasons**: warm shallows, cold deeps; metabolism scaled by local temperature → migration pressure, seasonal booms.
-- **Geographic speciation watch**: with rocks/currents partitioning the dish, test whether isolated pockets diverge past the 40° mate barrier in place.
+- **Evolving parasites**: a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
+- **Sensory honesty**: line-of-sight blocked by rocks; ambush predation becomes real.
 
 ## Later
 
-- **Evolving parasites**: a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
-- **Sensory honesty**: line-of-sight blocked by rocks; ambush predation becomes real.
 - **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
 - **The menu-bar pet**: a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 
