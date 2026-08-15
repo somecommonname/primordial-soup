@@ -57,15 +57,20 @@ Dish seeds: export any world as a compact compressed seed string and import some
 The dish gets a warm end, a cold end, and a four minute year. Local temperature scales plant growth, metabolism, and movement speed: warm water is fast rich living, cold water is a slow larder. A twelfth gene, warmth, sets each creature's comfort zone with a discomfort cost for living outside it. Seasons swing the whole dish through spring, summer, autumn, and winter, shown in the report and as an amber and blue wash over the water. Also in this build: a real mobile layout with panels that fold to their headers, and link preview tags so shared links unfurl nicely.
 *Field notes:* the warm side gets grazed bare by fast living creatures while the cold side accumulates standing algae, tropics and poles in miniature; nobody designed that. An eighteen minute geographic speciation watch found no sympatric split (gene flow wins while creatures roam freely) but strong local adaptation: the population's warmth gene tracked its habitat from 0.6 down to 0.31 as it settled the cold larder, with the warm side subpopulation consistently warmer adapted than the cold side. Adaptation is easy; speciation needs isolation.
 
+### v1.2 · Minds, plagues, and shadows
+Three systems in one build. Neural brains, the frontier groundwork: every creature now carries a 20 weight neural layer reading ten senses (food and threat bearings, energy, temperature, kin density) and outputting a steering nudge and thrust change, blended by a new brainW gene that starts near zero. Neural tissue costs real energy, so brains must earn their influence through selection; weights mutate and cross over like any gene. Evolving parasites: a second replicator living on hosts, one virulence gene governing both drain and spread, mutating at every transmission, countered by a new host immune gene with its own metabolic cost. Transmission by contact and by eating infected prey; patient zero arises naturally in any clean dish. Line of sight: rocks now block perception, so prey cannot fear what they cannot see, and predators remember hidden prey briefly and search. Also: persistent player records (longest dish, peak population, deepest generation, oldest creature) that survive across dishes, with ticker celebrations.
+*Field notes:* the first epidemic build saturated the dish in a minute (89 percent infected) thanks to a double scaled patient zero rate; cooled, outbreaks now come in waves separated by quiet minutes. Immunity drifted upward even without parasites until it was given a metabolic cost: free insurance always wins, so nothing in the dish is free anymore.
+
 ---
 
 ## Next (each ~a session)
 
-- **Evolving parasites**: a second, tiny replicator that lives on creatures; host-parasite Red Queen dynamics.
-- **Sensory honesty**: line-of-sight blocked by rocks; ambush predation becomes real.
+- **Badge gallery**: named achievements built on the records system (Centenarian, Plague Survivor, Speciation Witness); a trophy panel worth returning for.
+- **Brain selection experiments**: long runs probing when evolution pays for thought; the groundwork is live, the science begins.
 
 ## Later
 
+- **Global leaderboard**: longest dishes and deepest generations worldwide; needs a small backend, design to be discussed.
 - **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
 - **The menu-bar pet**: a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 

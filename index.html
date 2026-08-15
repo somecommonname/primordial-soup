@@ -162,7 +162,8 @@
     <div class="alg"><span id="stAlgae">0</span><label>ALGAE</label></div>
   </div>
   <div class="subnums">gen <b id="stGen">1</b> · species <b id="stSpecies">1</b> · strains <b id="stStrains">1</b> · <b id="stSeason"></b></div>
-  <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b></div>
+  <div class="subnums">born <b id="stBirths">0</b> · sexual <b id="stSex">0</b> · cloned <b id="stClone">0</b> · died <b id="stDeaths">0</b> · sick <b id="stSick">0</b></div>
+  <div class="subnums">🏆 <b id="stRecords"></b></div>
   <canvas id="popChart"></canvas>
   <div class="ptitle">TRAIT DRIFT</div>
   <div class="spark"><span class="lbl">size</span><canvas id="spSize"></canvas><span class="val" id="vSize"></span></div>
@@ -258,6 +259,8 @@ const GENES={
   spike: {min:0,  max:1,   sd:0.5, def:0.02},
   shell: {min:0,  max:1,   sd:0.5, def:0.02},
   warmth:{min:0,  max:1,   sd:0.5, def:0.5},
+  immune:{min:0,  max:1,   sd:0.5, def:0.03},
+  brainW:{min:0,  max:1,   sd:0.5, def:0},
 };
 let mutRate=0.10;
 function founderGenome(baseHue){
@@ -273,6 +276,8 @@ function founderGenome(baseHue){
     spike: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
     shell: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
     warmth: clamp(0.5+gauss()*0.1, 0, 1),
+    immune: clamp(0.02+Math.abs(gauss())*0.03, 0, 1),
+    brainW: clamp(0.02+Math.abs(gauss())*0.02, 0, 1),
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
@@ -290,7 +295,7 @@ function mutate(g){
 let creatures=[], algae=[], newborns=[], rocks=[], jets=[];
 let nextId=1, births=0, deaths=0, maxGen=1, simT=0;
 let sexBirths=0, cloneBirths=0;
-let dStarveYoung=0, dStarveAdult=0, dAge=0, dKill=0;
+let dStarveYoung=0, dStarveAdult=0, dAge=0, dKill=0, dPar=0, parasiteN=0;
 let paused=false, speedMult=1, tool='inspect', selected=null;
 let iceUntil=-1, shake=0, extinctAt=-1, lastSpeciesN=1, lastSpeciesMsgT=0;
 let foodRate=11;
@@ -301,11 +306,29 @@ const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 const SYL=['blo','gur','mip','zor','vel','tik','osh','ree','dal','umo','kai','pex','nur','ova','glim','fen','qua','bim'];
 const nameOf=c=>{const a=SYL[c.id%18],b=SYL[(c.id*7+3)%18];return a[0].toUpperCase()+a.slice(1)+b;};
 
+const BRAIN_N=20;
+function freshBrain(spread){
+  const b=new Array(BRAIN_N);
+  for(let i=0;i<BRAIN_N;i++)b[i]=gauss()*(spread||0.05);
+  return b;
+}
+function brainSum(b){let t=0;for(let i=0;i<BRAIN_N;i++)t+=Math.abs(b[i]);return t;}
+function mutateBrain(b){
+  const c=b.slice();
+  for(let i=0;i<BRAIN_N;i++)c[i]+=gauss()*mutRate*0.6;
+  return c;
+}
+function crossBrain(a,b){
+  const c=new Array(BRAIN_N);
+  for(let i=0;i<BRAIN_N;i++)c[i]=Math.random()<0.5?a[i]:b[i];
+  return c;
+}
 function makeCreature(g,x,y,energy,gen){
   const cap=12*g.size*g.size;
   return {id:nextId++, g, x, y, dir:rand(0,TAU), energy:energy??cap*0.65, cap,
           age:0, gen:gen||1, kids:0, lifespan:Math.max(70,130+gauss()*25),
-          dead:false, phase:rand(0,TAU), lock:null, lockT:0, lastRep:-99, mateT:0};
+          dead:false, phase:rand(0,TAU), lock:null, lockT:0, lastRep:-99, mateT:0, par:null,
+          br:freshBrain(0.05), wsum:0, thrustMod:1};
 }
 function randInDish(f=1){
   const a=rand(0,TAU), r=Math.sqrt(Math.random())*R*f;
@@ -338,6 +361,19 @@ function genTerrain(){
   for(let i=0;i<nJ;i++)jets.push({ang:rand(0,TAU), off:rand(-R*0.5,R*0.5), width:rand(70,120),
     strength:rand(14,26)*(Math.random()<0.5?-1:1), drift:rand(-0.003,0.003)});
 }
+function losClear(x1,y1,x2,y2){
+  for(const rk of rocks){
+    const dx=x2-x1,dy=y2-y1;
+    const fx=x1-rk.x,fy=y1-rk.y;
+    const a=dx*dx+dy*dy;
+    if(a<1e-6)continue;
+    let t=-(fx*dx+fy*dy)/a;
+    t=t<0?0:t>1?1:t;
+    const px=fx+dx*t,py=fy+dy*t;
+    if(px*px+py*py<rk.r*rk.r)return false;
+  }
+  return true;
+}
 function rockPush(o,s){
   for(const rk of rocks){
     const dx=o.x-rk.x; if(dx>rk.r+s||dx<-rk.r-s)continue;
@@ -352,14 +388,14 @@ function initWorld(){
   creatures.length=0; algae.length=0; events.length=0;
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
   lastSample=-1; lastHud=-9; sexBirths=0; cloneBirths=0; lastSpeciesN=1; lastSpeciesMsgT=0;
-  dStarveYoung=0; dStarveAdult=0; dAge=0; dKill=0;
+  dStarveYoung=0; dStarveAdult=0; dAge=0; dKill=0; dPar=0; parasiteN=0;
   hist.t=[];hist.pop=[];hist.alg=[];hist.size=[];hist.speed=[];hist.sense=[];hist.diet=[];
   lineages.clear(); linNext=1; treeT.length=0; treeDt=2; lastTreeSample=-1;
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
   for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
   const rootLin=newLineage(0,baseHue);
-  for(const c of creatures)c.lin=rootLin;
+  for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
   for(let i=0;i<1800;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells');
   updateInspector();
@@ -427,6 +463,11 @@ function step(dt){
     if(p.x<0)p.x+=W; if(p.x>W)p.x-=W; if(p.y<0)p.y+=H; if(p.y>H)p.y-=H;
   }
 
+  if(parasiteN===0&&creatures.length>40&&Math.random()<0.008*dt){
+    const h=creatures[(Math.random()*creatures.length)|0];
+    if(h&&!h.dead){h.par={vir:0.3+rand(0,0.2)};say('🦠 a parasite finds its first host');}
+  }
+  parasiteN=0;
   const cGrid=buildGrid(creatures), aGrid=buildGrid(algae);
   // plants spread: each alga may sprout a neighbor, crowding permitting
   if(algae.length&&algae.length<ALGAE_CAP){
@@ -448,6 +489,7 @@ function step(dt){
   for(const c of creatures){
     if(c.dead)continue;
     const g=c.g;
+    const Tc=tempAt(c.x,c.y);
     c.age+=dt;
     // perceive
     const sense=g.sense;
@@ -491,9 +533,16 @@ function step(dt){
         if(sc>mateScore){mateScore=sc;mateD2=d2;mate=o;}
       }
       if(kin && g.herd>0.15 && d2<herdR2){kinN++;kinX+=o.x;kinY+=o.y;kinCos+=Math.cos(o.dir);kinSin+=Math.sin(o.dir);}
+      if(c.par&&!o.par&&d2<(g.size+o.g.size+6)**2&&Math.random()<c.par.vir*0.12*dt&&Math.random()>o.g.immune*0.7){
+        o.par={vir:clamp(c.par.vir+gauss()*0.08,0.05,1)};
+      }
       if(o.g.size>g.size*1.15 && o.g.diet>0.4 && d2<fleeRange*fleeRange && d2<thrD2){thrD2=d2;threat=o;}
     }
     // choose heading
+    let lockHidden=false;
+    if(algT&&!losClear(c.x,c.y,algT.x,algT.y)){algT=null;algD2=1e12;}
+    if(prey&&!losClear(c.x,c.y,prey.x,prey.y)){if(prey===c.lock)lockHidden=true;prey=null;preyD2=1e12;}
+    if(threat&&!losClear(c.x,c.y,threat.x,threat.y))threat=null;
     let want=null, urgency=1, arrive=1, hunting=false;
     if(threat){
       const a=Math.atan2(c.y-threat.y,c.x-threat.x); want=a; urgency=1.15;
@@ -519,7 +568,7 @@ function step(dt){
         c.lock=prey; hunting=preyD2<(g.size*5)**2;
         if(hunting)urgency=1.2;
       }else{
-        c.lock=null;
+        if(!lockHidden)c.lock=null;
         if(algT){
           want=Math.atan2(algT.y-c.y,algT.x-c.x);
           arrive=clamp(Math.sqrt(algD2)/30,0.35,1);
@@ -540,6 +589,21 @@ function step(dt){
       if(want==null)want=hAng;
       else{let hd=hAng-want;while(hd>Math.PI)hd-=TAU;while(hd<-Math.PI)hd+=TAU;want+=hd*g.herd*0.35;}
     }
+    // the brain: a learned nudge on top of instinct, paid for in energy
+    if(g.brainW>0.02&&c.br){
+      let fS=0,fC=0,fN=0,tS=0,tC=0,tN=0;
+      if(algT){const a=Math.atan2(algT.y-c.y,algT.x-c.x)-c.dir;fS=Math.sin(a);fC=Math.cos(a);fN=1-clamp(Math.sqrt(algD2)/sense,0,1);}
+      else if(prey){const a=Math.atan2(prey.y-c.y,prey.x-c.x)-c.dir;fS=Math.sin(a);fC=Math.cos(a);fN=1-clamp(Math.sqrt(preyD2)/sense,0,1);}
+      if(threat){const a=Math.atan2(threat.y-c.y,threat.x-c.x)-c.dir;tS=Math.sin(a);tC=Math.cos(a);tN=1-clamp(Math.sqrt(thrD2)/sense,0,1);}
+      const inp=[fS,fC,fN,tS,tC,tN,c.energy/c.cap,Tc,clamp(kinN/6,0,1),1];
+      const b=c.br;
+      let o0=0,o1=0;
+      for(let i=0;i<10;i++){o0+=inp[i]*b[i];o1+=inp[i]*b[10+i];}
+      o0=Math.tanh(o0);o1=Math.tanh(o1);
+      if(want==null)want=c.dir+o0*g.brainW*1.2;
+      else want+=o0*g.brainW*0.8;
+      c.thrustMod=1+o1*g.brainW*0.5;
+    }else c.thrustMod=1;
     // dish edge: blend inward instead of overriding, so the rim is no sanctuary
     const ex=c.x-CX,ey=c.y-CY,er=Math.sqrt(ex*ex+ey*ey);
     const margin=R-g.size-14;
@@ -560,8 +624,7 @@ function step(dt){
       c.dir+=gauss()*g.wiggle*dt;
     }
     // move
-    const Tc=tempAt(c.x,c.y);
-    const sp=g.speed*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1);
+    const sp=g.speed*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1);
     flow(c.x,c.y,simT,_fl);
     const cf=clamp(0.85-g.size*0.05,0.15,0.8);
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
@@ -571,8 +634,13 @@ function step(dt){
     if(nr>R-g.size){c.x=CX+nx/nr*(R-g.size);c.y=CY+ny/nr*(R-g.size);}
     // metabolism
     const s2=g.size*g.size, vn=sp/60;
-    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1);
+    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike+0.14*g.immune) + 0.10*s2*vn*vn*(1-0.15*g.diet) + 8e-5*sense*sense + 0.009*s2*(c.wsum||0)*g.brainW)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1);
     c.energy-=burn*dt;
+    if(c.par){
+      parasiteN++;
+      c.energy-=(2+9*c.par.vir)*dt;
+      if(Math.random()<(0.01+0.12*g.immune)*dt)c.par=null;
+    }
     // eat algae (graze everything within reach)
     if(g.diet<0.92&&c.energy<c.cap){
       const rr=(g.size+4)**2;
@@ -596,6 +664,7 @@ function step(dt){
           const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.diet,1.6));
           c.energy=Math.min(c.cap,c.energy+flesh);
           if(meal.g.spike>0.05)c.energy-=meal.g.spike*meal.g.size*14;
+          if(meal.par&&!c.par&&Math.random()<0.75*(1-g.immune*0.7))c.par={vir:clamp(meal.par.vir+gauss()*0.08,0.05,1)};
           ping(meal.x,meal.y,'rgba(255,107,94,0.7)',meal.g.size*4,2,0.5); sfx('kill');
           if(selected===meal)selected=null;
         }else{
@@ -614,6 +683,8 @@ function step(dt){
         cg.hue=Math.random()<0.5?g.hue:mate.g.hue;
         const mg=mutate(cg);
         const child=makeCreature(mg,(c.x+mate.x)/2,(c.y+mate.y)/2,null,Math.max(c.gen,mate.gen)+1);
+        child.br=mutateBrain(crossBrain(c.br||freshBrain(0.05),mate.br||freshBrain(0.05)));
+        child.wsum=brainSum(child.br);
         child.lin=lineageOf(c.lin,mg.hue);
         child.energy=Math.min((c.energy+mate.energy)*0.34,child.cap);
         c.energy*=0.63; mate.energy*=0.63;
@@ -628,6 +699,8 @@ function step(dt){
       if(c.mateT>5){
         const cg=mutate(g);
         const child=makeCreature(cg, c.x+gauss()*10, c.y+gauss()*10, null, c.gen+1);
+        child.br=mutateBrain(c.br||freshBrain(0.05));
+        child.wsum=brainSum(child.br);
         child.lin=lineageOf(c.lin,cg.hue);
         child.energy=Math.min(c.energy*0.45,child.cap);
         c.energy*=0.45; c.kids++; c.lastRep=c.age; c.mateT=0;
@@ -638,7 +711,7 @@ function step(dt){
     }else c.mateT=0;
     // death
     if(c.energy<=0||c.age>c.lifespan){
-      if(c.energy<=0){if(c.age<12)dStarveYoung++;else dStarveAdult++;}else dAge++;
+      if(c.energy<=0){if(c.par)dPar++;else if(c.age<12)dStarveYoung++;else dStarveAdult++;}else dAge++;
       c.dead=true; deaths++;
       const bits=Math.min(6,Math.floor(g.size*0.8));
       for(let i=0;i<bits;i++)spawnAlgae(c.x+gauss()*8,c.y+gauss()*8);
@@ -801,6 +874,10 @@ function render(){
     ctx.beginPath();ctx.arc(c.x-Math.cos(c.dir)*s*0.2,c.y-Math.sin(c.dir)*s*0.2,s*0.32,0,TAU);ctx.fill();
     ctx.fillStyle='rgba(8,14,26,0.9)';
     ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir)*s*0.5,c.y+Math.sin(c.dir)*s*0.5,Math.max(1,s*0.16),0,TAU);ctx.fill();
+    if(c.par){
+      ctx.fillStyle='rgba(255,80,200,'+(0.45+0.35*Math.sin(simT*6+c.phase)).toFixed(2)+')';
+      ctx.beginPath();ctx.arc(c.x+Math.cos(c.dir+2.4)*s*0.55,c.y+Math.sin(c.dir+2.4)*s*0.55,Math.max(1.4,s*0.2),0,TAU);ctx.fill();
+    }
     if(g.diet>0.5){
       ctx.strokeStyle='rgba(255,107,94,0.85)';
       ctx.lineWidth=1.1;
@@ -904,12 +981,14 @@ function updateHud(){
   $('stStrains').textContent=strains();
   $('stBirths').textContent=births;
   $('stDeaths').textContent=deaths;
+  $('stSick').textContent=parasiteN;
   $('stSex').textContent=sexBirths;
   $('stClone').textContent=cloneBirths;
   const q=(simT/SEASON_PERIOD)%1;
   $('stSeason').textContent=q<0.25?'🌱 spring':q<0.5?'☀ summer':q<0.75?'🍂 autumn':'❄ winter';
   const spN=speciesCount();
   $('stSpecies').textContent=spN;
+  checkRecords();
   if(simT>20&&simT-lastSpeciesMsgT>10){
     if(spN>lastSpeciesN){say('🌱 divergence: '+spN+' species now share the dish');lastSpeciesMsgT=simT;}
     else if(spN<lastSpeciesN){say('a species has vanished from the dish');lastSpeciesMsgT=simT;}
@@ -942,6 +1021,8 @@ function updateInspector(){
               ['spikes',g.spike,g.spike<0.15?'':g.spike<0.5?'quilled':'porcupine'],
               ['shell',g.shell,g.shell<0.15?'':g.shell<0.5?'plated':'fortress'],
               ['comfort',g.warmth,g.warmth<0.35?'cold-blooded':g.warmth<0.65?'temperate':'heat-lover'],
+              ['immune',g.immune,g.immune<0.15?'':g.immune<0.5?'hardy':'iron-blooded'],
+              ['brain',g.brainW,g.brainW<0.1?'instinct':g.brainW<0.45?'hybrid':'cerebral'],
               ['nerve',1-g.fear,g.fear<0.35?'bold':g.fear<0.65?'wary':'timid'],
               ['fertility',1-(g.rThresh-0.55)/0.4,'']];
   $('inspGenes').innerHTML=rows.map(([l,v,txt])=>
@@ -989,9 +1070,10 @@ function seedCreature(x,y){
     size:rand(3.5,13), speed:rand(15,125), sense:rand(30,200),
     diet:Math.random()<0.5?rand(0,0.3):rand(0.3,1),
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
-    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), hue:rand(0,360),
+    herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), immune:rand(0,0.6), brainW:rand(0,0.7), hue:rand(0,360),
   };
   const p=makeCreature(g,x,y);
+  p.br=freshBrain(0.3);p.wsum=brainSum(p.br);
   p.lin=newLineage(0,g.hue);
   creatures.push(p);
   ping(x,y,'hsla('+g.hue+',85%,70%,0.8)',30,1.5,0.8);
@@ -1065,7 +1147,8 @@ function saveWorld(){
     const cs=creatures.map(c=>({id:c.id,x:Math.round(c.x*10)/10,y:Math.round(c.y*10)/10,
       dir:Math.round(c.dir*100)/100,energy:Math.round(c.energy),cap:c.cap,age:Math.round(c.age*10)/10,
       gen:c.gen,kids:c.kids,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
-      phase:Math.round(c.phase*100)/100,lin:c.lin||0,g:c.g}));
+      phase:Math.round(c.phase*100)/100,lin:c.lin||0,par:c.par?+c.par.vir.toFixed(3):0,
+      br:(c.br||[]).map(w=>Math.round(w*100)/100),g:c.g}));
     const al=new Array(algae.length*2);
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
     store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
@@ -1088,7 +1171,9 @@ function loadWorld(){
   creatures.length=0;algae.length=0;events.length=0;rocks.length=0;jets.length=0;
   for(const c of s.cs){
     for(const k in GENES)if(typeof c.g[k]!=='number')c.g[k]=GENES[k].def!==undefined?GENES[k].def:(GENES[k].min+GENES[k].max)/2;
-    creatures.push({...c,x:tx(c.x),y:ty(c.y),dead:false,lock:null,lockT:0,mateT:0});
+    const br=(Array.isArray(c.br)&&c.br.length===BRAIN_N)?c.br:freshBrain(0.05);
+    creatures.push({...c,x:tx(c.x),y:ty(c.y),dead:false,lock:null,lockT:0,mateT:0,
+      par:(typeof c.par==='number'&&c.par>0)?{vir:c.par}:null,br,wsum:brainSum(br),thrustMod:1});
   }
   for(let i=0;i<s.al.length;i+=2)algae.push({x:tx(s.al[i]),y:ty(s.al[i+1]),eaten:false});
   for(const rk of s.rocks)rocks.push({x:tx(rk.x),y:ty(rk.y),r:rk.r*sc,spk:rk.spk||[]});
@@ -1218,6 +1303,31 @@ $('treeShow').addEventListener('click',()=>{
   treeC=setupChart('treeCv');drawTree();
 });
 if(store.get('soup.tree')==='0'){treeOpen=false;$('treePanel').style.display='none';$('treeShow').style.display='block';}
+
+// ---------- records: your best marks outlive every dish ----------
+let records=(()=>{try{return Object.assign({dish:0,pop:0,species:0,gen:0,elder:0},JSON.parse(store.get('primordialSoup.records'))||{});}catch(e){return {dish:0,pop:0,species:0,gen:0,elder:0};}})();
+let lastRecSave=0, recMsgT=-99;
+function checkRecords(){
+  let changed=false, celebrate=null;
+  let elder=0;
+  for(const c of creatures)if(c.age>elder)elder=c.age;
+  const cand={dish:simT,pop:creatures.length,species:lastSpeciesN,gen:maxGen,elder};
+  for(const k in cand){
+    if(cand[k]>records[k]){
+      const prev=records[k];records[k]=cand[k];changed=true;
+      if((k==='pop'||k==='species'||k==='gen')&&prev>0&&simT>90&&simT-recMsgT>25)celebrate=k;
+    }
+  }
+  if(changed&&performance.now()-lastRecSave>10000){
+    try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}
+    lastRecSave=performance.now();
+  }
+  if(celebrate){recMsgT=simT;
+    const label={pop:'largest population',species:'most species at once',gen:'deepest generation'}[celebrate];
+    say('🏆 new record: '+label+' ('+Math.round(records[celebrate])+')');
+  }
+  $('stRecords').textContent='dish '+Math.floor(records.dish/60)+'m · pop '+records.pop+' · gen '+records.gen+' · elder '+Math.floor(records.elder)+'s';
+}
 
 // ---------- sound ----------
 let audioCtx=null, soundOn=store.get('soup.sound')!=='0';

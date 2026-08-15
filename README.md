@@ -23,6 +23,9 @@ Works on phones too: the panels fold to their headers, tap to expand.
 - **⇪ share / ⇩ import**: copy your world as a seed string and trade dishes with friends
 - **🔊 sound**: the dish has a quiet voice; mute it in the top row
 - **🌡 climate**: a warm end, a cold end, and a four minute year; creatures evolve their comfort zone
+- **🧠 brains**: an evolvable neural layer; behavior itself is in the genome now
+- **🦠 parasites**: epidemics with evolving virulence; immunity costs something
+- **🏆 records**: your best marks (longest dish, deepest generation) outlive every world
 
 ## Roadmap
 
