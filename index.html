@@ -183,6 +183,7 @@
   </div>
   <div class="row" style="margin-top:8px">
     <button id="btnChron" style="flex:1">📜 chronicle</button>
+    <button id="btnPost" style="flex:1">📷 postcard</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -218,7 +219,8 @@
   <div class="meta" id="inspMeta"></div>
   <div class="row" style="margin:0 0 8px">
     <button id="inspRename" style="flex:1">✎ name</button>
-    <button id="inspFollow" style="flex:1">☆ follow line</button>
+    <button id="inspFollow" style="flex:1">☆ follow</button>
+    <button id="inspCard" style="flex:1">🎴 card</button>
   </div>
   <div class="ebar"><i id="inspEnergy"></i></div>
   <div id="inspGenes"></div>
@@ -1222,7 +1224,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.4.1';
+const APP_V='1.5.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1524,6 +1526,7 @@ const BADGES=[
    const u=records.tools||{};return u.meteor&&u.plague&&u.ice&&u.bloom&&u.seed&&u.elixir;}},
  {id:'healer',n:'Healer',d:'Cure 25 infections with elixir.',t:()=>(records.cured||0)>=25},
  {id:'dynast',n:'Dynast',d:'A followed bloodline reaches generation 25.',t:()=>(records.line||0)>=25},
+ {id:'photographer',n:'Photographer',d:'Send a postcard from your dish.',t:()=>records.tools&&records.tools.postcard},
  {id:'gardener',n:'Gardener',d:'Export a dish seed.',t:()=>records.tools&&records.tools.share},
  {id:'transplant',n:'Transplant Surgeon',d:'Import a foreign dish.',t:()=>records.tools&&records.tools.import},
  {id:'thinker',n:'The Thinker',d:'Average brain weight passes 0.25.',t:()=>{
@@ -1556,6 +1559,108 @@ function checkBadges(){
 }
 $('stRecordsRow').addEventListener('click',()=>{renderBadges();$('badgePanel').classList.add('show');});
 $('badgeClose').addEventListener('click',()=>$('badgePanel').classList.remove('show'));
+
+// ---------- postcards and creature cards ----------
+async function exportPNG(canvas,name){
+  const blob=await new Promise(r=>canvas.toBlob(r,'image/png'));
+  if(!blob)return;
+  try{
+    const file=new File([blob],name,{type:'image/png'});
+    if(navigator.canShare&&navigator.canShare({files:[file]})){
+      await navigator.share({files:[file],title:'Primordial Soup'});
+      return;
+    }
+  }catch(e){}
+  const a=document.createElement('a');
+  a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();
+  setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
+}
+function makePostcard(){
+  const S=1080,F=230;
+  const pc=document.createElement('canvas');pc.width=S;pc.height=S+F;
+  const g=pc.getContext('2d');
+  g.fillStyle='#050A14';g.fillRect(0,0,S,S+F);
+  const crop=2*(R+18);
+  g.drawImage(cv,(CX-crop/2)*DPR,(CY-crop/2)*DPR,crop*DPR,crop*DPR,0,0,S,S);
+  g.fillStyle='rgba(8,14,26,0.96)';g.fillRect(0,S,S,F);
+  g.fillStyle='#63E2FF';g.font='600 34px ui-monospace,monospace';
+  g.fillText('P R I M O R D I A L   S O U P',40,S+60);
+  g.fillStyle='#C9D8EA';g.font='26px ui-monospace,monospace';
+  g.fillText(creatures.length+' cells · '+lastSpeciesN+' species · gen '+maxGen+' · year '+Math.floor(simT/SEASON_PERIOD),40,S+106);
+  g.fillStyle='#5F7391';g.font='22px ui-monospace,monospace';
+  g.fillText('somecommonname.github.io/primordial-soup · v'+APP_V,40,S+144);
+  try{
+    if(treeC&&treeC.g&&treeC.g.canvas.width>0&&treeT.length>2){
+      g.globalAlpha=0.9;
+      g.drawImage(treeC.g.canvas,40,S+164,S-80,46);
+      g.globalAlpha=1;
+    }
+  }catch(e){}
+  sfx('bloom');
+  toolUsed('postcard');
+  return exportPNG(pc,'primordial-soup-postcard.png');
+}
+function drawMini(g,c,px,py,k){
+  const gg=c.g,sz=gg.size*k,h=gg.hue;
+  const gr=g.createRadialGradient(px,py,sz*0.2,px,py,sz*3);
+  gr.addColorStop(0,'hsla('+h+',90%,65%,0.5)');gr.addColorStop(1,'hsla('+h+',90%,65%,0)');
+  g.fillStyle=gr;g.beginPath();g.arc(px,py,sz*3,0,TAU);g.fill();
+  if(gg.spike>0.12){
+    g.strokeStyle='hsla('+h+',85%,78%,0.85)';g.lineWidth=k*1.2;g.beginPath();
+    const len=sz*(0.3+0.8*gg.spike);
+    for(let i=0;i<9;i++){const a=i/9*TAU;
+      g.moveTo(px+Math.cos(a)*sz*0.9,py+Math.sin(a)*sz*0.9);
+      g.lineTo(px+Math.cos(a)*(sz*0.9+len),py+Math.sin(a)*(sz*0.9+len));}
+    g.stroke();
+  }
+  g.fillStyle='hsla('+h+',72%,60%,0.95)';g.beginPath();g.arc(px,py,sz,0,TAU);g.fill();
+  g.strokeStyle='hsla('+h+',80%,78%,0.8)';g.lineWidth=k;g.stroke();
+  if(gg.shell>0.12){
+    g.strokeStyle='hsla('+h+',30%,85%,'+(0.25+0.55*gg.shell).toFixed(2)+')';
+    g.lineWidth=k*(1+2.2*gg.shell);
+    g.beginPath();g.arc(px,py,sz+k*1.5,0,TAU);g.stroke();
+  }
+  g.fillStyle='hsla('+h+',60%,88%,0.9)';g.beginPath();g.arc(px-sz*0.2,py,sz*0.32,0,TAU);g.fill();
+  g.fillStyle='rgba(8,14,26,0.9)';g.beginPath();g.arc(px+sz*0.5,py,Math.max(k,sz*0.16),0,TAU);g.fill();
+  if(gg.diet>0.5){
+    g.strokeStyle='rgba(255,107,94,0.9)';g.lineWidth=k*1.1;g.beginPath();
+    g.moveTo(px+Math.cos(0.5)*sz*0.8,py+Math.sin(0.5)*sz*0.8);
+    g.lineTo(px+sz*1.25,py);
+    g.lineTo(px+Math.cos(-0.5)*sz*0.8,py+Math.sin(-0.5)*sz*0.8);
+    g.stroke();
+  }
+}
+function makeCard(c){
+  const Wc=640,Hc=900;
+  const cc=document.createElement('canvas');cc.width=Wc;cc.height=Hc;
+  const g=cc.getContext('2d');
+  g.fillStyle='#050A14';g.fillRect(0,0,Wc,Hc);
+  g.strokeStyle='hsla('+c.g.hue+',70%,60%,0.6)';g.lineWidth=3;
+  g.strokeRect(14,14,Wc-28,Hc-28);
+  drawMini(g,c,Wc/2,235,13);
+  g.fillStyle='#63E2FF';g.font='600 44px ui-monospace,monospace';g.textAlign='center';
+  g.fillText(nameOf(c),Wc/2,462);
+  g.fillStyle='#5F7391';g.font='22px ui-monospace,monospace';
+  g.fillText('gen '+c.gen+' · age '+Math.floor(c.age)+'s · '+c.kids+' offspring'+(c.par?' · infected':''),Wc/2,500);
+  g.textAlign='left';
+  const rows=[['size',(c.g.size-3)/11],['speed',(c.g.speed-8)/122],['vision',(c.g.sense-15)/195],
+    ['diet',c.g.diet],['herding',c.g.herd],['spikes',c.g.spike],['shell',c.g.shell],
+    ['comfort',c.g.warmth],['immune',c.g.immune],['brain',c.g.brainW]];
+  g.font='20px ui-monospace,monospace';
+  rows.forEach((r,i)=>{
+    const y=556+i*29;
+    g.fillStyle='#5F7391';g.fillText(r[0],60,y);
+    g.fillStyle='rgba(99,140,190,0.2)';g.fillRect(220,y-14,360,10);
+    g.fillStyle='hsla('+c.g.hue+',70%,65%,0.9)';g.fillRect(220,y-14,360*clamp(r[1],0,1),10);
+  });
+  g.fillStyle='#5F7391';g.font='18px ui-monospace,monospace';
+  g.fillText('PRIMORDIAL SOUP · v'+APP_V,60,Hc-36);
+  sfx('bloom');
+  return exportPNG(cc,'soup-'+nameOf(c).toLowerCase().replace(/[^a-z0-9]/g,'')+'.png');
+}
+$('btnPost').addEventListener('click',makePostcard);
+$('inspCard').addEventListener('click',()=>{if(selected&&!selected.dead)makeCard(selected);});
 
 // ---------- sound ----------
 let audioCtx=null, soundOn=store.get('soup.sound')!=='0';

@@ -69,6 +69,9 @@ The badge gallery: seventeen named achievements built on the records system (Cen
 Name any creature (the ✎ button in the inspector) and follow its line (the ☆ button): the report then tracks your bloodline forever, celebrating each ten generations and mourning the line's end if it comes. The dish also writes its own history now: the Chronicle (📜 in the tools panel) records each year's births and deaths alongside meteors, plagues, ice ages, first infections, divergences, and badges, and it persists with the save. A Dynast badge honors any followed line that reaches generation 25.
 *Field notes:* in the first test, a founder named Adam was followed, produced 85 living descendants by generation 13, and died of old age during his own experiment. The feature works: it already hurts.
 
+### v1.5 · Postcards and creature cards
+The 📷 postcard button composes a shareable image of your dish: the living world, its stats, the tree of life, and the address. The 🎴 card button in the inspector renders any creature as a trading card: portrait with quills, shell, and jaws drawn true to its genes, plus all ten traits as bars. On phones both open the native share sheet; on desktop they download. A Photographer badge for your first postcard. Also: a visible version badge in the panel and self applying updates, so no device ever plays a stale build again.
+
 ---
 
 ## Next (each ~a session)
@@ -85,7 +88,7 @@ Name any creature (the ✎ button in the inspector) and follow its line (the ☆
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
 
-Fun and attachment: postcards (one tap shareable dish portraits), daily dish (one global seed per day, every copy diverges), scenario worlds (Ice World, Eden, Plaguelands), creature trading cards, finger painted terrain, dish versus dish (two seeds collide in a split world).
+Fun and attachment: daily dish (one global seed per day, every copy diverges), scenario worlds (Ice World, Eden, Plaguelands), finger painted terrain, dish versus dish (two seeds collide in a split world).
 
 Deeper evolution: memory neurons (fear that lingers, remembered food), evolved signaling and hearing (alarm calls, and eventually lying), pheromone trails, morphology genes (bodies with segments, fins, jaws), lifecycles (eggs, parental care, evolvable hibernation), decomposer fungi, parasites softening into symbionts, and proto-culture: behavior spreading without genes once memory and signals exist.
 
