@@ -92,6 +92,8 @@
   #treeCv{width:100%;height:120px;display:block}
   #treeShow{position:fixed;left:18px;bottom:16px;display:none;font-size:14px;padding:6px 9px}
   @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
+  #scenModal{left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,88vw);display:none;z-index:36}
+  #scenModal.show{display:block}
   #chronPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(520px,92vw);display:none;z-index:35;
               max-height:80vh;overflow-y:auto}
   #chronPanel.show{display:block}
@@ -154,7 +156,10 @@
     <button id="btnSound" title="sound">🔊</button>
   </div>
   <div class="ptitle" style="margin-top:14px">MEDDLE · CLICK THE DISH</div>
-  <button class="wide on" data-tool="inspect" style="margin-top:0">🔍 inspect</button>
+  <div class="row">
+    <button class="on" data-tool="inspect" style="flex:1.4">🔍 inspect</button>
+    <button data-tool="rock" style="flex:1">🪨 rock</button>
+  </div>
   <div class="ptitle">BLESSINGS</div>
   <div class="toolgrid three">
     <button data-tool="bloom">🌿 bloom</button>
@@ -190,6 +195,7 @@
 
 <div class="panel" id="report">
   <div class="ptitle">DISH REPORT</div>
+  <div class="subnums" id="stDish" style="margin-bottom:6px"></div>
   <div class="bignums">
     <div><span id="stPop">0</span><label>CELLS</label></div>
     <div class="alg"><span id="stAlgae">0</span><label>ALGAE</label></div>
@@ -224,6 +230,17 @@
   </div>
   <div class="ebar"><i id="inspEnergy"></i></div>
   <div id="inspGenes"></div>
+</div>
+
+<div class="panel" id="scenModal">
+  <div class="ptitle">CHOOSE A WORLD</div>
+  <div class="toolgrid" style="margin-top:8px">
+    <button data-scen="classic">🌍 classic</button>
+    <button data-scen="ice">❄ ice world</button>
+    <button data-scen="eden">🌿 eden</button>
+    <button data-scen="plague">🦠 plaguelands</button>
+  </div>
+  <button class="wide" id="scenCancel">cancel</button>
 </div>
 
 <div class="panel" id="chronPanel">
@@ -436,7 +453,9 @@ function rockPush(o,s){
 }
 function ping(x,y,color,r1=26,width=1.5,dur=0.6){ events.push({x,y,t0:simT,dur,r0:2,r1,color,width}); }
 
-function initWorld(){
+function initWorld(scn){
+  if(scn)scenario=scn;
+  dishId=makeCallsign();
   creatures.length=0; algae.length=0; events.length=0;
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
   lastSample=-1; lastHud=-9; sexBirths=0; cloneBirths=0; lastSpeciesN=1; lastSpeciesMsgT=0;
@@ -449,8 +468,15 @@ function initWorld(){
   for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
   const rootLin=newLineage(0,baseHue);
   for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
-  for(let i=0;i<1800;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
-  say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells');
+  const algN=scenario==='eden'?2600:scenario==='ice'?1200:1800;
+  for(let i=0;i<algN;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
+  if(scenario==='eden'){foodRate=1.5;foodEl.value=1.5;syncDials();}
+  if(scenario==='plague'){
+    for(let i=0;i<6;i++){const h=creatures[(Math.random()*creatures.length)|0];if(h)h.par={vir:0.3+rand(0,0.2)};}
+  }
+  const scLabel={classic:'',ice:' · endless winter',eden:' · a gentle world',plague:' · the sickness is endemic'}[scenario]||'';
+  say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells'+scLabel);
+  logChron('The dish '+dishId+' was born'+(scenario!=='classic'?' ('+scenario+')':''));
   updateInspector();
 }
 
@@ -475,7 +501,12 @@ function queryGrid(grid,x,y,r,out){
 }
 
 // ---------- climate: a warm end, a cold end, and a slow year ----------
-let tempAng=0, season=0;
+let tempAng=0, season=0, scenario='classic', dishId='';
+const CALLCHARS='ABCDEFGHJKMNPQRSTVWXYZ23456789';
+function makeCallsign(){
+  const pick=n=>{let t='';for(let i=0;i<n;i++)t+=CALLCHARS[(Math.random()*CALLCHARS.length)|0];return t;};
+  return 'SOUP-'+pick(4)+'-'+pick(2);
+}
 const SEASON_PERIOD=240;
 function tempAt(x,y){
   const proj=(Math.cos(tempAng)*(x-CX)+Math.sin(tempAng)*(y-CY))/Math.max(1,R);
@@ -500,7 +531,7 @@ function flow(x,y,t,out){
 const _n1=[],_n2=[],_fl=[0,0];
 function step(dt){
   simT+=dt;
-  season=Math.sin(TAU*simT/SEASON_PERIOD);
+  season=scenario==='ice'?-0.75:Math.sin(TAU*simT/SEASON_PERIOD);
   const ice=simT<iceUntil;
   // food spawn
   // spore rain: a thin drizzle, stronger over bare ground so deserts can recover
@@ -516,7 +547,7 @@ function step(dt){
     if(p.x<0)p.x+=W; if(p.x>W)p.x-=W; if(p.y<0)p.y+=H; if(p.y>H)p.y-=H;
   }
 
-  if(parasiteN===0&&creatures.length>40&&Math.random()<0.008*dt){
+  if(parasiteN===0&&creatures.length>40&&Math.random()<(scenario==='plague'?0.12:0.008)*dt){
     const h=creatures[(Math.random()*creatures.length)|0];
     if(h&&!h.dead){h.par={vir:0.3+rand(0,0.2)};say('🦠 a parasite finds its first host');logChron('🦠 A parasite found its first host');}
   }
@@ -1041,7 +1072,8 @@ function updateHud(){
   $('stSex').textContent=sexBirths;
   $('stClone').textContent=cloneBirths;
   const q=(simT/SEASON_PERIOD)%1;
-  $('stSeason').textContent=q<0.25?'🌱 spring':q<0.5?'☀ summer':q<0.75?'🍂 autumn':'❄ winter';
+  $('stSeason').textContent=scenario==='ice'?'❄ endless winter':(q<0.25?'🌱 spring':q<0.5?'☀ summer':q<0.75?'🍂 autumn':'❄ winter');
+  $('stDish').textContent=dishId+(scenario!=='classic'?' · '+scenario:'');
   const spN=speciesCount();
   $('stSpecies').textContent=spN;
   chronYear();
@@ -1148,6 +1180,30 @@ function seedCreature(x,y){
   sfx('seedc');
   toolUsed('seed');
 }
+function rockAt(x,y){
+  for(let i=0;i<rocks.length;i++){
+    const rk=rocks[i];
+    if((rk.x-x)**2+(rk.y-y)**2<rk.r*rk.r){
+      rocks.splice(i,1);
+      ping(x,y,'rgba(160,190,230,0.6)',rk.r+12,2,0.7);
+      say('🪨 a rock crumbles away');
+      sfx('kill');
+      return;
+    }
+  }
+  if(rocks.length>=14){say('🪨 the dish can bear no more stone');return;}
+  const r=rand(24,40);
+  if((x-CX)**2+(y-CY)**2>(R-r-30)**2){say('🪨 too close to the rim');return;}
+  const spk=[];
+  for(let i=0;i<r/4;i++){const a=rand(0,TAU),d=Math.sqrt(Math.random())*r*0.8;
+    spk.push([Math.cos(a)*d,Math.sin(a)*d]);}
+  rocks.push({x,y,r,spk});
+  for(const c of creatures)rockPush(c,c.g.size);
+  ping(x,y,'rgba(160,190,230,0.7)',r+10,2,0.7);
+  say('🪨 a rock rises from the deep');
+  sfx('meteor');
+  toolUsed('rock');
+}
 function elixirAt(x,y){
   let healed=0,cured=0;
   for(const c of creatures){
@@ -1184,6 +1240,7 @@ cv.addEventListener('click',e=>{
   if(tool==='meteor')return meteor(x,y);
   if(tool==='bloom')return bloomAt(x,y);
   if(tool==='elixir')return elixirAt(x,y);
+  if(tool==='rock')return rockAt(x,y);
   if(tool==='seed')return seedCreature(x,y);
   let best=null,bd=26*26;
   for(const c of creatures){
@@ -1208,10 +1265,16 @@ $('btnIce').addEventListener('click',iceAge);
 let resetArm=0;
 $('btnReset').addEventListener('click',()=>{
   const n=performance.now();
-  if(n-resetArm<3000){store.del(SAVE_KEY);catchupLeft=0;initWorld();resetArm=0;$('btnReset').textContent='↻ new dish';}
+  if(n-resetArm<3000){resetArm=0;$('btnReset').textContent='↻ new dish';$('scenModal').classList.add('show');}
   else{resetArm=n;$('btnReset').textContent='⚠ erase this world?';
     setTimeout(()=>{if(performance.now()-resetArm>=2900){$('btnReset').textContent='↻ new dish';resetArm=0;}},3100);}
 });
+document.querySelectorAll('[data-scen]').forEach(b=>b.addEventListener('click',()=>{
+  $('scenModal').classList.remove('show');
+  store.del(SAVE_KEY);catchupLeft=0;
+  initWorld(b.dataset.scen);
+}));
+$('scenCancel').addEventListener('click',()=>$('scenModal').classList.remove('show'));
 $('inspClose').addEventListener('click',()=>{selected=null;updateInspector();});
 const foodEl=$('foodRate'),radEl=$('mutRate');
 function syncDials(){
@@ -1224,7 +1287,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.5.0';
+const APP_V='1.6.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1244,7 +1307,7 @@ function saveWorld(){
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
       foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt,
-      chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen}));
+      chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId}));
   }catch(e){}
 }
 function loadWorld(){
@@ -1280,6 +1343,7 @@ function loadWorld(){
   chron=Array.isArray(s.chron)?s.chron:[];
   yearN=s.yearN||0; yearB0=s.yearB0||0; yearD0=s.yearD0||0;
   followLin=s.followLin||0; followName=s.followName||''; lineBestGen=s.lineBestGen||0;
+  scenario=s.scenario||'classic'; dishId=s.dishId||makeCallsign();
   lineWasAlive=followLin?true:false;
   initSnow();
   const away=(Date.now()-s.savedAt)/1000;
@@ -1527,6 +1591,7 @@ const BADGES=[
  {id:'healer',n:'Healer',d:'Cure 25 infections with elixir.',t:()=>(records.cured||0)>=25},
  {id:'dynast',n:'Dynast',d:'A followed bloodline reaches generation 25.',t:()=>(records.line||0)>=25},
  {id:'photographer',n:'Photographer',d:'Send a postcard from your dish.',t:()=>records.tools&&records.tools.postcard},
+ {id:'iceborn',n:'Iceborn',d:'Keep an Ice World alive to year 2.',t:()=>scenario==='ice'&&simT>=2*SEASON_PERIOD&&creatures.length>=30},
  {id:'gardener',n:'Gardener',d:'Export a dish seed.',t:()=>records.tools&&records.tools.share},
  {id:'transplant',n:'Transplant Surgeon',d:'Import a foreign dish.',t:()=>records.tools&&records.tools.import},
  {id:'thinker',n:'The Thinker',d:'Average brain weight passes 0.25.',t:()=>{
@@ -1586,14 +1651,18 @@ function makePostcard(){
   g.fillStyle='rgba(8,14,26,0.96)';g.fillRect(0,S,S,F);
   g.fillStyle='#63E2FF';g.font='600 34px ui-monospace,monospace';
   g.fillText('P R I M O R D I A L   S O U P',40,S+60);
+  const q=(simT/SEASON_PERIOD)%1;
+  const seas=scenario==='ice'?'endless winter':(q<0.25?'spring':q<0.5?'summer':q<0.75?'autumn':'winter');
   g.fillStyle='#C9D8EA';g.font='26px ui-monospace,monospace';
-  g.fillText(creatures.length+' cells · '+lastSpeciesN+' species · gen '+maxGen+' · year '+Math.floor(simT/SEASON_PERIOD),40,S+106);
-  g.fillStyle='#5F7391';g.font='22px ui-monospace,monospace';
-  g.fillText('somecommonname.github.io/primordial-soup · v'+APP_V,40,S+144);
+  g.fillText(creatures.length+' cells · '+lastSpeciesN+' species · gen '+maxGen+' · year '+Math.floor(simT/SEASON_PERIOD)+', '+seas,40,S+102);
+  g.fillStyle='#FFD166';g.font='24px ui-monospace,monospace';
+  g.fillText(dishId+(scenario!=='classic'?' · '+scenario:'')+' · '+new Date().toLocaleDateString(),40,S+138);
+  g.fillStyle='#5F7391';g.font='20px ui-monospace,monospace';
+  g.fillText('somecommonname.github.io/primordial-soup · v'+APP_V,40,S+168);
   try{
     if(treeC&&treeC.g&&treeC.g.canvas.width>0&&treeT.length>2){
       g.globalAlpha=0.9;
-      g.drawImage(treeC.g.canvas,40,S+164,S-80,46);
+      g.drawImage(treeC.g.canvas,40,S+182,S-80,40);
       g.globalAlpha=1;
     }
   }catch(e){}
@@ -1655,7 +1724,7 @@ function makeCard(c){
     g.fillStyle='hsla('+c.g.hue+',70%,65%,0.9)';g.fillRect(220,y-14,360*clamp(r[1],0,1),10);
   });
   g.fillStyle='#5F7391';g.font='18px ui-monospace,monospace';
-  g.fillText('PRIMORDIAL SOUP · v'+APP_V,60,Hc-36);
+  g.fillText('PRIMORDIAL SOUP · '+dishId+' · v'+APP_V,60,Hc-36);
   sfx('bloom');
   return exportPNG(cc,'soup-'+nameOf(c).toLowerCase().replace(/[^a-z0-9]/g,'')+'.png');
 }
