@@ -1368,6 +1368,7 @@ function bloomAt(x,y){
 
 // ---------- input ----------
 cv.addEventListener('click',e=>{
+  if(modalJustClosed){modalJustClosed=false;return;}
   const x=e.clientX,y=e.clientY;
   if((x-CX)**2+(y-CY)**2>R*R)return;
   if(tool==='meteor')return meteor(x,y);
@@ -1420,7 +1421,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.9.0';
+const APP_V='1.9.1';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1797,7 +1798,7 @@ async function exportPNG(canvas,name){
   setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove();},2000);
 }
 function makePostcard(){
-  const S=1080,F=230;
+  const S=1080,F=300;
   const pc=document.createElement('canvas');pc.width=S;pc.height=S+F;
   const g=pc.getContext('2d');
   g.fillStyle='#050A14';g.fillRect(0,0,S,S+F);
@@ -1809,15 +1810,18 @@ function makePostcard(){
   const q=(simT/SEASON_PERIOD)%1;
   const seas=scenario==='ice'?'endless winter':(q<0.25?'spring':q<0.5?'summer':q<0.75?'autumn':'winter');
   g.fillStyle='#C9D8EA';g.font='26px ui-monospace,monospace';
-  g.fillText(creatures.length+' cells · '+lastSpeciesN+' species · gen '+maxGen+' · year '+Math.floor(simT/SEASON_PERIOD)+', '+seas,40,S+102);
+  g.fillText(creatures.length+' cells · '+lastSpeciesN+' species · gen '+maxGen+' · year '+Math.floor(simT/SEASON_PERIOD)+', '+seas,40,S+100);
   g.fillStyle='#FFD166';g.font='24px ui-monospace,monospace';
-  g.fillText(dishId+(scenario!=='classic'?' · '+scenario:'')+' · '+new Date().toLocaleDateString(),40,S+138);
+  g.fillText(dishId+(scenario!=='classic'?' · '+scenario:'')+' · '+new Date().toLocaleDateString(),40,S+136);
+  g.fillStyle='#C9D8EA';g.font='22px ui-monospace,monospace';
+  g.fillText('🏆 best: pop '+records.pop+' · gen '+records.gen+' · elder '+Math.floor(records.elder)+'s · dish '+Math.floor(records.dish/60)+'m',40,S+172);
+  g.fillText('🏅 '+Object.keys(earned).length+' of '+BADGES.length+' badges · born '+births+' · died '+deaths+(parasiteN?' · sick '+parasiteN:''),40,S+204);
   g.fillStyle='#5F7391';g.font='20px ui-monospace,monospace';
-  g.fillText('somecommonname.github.io/primordial-soup · v'+APP_V,40,S+168);
+  g.fillText('somecommonname.github.io/primordial-soup · v'+APP_V,40,S+236);
   try{
     if(treeC&&treeC.g&&treeC.g.canvas.width>0&&treeT.length>2){
       g.globalAlpha=0.9;
-      g.drawImage(treeC.g.canvas,40,S+182,S-80,40);
+      g.drawImage(treeC.g.canvas,40,S+252,S-80,40);
       g.globalAlpha=1;
     }
   }catch(e){}
@@ -2016,6 +2020,29 @@ $('seedClose').addEventListener('click',()=>$('seedModal').classList.remove('sho
   applyFold();
   mq.addEventListener('change',applyFold);
 }
+
+// ---------- panels close on outside tap or Escape ----------
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal'];
+let modalJustClosed=false;
+document.addEventListener('pointerdown',e=>{
+  let closed=false;
+  for(const id of MODALS){
+    const p=$(id);
+    if(p&&p.classList.contains('show')&&!p.contains(e.target)){p.classList.remove('show');closed=true;}
+  }
+  const w=$('welcome');
+  if(w&&w.classList.contains('show')&&!w.contains(e.target)){
+    w.classList.remove('show');store.set('soup.seen','1');initAudio();closed=true;
+  }
+  if(closed)modalJustClosed=true;
+});
+window.addEventListener('keydown',e=>{
+  if(e.key==='Escape'){
+    for(const id of MODALS){const p=$(id);if(p)p.classList.remove('show');}
+    const w=$('welcome');
+    if(w&&w.classList.contains('show')){w.classList.remove('show');store.set('soup.seen','1');}
+  }
+});
 
 // ---------- first visit ----------
 if(!store.get('soup.seen'))$('welcome').classList.add('show');
