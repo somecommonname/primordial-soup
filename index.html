@@ -316,6 +316,7 @@
     <div class="gl">🎬 Press film during a replay to export the whole story as a video</div>
     <div class="gl">👑 Heirloom: your best bloodlines found the next dish; dynasties chain forever</div>
     <div class="gl">🧪 The workshop: design a genome by hand and release it; the body is yours, the mind must evolve</div>
+    <div class="gl">🎵 Every creature sings its genome: click one to hear it; new species announce themselves in song</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -1520,7 +1521,8 @@ function updateHud(){
   checkRecords();
   checkBadges();
   if(simT>20&&simT-lastSpeciesMsgT>10){
-    if(spN>lastSpeciesN){say('🌱 divergence: '+spN+' species now share the dish');logChron('🌱 Divergence: '+spN+' species now share the dish');lastSpeciesMsgT=simT;}
+    if(spN>lastSpeciesN){say('🌱 divergence: '+spN+' species now share the dish');logChron('🌱 Divergence: '+spN+' species now share the dish');lastSpeciesMsgT=simT;
+      if(!replay){let nw=null;for(const c of creatures)if(!c.dead&&(!nw||c.lin>nw.lin))nw=c;if(nw)playMotif(nw.g,0.04);}}
     else if(spN<lastSpeciesN){say('a species has vanished from the dish');lastSpeciesMsgT=simT;}
   }
   lastSpeciesN=spN;
@@ -1701,6 +1703,7 @@ cv.addEventListener('click',e=>{
     if(d<bd){bd=d;best=c;}
   }
   selected=best;updateInspector();
+  if(selected)playMotif(selected.g,0.055);
 });
 document.querySelectorAll('[data-tool]').forEach(b=>b.addEventListener('click',()=>{
   tool=b.dataset.tool;
@@ -1788,7 +1791,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.19.0';
+const APP_V='1.20.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2084,7 +2087,7 @@ $('stLine').addEventListener('click',()=>{
   }
   let best=null;
   for(const c of creatures)if(inLine.has(c.lin)&&(!best||c.gen>best.gen))best=c;
-  if(best){selected=best;updateInspector();say('☆ visiting '+nameOf(best)+' of the line of '+followName);}
+  if(best){selected=best;updateInspector();playMotif(best.g,0.05);say('☆ visiting '+nameOf(best)+' of the line of '+followName);}
   else say('☆ no living members of the line remain');
 });
 $('lineClear').addEventListener('click',()=>{
@@ -2334,6 +2337,30 @@ function initAudio(){
 }
 window.addEventListener('pointerdown',initAudio);
 window.addEventListener('keydown',initAudio);
+const PENT=[0,2,4,7,9];
+function motifOf(g){
+  const deg=PENT[Math.floor(((g.hue%360)+360)%360/72)%5];
+  const oct=g.size>10?0:g.size>7?1:2;
+  const root=110*Math.pow(2,oct)*Math.pow(2,deg/12);
+  const n=3+Math.round(clamp(g.brainW||0,0,1)*3);
+  const dt=clamp(0.3-0.0015*(g.speed||60),0.09,0.3);
+  const steps=(g.diet||0)>0.5?[0,3,6,10,12]:[0,4,7,12,9];
+  const type=(g.shell||0)>0.45?'square':(g.spike||0)>0.45?'sawtooth':'sine';
+  const vib=(g.wiggle||1)>2.2;
+  const notes=[];
+  for(let i=0;i<n;i++){
+    const st=steps[i%steps.length]+(i>=steps.length?12:0);
+    notes.push(root*Math.pow(2,st/12));
+  }
+  return {notes,dt,type,vib};
+}
+function playMotif(g,vol){
+  if(!soundOn||!audioCtx)return;
+  const m=motifOf(g);
+  m.notes.forEach((f,i)=>{
+    setTimeout(()=>beep(f,m.dt*0.92,m.type,vol||0.05,m.vib?f*0.97:null),i*m.dt*1000);
+  });
+}
 function beep(freq,dur,type,vol,glide){
   if(!soundOn||!audioCtx)return;
   try{
@@ -2508,7 +2535,7 @@ function renderObs(){
   $('obsBody').innerHTML=html;
   $('obsBody').querySelectorAll('tr.click').forEach(tr=>tr.addEventListener('click',()=>{
     const c=creatures.find(x=>x.id==tr.dataset.cid);
-    if(c){selected=c;updateInspector();$('obsPanel').classList.remove('show');}
+    if(c){selected=c;updateInspector();playMotif(c.g,0.05);$('obsPanel').classList.remove('show');}
   }));
 }
 function r2(v){return typeof v==='number'?Math.round(v*100)/100:v;}
