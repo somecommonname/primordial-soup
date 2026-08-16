@@ -351,6 +351,7 @@
     <div class="gl">🏛 Retired worlds rest in the museum; revivable ones rerun their whole history and live again</div>
     <div class="gl">🗓 The calendar: event weeks change the daily dish for everyone (the Great Winter, the Age of Plagues)</div>
     <div class="gl">🎓 The classroom: guided experiments on shared seeds, compare results with anyone</div>
+    <div class="gl">🏝 The archipelago: one people, three lagoons, narrow straits; geography becomes speciation</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -365,7 +366,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 37 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 38 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -383,6 +384,7 @@
     <button data-scen="ice">❄ ice world</button>
     <button data-scen="eden">🌿 eden</button>
     <button data-scen="plague">🦠 plaguelands</button>
+    <button data-scen="arch">🏝 archipelago</button>
     <button id="scenDaily">📅 today's dish</button>
     <button id="scenHeir">👑 heirloom</button>
     <button id="scenVersus">⚔ versus</button>
@@ -658,6 +660,49 @@ function rockPush(o,s){
 }
 function ping(x,y,color,r1=26,width=1.5,dur=0.6){ events.push({x,y,t0:simT,dur,r0:2,r1,color,width}); }
 
+function archLagoons(){
+  const d=R*0.52;
+  return [90,210,330].map(a=>({x:CX+Math.cos(a*Math.PI/180)*d,y:CY+Math.sin(a*Math.PI/180)*d}));
+}
+function lagoonOf(x,y){
+  const L=archLagoons();
+  let bi=0,bd=1e18;
+  for(let i=0;i<3;i++){const dd=(L[i].x-x)**2+(L[i].y-y)**2;if(dd<bd){bd=dd;bi=i;}}
+  return bi;
+}
+function archRock(x,y,r){
+  const spk=[];
+  for(let s=0;s<r/4;s++){const sa=rand(0,TAU),sd=Math.sqrt(rnd())*r*0.8;spk.push([Math.cos(sa)*sd,Math.sin(sa)*sd]);}
+  rocks.push({x,y,r,spk});
+}
+function archTerrain(){
+  rocks.length=0;
+  archRock(CX,CY,R*0.16);
+  for(const wa of [30,150,270]){
+    const ax=Math.cos(wa*Math.PI/180), ay=Math.sin(wa*Math.PI/180);
+    archRock(CX+ax*R*0.30,CY+ay*R*0.30,R*0.15);
+    archRock(CX+ax*R*0.55,CY+ay*R*0.55,R*0.12);
+    archRock(CX+ax*R*0.90,CY+ay*R*0.90,R*0.11);
+  }
+}
+let lastMigSayT=-99;
+function archMigration(){
+  if(replay)return;
+  const L=archLagoons();
+  for(const c of creatures){
+    if(c.dead)continue;
+    const lg=lagoonOf(c.x,c.y);
+    if(c.lg!==undefined&&c.lg!==lg){
+      const dNew=(L[lg].x-c.x)**2+(L[lg].y-c.y)**2;
+      const dOld=(L[c.lg].x-c.x)**2+(L[c.lg].y-c.y)**2;
+      if(dNew>dOld*0.64)continue;
+      records.migrations=(records.migrations||0)+1;
+      if(records.migrations%5===0){try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+      if(simT-lastMigSayT>20){lastMigSayT=simT;say('🏝 a wayfarer crossed the strait into another lagoon');}
+    }
+    c.lg=lg;
+  }
+}
 function initWorld(scn,seed){
   if(scn)scenario=scn;
   dishSeed=(seed!=null?seed:((Math.random()*4294967296)>>>0))>>>0;
@@ -678,6 +723,8 @@ function initWorld(scn,seed){
   chron=[]; yearN=0; yearB0=0; yearD0=0; followLin=0; followName=''; lineBestGen=0; lineWasAlive=false;
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
+  if(scenario==='arch')archTerrain();
+  lastMigSayT=-99;
   for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
   if(scenario==='versus'&&versusSeeds){
     creatures.length=0;
@@ -717,6 +764,18 @@ function initWorld(scn,seed){
       creatures.push(c);
     }
     logChron('👑 Founded by heirs of '+parentDish+': dynasty '+roman(dynasty));
+  }else if(scenario==='arch'){
+    creatures.length=0;
+    const L=archLagoons(), rootLin=newLineage(0,baseHue);
+    for(let li=0;li<3;li++){
+      for(let i=0;i<24;i++){
+        const a=rand(0,TAU), d=Math.sqrt(rnd())*R*0.24;
+        const c=makeCreature(founderGenome(baseHue),L[li].x+Math.cos(a)*d,L[li].y+Math.sin(a)*d);
+        c.lin=rootLin;c.wsum=brainSum(c.br);c.lg=li;
+        creatures.push(c);
+      }
+    }
+    logChron('🏝 One people woke scattered across three lagoons');
   }else{
     const rootLin=newLineage(0,baseHue);
     for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
@@ -728,8 +787,8 @@ function initWorld(scn,seed){
   if(scenario==='plague'){
     for(let i=0;i<6;i++){const h=creatures[(rnd()*creatures.length)|0];if(h)h.par={vir:0.3+rand(0,0.2)};}
   }
-  const scLabel={classic:'',ice:' · endless winter',eden:' · a gentle world',plague:' · the sickness is endemic'}[scenario]||'';
-  say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, 70 founder cells'+scLabel);
+  const scLabel={classic:'',ice:' · endless winter',eden:' · a gentle world',plague:' · the sickness is endemic',arch:' · three lagoons, narrow straits'}[scenario]||'';
+  say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, '+creatures.length+' founder cells'+scLabel);
   logChron('The dish '+dishId+' was born'+(scenario!=='classic'?' ('+scenario+')':''));
   updateInspector();
 }
@@ -792,6 +851,7 @@ const _n1=[],_n2=[],_fl=[0,0];
 function step(dt){
   stepN++;
   simT+=dt;
+  if(scenario==='arch'&&stepN%60===0)archMigration();
   season=scenario==='ice'?-0.75:Math.sin(TAU*simT/SEASON_PERIOD);
   const ice=simT<iceUntil;
   // food spawn
@@ -1831,7 +1891,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.22.0';
+const APP_V='1.23.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2217,6 +2277,7 @@ const BADGES=[
  {id:'creator',n:'Creator',d:'Release a hand designed creature from the workshop.',t:()=>records.tools&&records.tools.workshop},
  {id:'curator',n:'Curator',d:'Revive a world from the museum.',t:()=>records.tools&&records.tools.revive},
  {id:'graduate',n:'Graduate',d:'Run three different classroom experiments.',t:()=>records.tools&&records.tools.classroom},
+ {id:'wayfarer',n:'Wayfarer',d:'Witness ten migrations between lagoons.',t:()=>(records.migrations||0)>=10},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
