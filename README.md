@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.17.**
+**A small evolving universe in one HTML file. Now v1.18.**
 
 Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -43,12 +43,13 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 - **🔭 The Observatory**: species census, vital signs, record holders one tap away, and full JSON export of your world
 - **📜 The Chronicle**: the dish writes its own yearly history
 - **⏪ The Time Machine**: every dish records its interventions from birth; replay its entire history like film, then **🎬 export the whole story as a video timelapse**
-- **🏆 Records and 🏅 33 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 34 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
 - **⇪ Export** your whole world as a compressed seed string; **⇩ import** anyone else's, fossil record intact
 - **📷 Postcards** with stats, records, and badges; **🎴 creature cards** drawn true to the genes
+- **👑 Heirloom dishes**: when a world's story ends, harvest its best bloodlines to found the next one; dynasties chain with roman numerals
 
 ## Roadmap
 
@@ -56,9 +57,11 @@ The plan (shipped versions with field notes, what's next, and the honest answer 
 
 Have an idea for the dish? Open an issue; the roadmap's Greenhouse section is where suggestions grow into versions.
 
+The emergent findings are written up as an informal research note in [PAPER.md](PAPER.md): couch potato evolution, wartime brains, the jackal niche, and why nothing free stays honest.
+
 ## Field notes
 
-This project's best moments were diagnoses: creatures that orbited food they could not reach, a predator that starved while touching its prey, a dish rim that was accidentally a merry-go-round sanctuary, brains that tripled under predation then shrank in peacetime, and a test subject eaten by its own test apparatus. The debugging stories are preserved in the roadmap: bugs are field notes.
+This project's best moments were diagnoses: creatures that orbited food they could not reach, a predator that starved while touching its prey, a dish rim that was accidentally a merry-go-round sanctuary, brains that tripled under predation then shrank in peacetime, a test subject eaten by its own test apparatus, and new dishes haunted by the scent ghosts of the dead worlds before them. The debugging stories are preserved in the roadmap: bugs are field notes.
 
 Performance is a standing rule: the whole simulation runs in well under a millisecond per step, and every release reports its numbers.
 

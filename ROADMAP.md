@@ -128,6 +128,9 @@ Every dish now logs each intervention, every meteor, bloom, elixir, rock, strang
 ### v1.17 The Film (2026-08-16)
 Press 🎬 film inside the time machine and the replay records itself: canvas capture at 30fps, exported as mp4 where the browser allows it, webm elsewhere, delivered through the native share sheet on phones or a straight download. A ten minute dish becomes a half minute film of its entire history. Cinematographer badge (33). Performance: 0.98ms per step at population 203; replay frames 8.4ms at 16x, comfortably inside the 60fps budget.
 
+### v1.18 Heirloom dishes (2026-08-16)
+When a world's story ends, it no longer has to end. The 👑 heirloom button in the world picker harvests the eight most evolved living cells, deepest generation first, and founds a new dish from their descendants: fresh terrain, fresh seed, seventy founders drawn from eight bloodlines with fixed founding mutation so replays stay honest. Dynasties chain: the dish report reads SOUP-XXXX · dyn II, the chronicle records the ancestry, and the heirs carry their parents' brains into the new world. Field note: the first heirloom replays diverged, and the cause was a ghost. The pheromone scent field was never cleared between worlds, so every new dish inherited the fading trails of the dead one, and a replay began atop the scent its own history had left behind. One line, scent.fill(0), exorcised it, and hardened the deterministic seed promise for every dish type. Heirloom badge (34).
+
 ---
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
@@ -138,7 +141,7 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 ## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
 
-The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Workshop: a creature designer lab; build a genome by hand and release it. Dish inheritance: when a world ends, its survivors seed a child dish, and legacies chain across generations of worlds. The Museum: an archive of famous seeds, great bloodlines, and historic dishes. Sound evolution: each species carries a leitmotif; the dish becomes a slowly evolving composition. Annual events: real world weeks where every daily dish shares a theme, the Great Winter, the Age of Plagues. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
+The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Workshop: a creature designer lab; build a genome by hand and release it. The Museum: an archive of famous seeds, great bloodlines, and historic dishes. Sound evolution: each species carries a leitmotif; the dish becomes a slowly evolving composition. Annual events: real world weeks where every daily dish shares a theme, the Great Winter, the Age of Plagues. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
 
 ## Frontier (the "how far can this go" answer)
 
