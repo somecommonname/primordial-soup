@@ -128,6 +128,10 @@ Fun and attachment: Amber: a cosmetic prestige idea from David, rewards for dish
 
 Deeper evolution: and proto-culture: behavior spreading without genes once memory and signals exist.
 
+## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
+
+The Time Machine: destiny seeds make full replay possible; log every intervention with its timestamp and any dish's entire history can be re-run and scrubbed like film. Timelapse export: record the canvas to a real video file for sharing. The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Workshop: a creature designer lab; build a genome by hand and release it. Dish inheritance: when a world ends, its survivors seed a child dish, and legacies chain across generations of worlds. The Museum: an archive of famous seeds, great bloodlines, and historic dishes. Sound evolution: each species carries a leitmotif; the dish becomes a slowly evolving composition. Annual events: real world weeks where every daily dish shares a theme, the Great Winter, the Age of Plagues. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
+
 ## Frontier (the "how far can this go" answer)
 
 - **Neural brains.** Replace the fixed seek/flee/wander program with a tiny evolvable network (inputs: food/threat/kin vectors, energy; outputs: turn, thrust). Behavior itself then evolves: ambush, migration, hoarding, deception could appear *unprogrammed*. This is the jump from tuning an animal to growing one.
