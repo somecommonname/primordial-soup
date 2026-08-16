@@ -122,6 +122,14 @@ The social tier arrives. 📅 Today's dish: one tap seeds the world from the dat
 - **Performance floor**: spatial-hash tuning, offscreen sprites, optional WebGL renderer: 1k → 10k creatures.
 - **The menu-bar pet**: a native always-on dish (Tauri) living in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.
 
+### v1.16 The Time Machine (2026-08-16)
+Every dish now logs each intervention, every meteor, bloom, elixir, rock, stranger, plague, ice age, and dial change, stamped with its exact simulation step. Because worlds are seeded and deterministic, the log plus the seed IS the dish's complete history: press ⏪ replay and watch your world begin again, at 4x or 16x, pause it, or exit back to the present. Guards keep history read only: saves, tools, and dials are locked while the machine runs. Old dishes predate their own records and say so honestly; every dish born from v1.16 onward carries its whole past. Field note: the first replays diverged from history because the sunlight dial applied its present value to the past; the fix logs the dials the dish was born with as step zero entries. A second bug: versus dishes forgot which two founding seeds built them; the pair is now part of the save. Verified bit identical replays across classic, versus, and non default dial dishes: same random stream, same positions, same energies. Historian badge (32).
+
+### v1.17 The Film (2026-08-16)
+Press 🎬 film inside the time machine and the replay records itself: canvas capture at 30fps, exported as mp4 where the browser allows it, webm elsewhere, delivered through the native share sheet on phones or a straight download. A ten minute dish becomes a half minute film of its entire history. Cinematographer badge (33). Performance: 0.98ms per step at population 203; replay frames 8.4ms at 16x, comfortably inside the 60fps budget.
+
+---
+
 ## Greenhouse (ideas under consideration, not yet scheduled)
 
 Fun and attachment: Amber: a cosmetic prestige idea from David, rewards for dish longevity such as patinas, honorifics, and postcard flourishes, deliberately without blockchain or money; to be designed in the leaderboard phase.
@@ -130,7 +138,7 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 ## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
 
-The Time Machine: destiny seeds make full replay possible; log every intervention with its timestamp and any dish's entire history can be re-run and scrubbed like film. Timelapse export: record the canvas to a real video file for sharing. The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Workshop: a creature designer lab; build a genome by hand and release it. Dish inheritance: when a world ends, its survivors seed a child dish, and legacies chain across generations of worlds. The Museum: an archive of famous seeds, great bloodlines, and historic dishes. Sound evolution: each species carries a leitmotif; the dish becomes a slowly evolving composition. Annual events: real world weeks where every daily dish shares a theme, the Great Winter, the Age of Plagues. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
+The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Workshop: a creature designer lab; build a genome by hand and release it. Dish inheritance: when a world ends, its survivors seed a child dish, and legacies chain across generations of worlds. The Museum: an archive of famous seeds, great bloodlines, and historic dishes. Sound evolution: each species carries a leitmotif; the dish becomes a slowly evolving composition. Annual events: real world weeks where every daily dish shares a theme, the Great Winter, the Age of Plagues. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
 
 ## Frontier (the "how far can this go" answer)
 

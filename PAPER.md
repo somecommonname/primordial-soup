@@ -4,7 +4,7 @@
 
 ## Abstract
 
-Primordial Soup is a browser based artificial life simulator, one HTML file, where creatures with 20 genes and a 108 weight recurrent neural brain eat, hunt, court, breed, speak, and leave scent trails in a persistent dish. No behavior is scripted: every channel is physically implemented and paid for in energy, with meaning left to selection. Across twenty three shipped versions the dish produced unplanned outcomes: creatures that evolved to sit still near food, an omnivore niche where apex predators could not persist, quills chosen over armor, brains that grew under predation and shrank in peace, and a parasite that evolved into a partner. These findings come from single creature telemetry, seeded deterministic runs, and accelerated runs measured in minutes, not theory. They show that honest costs generate real selection pressure in a small toy system, not open-ended evolution, which remains the project's unmet frontier.
+Primordial Soup is a browser based artificial life simulator, one HTML file, where creatures with 20 genes and a 108 weight recurrent neural brain eat, hunt, court, breed, speak, and leave scent trails in a persistent dish. No behavior is scripted: every channel is physically implemented and paid for in energy, with meaning left to selection. Across twenty three shipped versions the dish produced unplanned outcomes: creatures that evolved to sit still near food, an omnivore niche that outlasted apex predators, quills chosen over armor, brains that grew under predation and shrank in peace, and a parasite that evolved into a partner. These findings come from single creature telemetry, seeded deterministic runs, and accelerated runs measured in minutes, not theory. They show that honest costs generate real selection pressure in a small toy system, not open-ended evolution, which remains the project's unmet frontier.
 
 ## 1. The System
 
@@ -24,13 +24,13 @@ Single creature telemetry. Every balance change followed from instrumenting one 
 
 Seeded determinism. Since version 1.14, every random draw flows through a single seeded generator; a dish seed, a number or hashed phrase, rebuilds the same world down to every rock, founder genome, and brain weight. Two runs from one seed matched exactly after ten simulated seconds of evolution, so any run is reproducible and checkable.
 
-Headless, accelerated runs. The dish keeps running unwatched: time away is computed and replayed as a visible catch-up, verified by returning a saved world exactly as left, then living out five missing minutes to the second. That capacity is what makes the findings below observable: most were read off runs of single digit minutes.
+Headless, accelerated runs. The dish keeps running unwatched: time away is computed and replayed as a visible catch-up, verified by returning a saved world exactly as left, then living out five missing minutes to the second. Most findings below were read off similarly fast runs, measured in single digit minutes.
 
 Universal energy costs. No mechanic is free. Neural weights, calls, and scent deposits draw energy; shells slow their bearer; care delays the next clutch; torpor crashes the ability to flee; immunity carries a metabolic cost, added after early builds showed it drifting upward for nothing. Every trait has a price.
 
 ## 3. Findings
 
-Seven results stand out from the field notes kept in the roadmap.
+Seven results stand out from the roadmap's field notes.
 
 ### 3.1 Couch potato evolution
 
@@ -62,18 +62,18 @@ Version 1.15's versus mode declares a winner only at true extinction. Testing th
 
 ## 4. Honest Limitations
 
-Population sizes are small: one canvas thread comfortably holds about a thousand creatures, and the apex predator finding above rests on just two to three individuals, barely distinguishable from noise. Planned WebGL work would raise the ceiling roughly tenfold, but nothing here was gathered above four figures of population.
+Population sizes are small: one canvas thread comfortably holds about a thousand creatures, and the apex predator finding above rests on just two to three individuals, barely distinguishable from noise. Planned WebGL work would raise the ceiling roughly tenfold, but nothing here exceeded four figures of population.
 
 Timescales are short. Most findings above come from single digit minute runs: three for brain weight, four for quills, eleven for a radiation driven count of 81 lineages, eighteen for the climate watch, long enough to see a gene shift but short against timescales usually tied to speciation in nature.
 
 Determinism is real but local. Seeded runs reproduce exactly, rock for rock and weight for weight, on a given build and machine, enough for checkable experiments and shareable seeds. Whether the same seed reproduces identically across different hardware or browsers has never been tested.
 
-Parameter evolution is not open-endedness. Every trait moves within a gene range fixed by the code; a pinned gene is, in the project's own phrase, a spent direction. The dish repeatedly finds good, sometimes surprising settings for the knobs it is given, but has not been shown to invent a new knob outside the space the code anticipates. That distinction, tuning an animal against growing a new kind of thing, is the project's own stated unmet frontier.
+Parameter evolution is not open-endedness. Every trait moves within a gene range fixed by the code; a pinned gene is, in the project's phrase, a spent direction. The dish repeatedly finds good, sometimes surprising settings for the knobs it is given, but has not been shown to invent a new knob outside the space the code anticipates: tuning an animal, not growing a new kind of thing.
 
 ## 5. Open Questions
 
 Proto-culture. Calls, scent trails, and memory now all exist, everything needed for behavior to spread through signals rather than genes. Whether it happens, a call or trail pattern moving through a population faster than genes could carry it, is untested, and would be the first evidence here of culture in a minimal sense, rather than instinct.
 
-Virulence attenuation in the wild. The mutualism pathway in section 3.6 was verified as a working mechanism during a live epidemic in a test dish, but a mechanism firing correctly once differs from an unprompted general tendency. Whether ordinary, unseeded dishes actually walk their parasites down into symbionts on their own, rather than occasionally and by chance, remains open.
+Virulence attenuation in the wild. The mutualism pathway in section 3.6 was verified as a working mechanism during a live epidemic in a test dish, but a mechanism firing correctly once differs from an unprompted general tendency. Whether ordinary, unseeded dishes walk their parasites down into symbionts as a rule, rather than by chance, remains open.
 
 What players will find that test dishes did not. Every finding here comes from a handful of short, single machine test runs. The daily dish and versus modes now put many independently seeded populations in front of many players at once, at a volume no test run has matched. Whether that turns up genuinely new strategies, rather than re-derivations of what test dishes already found, is the most direct test of the project's stated goal: a dish that keeps surprising the people watching it, not only the people who built it.
