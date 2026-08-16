@@ -24,8 +24,9 @@
   body{background:var(--abyss);color:var(--ink);font-family:var(--mono);overflow:hidden;
        font-variant-numeric:tabular-nums;-webkit-font-smoothing:antialiased}
   canvas#dish{position:fixed;inset:0;display:block}
+  canvas#glcv{position:fixed;inset:0;display:block;pointer-events:none;z-index:1}
   .panel{position:fixed;background:rgba(8,14,26,0.92);border:1px solid var(--line);border-radius:10px;
-         padding:14px 16px;box-shadow:0 8px 40px rgba(0,0,0,0.5)}
+         padding:14px 16px;box-shadow:0 8px 40px rgba(0,0,0,0.5);z-index:2}
   @media (min-width:701px){
     .panel{background:var(--panel);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}
   }
@@ -33,7 +34,7 @@
     .panel{backdrop-filter:none!important;-webkit-backdrop-filter:none!important;
            background:rgba(8,14,26,0.94)!important}
   }
-  #tools{left:18px;top:18px;width:228px}
+  #tools{left:18px;top:18px;width:228px;max-height:calc(100vh - 36px);overflow-y:auto}
   #report{right:18px;top:18px;width:264px}
   h1{font-size:15px;font-weight:600;letter-spacing:0.28em;color:var(--cyan)}
   .sub{font-size:10px;color:var(--dim);letter-spacing:0.12em;margin:3px 0 12px}
@@ -84,7 +85,7 @@
   .gene .bar{flex:1;height:4px;background:rgba(99,140,190,0.15);border-radius:2px;overflow:hidden}
   .gene .bar i{display:block;height:100%;border-radius:2px;background:var(--ink)}
   .gene.diet .bar i{background:linear-gradient(90deg,var(--algae),var(--danger))}
-  #ticker{position:fixed;left:18px;bottom:246px;font-size:10.5px;color:var(--dim);pointer-events:none}
+  #ticker{position:fixed;left:50%;bottom:14px;transform:translateX(-50%);font-size:10.5px;color:var(--dim);pointer-events:none;text-align:center;max-width:min(600px,86vw);z-index:2}
   #treePanel{left:18px;bottom:18px;width:min(560px,44vw);padding:10px 12px 8px}
   #treePanel .thead{display:flex;justify-content:space-between;align-items:center;margin-bottom:6px}
   #treePanel .thead button{padding:2px 8px;font-size:9px;border:none;background:none;color:var(--dim)}
@@ -183,12 +184,13 @@
     #popChart{height:44px}
     h1{font-size:12px}
     #inspector{width:min(320px,92vw)}
-    #ticker{left:8px;bottom:8px}
+    #ticker{bottom:6px;max-width:94vw}
   }
 </style>
 </head>
 <body>
 <canvas id="dish"></canvas>
+<canvas id="glcv"></canvas>
 
 <div class="panel" id="tools">
   <h1>PRIMORDIAL SOUP</h1>
@@ -231,24 +233,17 @@
     <button id="btnShare" style="flex:1">⇪ share</button>
     <button id="btnImport" style="flex:1">⇩ import</button>
   </div>
-  <div class="row" style="margin-top:8px">
-    <button id="btnChron" style="flex:1">📜 chronicle</button>
-    <button id="btnBadges" style="flex:1">🏅 badges</button>
-  </div>
-  <div class="row" style="margin-top:8px">
-    <button id="btnPost" style="flex:1">📷 postcard</button>
-    <button id="btnObs" style="flex:1">🔭 observe</button>
-  </div>
-  <div class="row" style="margin-top:8px">
-    <button id="btnGuide" style="flex:1">❓ guide</button>
-    <button id="btnReplay" style="flex:1">⏪ replay</button>
-  </div>
-  <div class="row" style="margin-top:8px">
-    <button id="btnWorkshop" style="flex:1">🧪 workshop</button>
-    <button id="btnMuseum" style="flex:1">🏛 museum</button>
-  </div>
-  <div class="row" style="margin-top:8px">
-    <button id="btnClass" style="flex:1">🎓 classroom</button>
+  <div class="ptitle" style="margin-top:10px">PANELS</div>
+  <div class="toolgrid three">
+    <button id="btnChron">📜 log</button>
+    <button id="btnBadges">🏅 badges</button>
+    <button id="btnPost">📷 card</button>
+    <button id="btnObs">🔭 observe</button>
+    <button id="btnGuide">❓ guide</button>
+    <button id="btnReplay">⏪ replay</button>
+    <button id="btnWorkshop">🧪 build</button>
+    <button id="btnMuseum">🏛 museum</button>
+    <button id="btnClass">🎓 learn</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -352,6 +347,7 @@
     <div class="gl">🗓 The calendar: event weeks change the daily dish for everyone (the Great Winter, the Age of Plagues)</div>
     <div class="gl">🎓 The classroom: guided experiments on shared seeds, compare results with anyone</div>
     <div class="gl">🏝 The archipelago: one people, three lagoons, narrow straits; geography becomes speciation</div>
+    <div class="gl">🌊 The ocean: a wide fertile sea; when the dish grows crowded a faster renderer takes over</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -366,7 +362,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 38 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 39 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -385,6 +381,7 @@
     <button data-scen="eden">🌿 eden</button>
     <button data-scen="plague">🦠 plaguelands</button>
     <button data-scen="arch">🏝 archipelago</button>
+    <button data-scen="ocean">🌊 ocean</button>
     <button id="scenDaily">📅 today's dish</button>
     <button id="scenHeir">👑 heirloom</button>
     <button id="scenVersus">⚔ versus</button>
@@ -458,12 +455,17 @@ const hueDist=(a,b)=>{const d=Math.abs(a-b)%360;return d>180?360-d:d;};
 // ---------- canvas ----------
 const cv=document.getElementById('dish'), ctx=cv.getContext('2d');
 let W=0,H=0,CX=0,CY=0,R=0,DPR=1;
+let gl=null, glOK=false, glProg=null, glBuf=null, glLoc=null, glArr=new Float32Array(0);
+let glCreat=false, glAlg=false;
 function resize(){
   DPR=Math.min(2,window.devicePixelRatio||1);
   W=window.innerWidth; H=window.innerHeight;
   cv.width=W*DPR; cv.height=H*DPR;
   cv.style.width=W+'px'; cv.style.height=H+'px';
   ctx.setTransform(DPR,0,0,DPR,0,0);
+  const gcv=document.getElementById('glcv');
+  if(gcv){gcv.width=W*DPR;gcv.height=H*DPR;gcv.style.width=W+'px';gcv.style.height=H+'px';
+    if(gl)gl.viewport(0,0,gcv.width,gcv.height);}
   CX=W/2; CY=H/2; R=Math.min(W,H)/2-26;
 }
 let worldReady=false;
@@ -725,7 +727,8 @@ function initWorld(scn,seed){
   genTerrain(); initSnow();
   if(scenario==='arch')archTerrain();
   lastMigSayT=-99;
-  for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
+  const fN=scenario==='ocean'?120:70;
+  for(let i=0;i<fN;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
   if(scenario==='versus'&&versusSeeds){
     creatures.length=0;
     rngS=versusSeeds.a|0;
@@ -780,14 +783,14 @@ function initWorld(scn,seed){
     const rootLin=newLineage(0,baseHue);
     for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
   }
-  const algN=scenario==='eden'?2600:scenario==='ice'?1200:1800;
+  const algN=scenario==='ocean'?4200:scenario==='eden'?2600:scenario==='ice'?1200:1800;
   for(let i=0;i<algN;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   if(scenario==='eden'){foodRate=1.5;foodEl.value=1.5;syncDials();}
   if(!replay){ivLog=[{s:0,t:'food',p:{v:foodRate}},{s:0,t:'rad',p:{v:mutRate}}]; ivComplete=true;}
   if(scenario==='plague'){
     for(let i=0;i<6;i++){const h=creatures[(rnd()*creatures.length)|0];if(h)h.par={vir:0.3+rand(0,0.2)};}
   }
-  const scLabel={classic:'',ice:' · endless winter',eden:' · a gentle world',plague:' · the sickness is endemic',arch:' · three lagoons, narrow straits'}[scenario]||'';
+  const scLabel={classic:'',ice:' · endless winter',eden:' · a gentle world',plague:' · the sickness is endemic',arch:' · three lagoons, narrow straits',ocean:' · a wide fertile sea'}[scenario]||'';
   say('the dish forms: '+rocks.length+' rocks, '+jets.length+' currents, '+creatures.length+' founder cells'+scLabel);
   logChron('The dish '+dishId+' was born'+(scenario!=='classic'?' ('+scenario+')':''));
   updateInspector();
@@ -1333,15 +1336,103 @@ function glowSprite(hue){
   g.fillStyle=gr;g.fillRect(0,0,64,64);
   glowCache[b]=s;return s;
 }
+let uiRngS=987654321;
+function uiRnd(){uiRngS=uiRngS+0x6D2B79F5|0;let t=Math.imul(uiRngS^uiRngS>>>15,1|uiRngS);
+  t=t+Math.imul(t^t>>>7,61|t)^t;return ((t^t>>>14)>>>0)/4294967296;}
+function uiGauss(){let u=0,v=0;while(!u)u=uiRnd();while(!v)v=uiRnd();
+  return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v);}
 const snow=[];
 function initSnow(){snow.length=0;for(let i=0;i<140;i++)snow.push({x:rand(0,W),y:rand(0,H),vx:0,vy:0});}
+
+// ---------- webgl fast renderer: thousands of bodies, one draw call ----------
+const glRGB=(()=>{const cache={};return h=>{h=((h|0)%360+360)%360;let c=cache[h];if(c)return c;
+  const f=(n)=>{const k=(n+h/30)%12;return 0.65-0.585*Math.max(-1,Math.min(k-3,9-k,1));};
+  c=[f(0),f(8),f(4)];cache[h]=c;return c;};})();
+function initGL(){
+  const g=document.getElementById('glcv');
+  try{gl=g.getContext('webgl',{alpha:true,antialias:false,premultipliedAlpha:true});}catch(e){gl=null;}
+  if(!gl){glOK=false;return;}
+  const vs='attribute vec2 aP;attribute vec2 aUV;attribute vec4 aC;varying vec2 vUV;varying vec4 vC;uniform vec2 uRes;'+
+    'void main(){vec2 c=(aP/uRes)*2.0-1.0;gl_Position=vec4(c.x,-c.y,0.0,1.0);vUV=aUV;vC=aC;}';
+  const fs='precision mediump float;varying vec2 vUV;varying vec4 vC;'+
+    'void main(){float d=length(vUV);float core=smoothstep(1.0,0.7,d);float halo=smoothstep(2.4,0.55,d)*0.28;'+
+    'float a=(core+halo)*vC.a;gl_FragColor=vec4(vC.rgb*a,a);}';
+  const sh=(t,src)=>{const x=gl.createShader(t);gl.shaderSource(x,src);gl.compileShader(x);
+    if(!gl.getShaderParameter(x,gl.COMPILE_STATUS)){throw new Error('shader');}return x;};
+  try{
+    glProg=gl.createProgram();
+    gl.attachShader(glProg,sh(gl.VERTEX_SHADER,vs));
+    gl.attachShader(glProg,sh(gl.FRAGMENT_SHADER,fs));
+    gl.linkProgram(glProg);
+    if(!gl.getProgramParameter(glProg,gl.LINK_STATUS))throw new Error('link');
+  }catch(e){gl=null;glOK=false;return;}
+  glLoc={aP:gl.getAttribLocation(glProg,'aP'),aUV:gl.getAttribLocation(glProg,'aUV'),
+         aC:gl.getAttribLocation(glProg,'aC'),uRes:gl.getUniformLocation(glProg,'uRes')};
+  glBuf=gl.createBuffer();
+  gl.enable(gl.BLEND);
+  gl.blendFunc(gl.ONE,gl.ONE_MINUS_SRC_ALPHA);
+  g.addEventListener('webglcontextlost',e=>{e.preventDefault();glOK=false;});
+  g.addEventListener('webglcontextrestored',()=>initGL());
+  gl.viewport(0,0,g.width,g.height);
+  glOK=true;
+}
+const QUAD=[[-1,-1],[1,-1],[1,1],[-1,-1],[1,1],[-1,1]];
+function glFrame(drawC,drawA){
+  if(!gl)return;
+  gl.clearColor(0,0,0,0);
+  gl.clear(gl.COLOR_BUFFER_BIT);
+  const nC=drawC?creatures.length:0, nA=drawA?algae.length:0;
+  const verts=(nC+nA)*6;
+  if(!verts)return;
+  const need=verts*8;
+  if(glArr.length<need)glArr=new Float32Array(Math.ceil(need*1.3));
+  let o=0;
+  if(drawA){
+    for(const a of algae){
+      const al=0.5+0.28*Math.sin(a.x*0.37+a.y*0.29+simT*2);
+      for(const q of QUAD){
+        glArr[o++]=a.x+q[0]*2.4;glArr[o++]=a.y+q[1]*2.4;
+        glArr[o++]=q[0]*2.4;glArr[o++]=q[1]*2.4;
+        glArr[o++]=0.30*al;glArr[o++]=0.75*al;glArr[o++]=0.40*al;glArr[o++]=al;
+      }
+    }
+  }
+  if(drawC){
+    for(const c of creatures){
+      if(c.dead)continue;
+      const g2=c.g,sz=g2.size;
+      const ex=sz*(1+(g2.elong||0)*0.85), ey=sz*(1-(g2.elong||0)*0.3);
+      const co=Math.cos(c.dir), si=Math.sin(c.dir);
+      const vit=Math.max(0,Math.min(1,c.energy/c.cap));
+      let al=0.5+0.4*vit; if(c.torpid)al*=0.55;
+      const rgb=glRGB(g2.hue);
+      for(const q of QUAD){
+        const lx=q[0]*2.4*ex, ly=q[1]*2.4*ey;
+        glArr[o++]=c.x+lx*co-ly*si;glArr[o++]=c.y+lx*si+ly*co;
+        glArr[o++]=q[0]*2.4;glArr[o++]=q[1]*2.4;
+        glArr[o++]=rgb[0]*al;glArr[o++]=rgb[1]*al;glArr[o++]=rgb[2]*al;glArr[o++]=al;
+      }
+    }
+  }
+  gl.useProgram(glProg);
+  gl.bindBuffer(gl.ARRAY_BUFFER,glBuf);
+  gl.bufferData(gl.ARRAY_BUFFER,glArr.subarray(0,o),gl.DYNAMIC_DRAW);
+  gl.enableVertexAttribArray(glLoc.aP);
+  gl.vertexAttribPointer(glLoc.aP,2,gl.FLOAT,false,32,0);
+  gl.enableVertexAttribArray(glLoc.aUV);
+  gl.vertexAttribPointer(glLoc.aUV,2,gl.FLOAT,false,32,8);
+  gl.enableVertexAttribArray(glLoc.aC);
+  gl.vertexAttribPointer(glLoc.aC,4,gl.FLOAT,false,32,16);
+  gl.uniform2f(glLoc.uRes,W,H);
+  gl.drawArrays(gl.TRIANGLES,0,o/8);
+}
 
 function render(){
   // trail fade
   ctx.fillStyle='rgba(5,10,20,0.30)';
   ctx.fillRect(0,0,W,H);
   ctx.save();
-  if(shake>0&&!reduceMotion){ctx.translate(gauss()*shake,gauss()*shake);shake=Math.max(0,shake-0.5);}
+  if(shake>0&&!reduceMotion){ctx.translate(uiGauss()*shake,uiGauss()*shake);shake=Math.max(0,shake-0.5);}
   // temperature wash: amber warmth, blue cold, swinging with the season
   {
     const gx=Math.cos(tempAng),gy=Math.sin(tempAng);
@@ -1367,9 +1458,15 @@ function render(){
       }
     }
   }
+  // hybrid renderer thresholds (hysteresis so the switch never flickers)
+  glCreat=glOK&&(glCreat?creatures.length>220:creatures.length>250);
+  glAlg=glOK&&(glAlg?algae.length>1250:algae.length>1500);
+  if(glOK)glFrame(glCreat,glAlg);
   // algae
-  ctx.fillStyle='rgba(111,224,138,0.85)';
-  for(const a of algae)ctx.fillRect(a.x-1.1,a.y-1.1,2.2,2.2);
+  if(!glAlg){
+    ctx.fillStyle='rgba(111,224,138,0.85)';
+    for(const a of algae)ctx.fillRect(a.x-1.1,a.y-1.1,2.2,2.2);
+  }
   // fungi
   for(const f of fungi){
     ctx.fillStyle='rgba(190,150,255,'+(0.4+0.3*Math.min(1,f.age/10)).toFixed(2)+')';
@@ -1395,7 +1492,13 @@ function render(){
     for(const s of rk.spk)ctx.fillRect(rk.x+s[0],rk.y+s[1],1.6,1.6);
   }
   // creatures
-  for(const c of creatures){
+  if(glCreat){
+    if(selected&&!selected.dead){
+      ctx.strokeStyle='rgba(99,226,255,0.9)';ctx.lineWidth=1.2;
+      ctx.beginPath();ctx.arc(selected.x,selected.y,selected.g.size+5,0,TAU);ctx.stroke();
+    }
+  }
+  else for(const c of creatures){
     const g=c.g,s=g.size,h=g.hue;
     const vit=clamp(c.energy/c.cap,0,1);
     ctx.globalAlpha=0.25+0.35*vit;
@@ -1891,7 +1994,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.23.0';
+const APP_V='1.24.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2278,6 +2381,7 @@ const BADGES=[
  {id:'curator',n:'Curator',d:'Revive a world from the museum.',t:()=>records.tools&&records.tools.revive},
  {id:'graduate',n:'Graduate',d:'Run three different classroom experiments.',t:()=>records.tools&&records.tools.classroom},
  {id:'wayfarer',n:'Wayfarer',d:'Witness ten migrations between lagoons.',t:()=>(records.migrations||0)>=10},
+ {id:'legion',n:'Legion',d:'A thousand cells alive in one dish.',t:()=>(records.pop||0)>=1000},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -3065,6 +3169,7 @@ function frame(){
   requestAnimationFrame(frame);
 }
 syncDials();
+try{initGL();}catch(e){glOK=false;}
 ctx.fillStyle='#050A14';ctx.fillRect(0,0,W,H);
 frame();
 if(location.protocol.indexOf('http')===0&&'serviceWorker' in navigator){
