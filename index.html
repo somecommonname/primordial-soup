@@ -289,6 +289,7 @@
     <div class="gl">🎲 New dish accepts a seed: the same seed builds the same world for anyone, anywhere</div>
     <div class="gl">📅 The daily dish: one world per day, shared by everyone; ⚔ versus: two peoples, one arena</div>
     <div class="gl">⏪ The time machine replays your world's whole history like film</div>
+    <div class="gl">🎬 Press film during a replay to export the whole story as a video</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -303,7 +304,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 32 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 33 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -365,6 +366,7 @@
   <button id="rpPause">⏸</button>
   <button id="rpSlow">4×</button>
   <button id="rpFast">16×</button>
+  <button id="rpRec">🎬 film</button>
   <button id="rpExit">exit</button>
 </div>
 
@@ -1727,7 +1729,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.16.0';
+const APP_V='1.17.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1989,6 +1991,7 @@ $('rpSlow').addEventListener('click',()=>{if(replay)replay.speed=4;});
 $('rpFast').addEventListener('click',()=>{if(replay)replay.speed=16;});
 $('rpExit').addEventListener('click',endReplay);
 $('btnReplay').addEventListener('click',startReplay);
+$('rpRec').addEventListener('click',startFilm);
 $('btnBadges').addEventListener('click',()=>{renderBadges();$('badgePanel').classList.add('show');});
 $('guideClose').addEventListener('click',()=>$('guidePanel').classList.remove('show'));
 $('welcomeGuide').addEventListener('click',()=>$('guidePanel').classList.add('show'));
@@ -2090,6 +2093,7 @@ const BADGES=[
  {id:'daily',n:'Day Player',d:'Begin a daily dish.',t:()=>records.tools&&records.tools.daily},
  {id:'warbringer',n:'Warbringer',d:'Set two peoples against each other.',t:()=>records.tools&&records.tools.versus},
  {id:'historian',n:'Historian',d:'Watch a world begin again in the time machine.',t:()=>records.tools&&records.tools.replay},
+ {id:'cinematographer',n:'Cinematographer',d:'Film a timelapse of a world entire history.',t:()=>records.tools&&records.tools.film},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -2531,6 +2535,7 @@ function startReplay(){
   say('⏪ the time machine: watching this world begin again');
 }
 function endReplay(){
+  stopFilm();
   replay=null;
   $('replayBar').style.display='none';
   if(!loadWorld())initWorld();
@@ -2552,6 +2557,44 @@ function replayTick(){
     say('⏪ history has caught up with the present');
     endReplay();
   }
+}
+
+// ---------- timelapse film ----------
+let recorder=null, recChunks=[], recT0=0;
+function startFilm(){
+  if(!replay){say('🎬 film runs inside the time machine: press ⏪ replay first');return;}
+  if(recorder){stopFilm();return;}
+  if(!cv.captureStream||!window.MediaRecorder){say('🎬 this browser cannot record video');return;}
+  const stream=cv.captureStream(30);
+  const mime=['video/mp4','video/webm;codecs=vp9','video/webm'].find(m=>MediaRecorder.isTypeSupported(m))||'';
+  recorder=new MediaRecorder(stream,mime?{mimeType:mime}:{});
+  recChunks=[];
+  recorder.ondataavailable=e=>{if(e.data.size)recChunks.push(e.data);};
+  recorder.onstop=deliverFilm;
+  recorder.start(500);
+  recT0=performance.now();
+  $('rpRec').textContent='■ rec';
+  say('🎬 filming history: it exports when the replay ends');
+}
+function stopFilm(){if(recorder&&recorder.state!=='inactive')recorder.stop();}
+function deliverFilm(){
+  const mime=(recorder&&recorder.mimeType)||'video/webm';
+  const ext=mime.includes('mp4')?'mp4':'webm';
+  const blob=new Blob(recChunks,{type:mime});
+  recorder=null; recChunks=[]; $('rpRec').textContent='🎬 film';
+  if(blob.size<2000){say('🎬 nothing captured');return;}
+  const name=dishId+'-timelapse.'+ext;
+  const f=new File([blob],name,{type:mime});
+  toolUsed('film');
+  say('🎬 timelapse exported: '+Math.round((performance.now()-recT0)/1000)+' seconds of history');
+  if(navigator.canShare&&navigator.canShare({files:[f]})){
+    navigator.share({files:[f],title:'Primordial Soup timelapse'}).catch(()=>dlBlob(blob,name));
+  } else dlBlob(blob,name);
+}
+function dlBlob(blob,name){
+  const a=document.createElement('a');a.href=URL.createObjectURL(blob);a.download=name;
+  document.body.appendChild(a);a.click();a.remove();
+  setTimeout(()=>URL.revokeObjectURL(a.href),30000);
 }
 
 // ---------- panels close on outside tap or Escape ----------
