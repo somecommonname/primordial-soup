@@ -143,6 +143,12 @@ Worlds no longer die when you leave them: replacing a dish retires it to the üè
 ### v1.22 The Classroom (2026-08-16)
 Five guided experiments, each a question, a seeded world, and instructions on what to watch: selection under the hammer (predation reshapes prey bodies), thought is a wartime expense (brains grow only while the hunt is on), nothing free stays honest (virulence attenuates, immunity is rented not owned), speciation by color and by song (lineages drift apart in hue and in leitmotif together), and the ghost of the ice (endless winter selects hibernation and cold comfort). Because experiment worlds are seeded, every student who presses set up gets the identical dish, and a classroom can compare runs like real replicates. Setup releases are logged like any intervention, so experiment worlds replay bit identical in the time machine. Graduate badge for running three (37).
 
+### v1.23 The Archipelago (2026-08-16)
+One people, three lagoons. Sealed reef walls divide the dish into three seas joined only by narrow straits, and a single founding population is scattered across them. Geography does the rest: isolated lagoons drift apart in color and body until the strains counter climbs, which is allopatric speciation, the textbook mechanism the old panmictic dish could never produce. Migration is real and measured: rock sliding collision turns the reef walls into guide rails that funnel the bold through the passes, about a dozen crossings a minute in testing, each one counted with hysteresis so boundary loiterers do not inflate the ledger. The scent trails of wayfarers literally paint the migration highways on the reef. Wayfarer badge for witnessing ten crossings (38).
+
+### v1.24 The ocean and the fast renderer (2026-08-16)
+The üåä ocean scenario seeds a wide fertile sea, 120 founders and thick algae, and populations boom into the many hundreds. To draw them, a WebGL renderer now takes over above 250 cells: one buffer, one draw call, soft glowing oriented bodies with hue, elongation, energy, and torpor intact. Measured: 2,900 creatures render in 0.34 milliseconds where the canvas path needs 8.9, a 26x speedup with a flat cost curve, and the whole thing falls back to the hand drawn canvas automatically on small dishes and on browsers without WebGL. The toolbar also got its reckoning: nine panel launchers compressed into one three column grid, and the ticker moved to bottom center so updates never hide behind a growing toolbar again. And a confession from the audit: screen shake had been quietly drawing from the simulation's random stream every frame after a meteor, which made post meteor live timelines subtly unreplayable; shake now has its own private random stream, and the determinism promise is whole. Legion badge for a thousand cells alive at once (39).
+
 ---
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
@@ -153,7 +159,7 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 ## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
 
-The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Paper: the field notes written up properly as an artificial life research note.
+The greenhouse stands empty for the first time: every seedling planted on 2026-08-15 has shipped. New seeds welcome at the idea box.
 
 ## Frontier (the "how far can this go" answer)
 

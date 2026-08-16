@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.22.**
+**A small evolving universe in one HTML file. Now v1.24.**
 
 Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -9,6 +9,8 @@ Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri 
 **Just open the URL.** The game runs entirely in your browser. No download, no account, no server, no frameworks: one file.
 
 Your dish **persists**: it auto-saves as you play, evolution continues while you are away, and your return triggers a visible fast-forward. Install it as an app from the address bar; it works offline and updates itself. Works on phones: panels fold to their headers, tap to expand.
+
+When a dish grows past a few hundred cells, a WebGL renderer takes over and draws thousands of glowing bodies in a third of a millisecond; small dishes keep the hand drawn look, and browsers without WebGL never notice anything changed.
 
 **Seeds**: new dish accepts an optional seed (any number or phrase); the same seed builds the exact same starting world for anyone, anywhere. The 📅 daily dish gives the whole world one shared morning seed, and ⚔ versus seeds two peoples on opposite shores of one arena to see whose line endures.
 
@@ -28,7 +30,7 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 - **🪨 Rocks** block movement and sight; ambush predation is real; sculpt them by hand
 - **🌊 Currents** sweep the small; the big and the finned resist
 - **🌡 Climate**: a warm end, a cold end, and a four minute year with seasons
-- **🌍 Four world types**: Classic, Ice World, Eden, Plaguelands
+- **🌍 Seven world types**: Classic, Ice World, Eden, Plaguelands, the Daily Dish, the Archipelago (one people, three lagoons, narrow straits; geography becomes speciation), and the Ocean (a wide fertile sea that grows crowds)
 
 ## You
 
@@ -48,7 +50,7 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 - **🏛 The Museum**: retired worlds rest with their complete history; revivable ones rerun it and live again
 - **🗓 The calendar**: event weeks retheme the shared daily dish (the Great Winter in December, the Age of Plagues at Halloween, the Garden Week in April, the Birthday of the Soup in August)
 - **🎓 The Classroom**: five guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
-- **🏆 Records and 🏅 37 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 39 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
