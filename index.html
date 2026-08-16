@@ -281,6 +281,7 @@
     <div class="gl">🦠 They catch parasites, evolve immunity, infect each other; gentle strains become helpful symbionts</div>
     <div class="gl">🍄 Death feeds fungi; fungi feed scavengers or burst into new plants</div>
     <div class="gl">🎲 New dish accepts a seed: the same seed builds the same world for anyone, anywhere</div>
+    <div class="gl">📅 The daily dish: one world per day, shared by everyone; ⚔ versus: two peoples, one arena</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -295,7 +296,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 29 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 31 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -313,6 +314,8 @@
     <button data-scen="ice">❄ ice world</button>
     <button data-scen="eden">🌿 eden</button>
     <button data-scen="plague">🦠 plaguelands</button>
+    <button id="scenDaily">📅 today's dish</button>
+    <button id="scenVersus">⚔ versus</button>
   </div>
   <button class="wide" id="scenCancel">cancel</button>
 </div>
@@ -590,12 +593,38 @@ function initWorld(scn,seed){
   fungi.length=0; symbioN=0;
   hist.t=[];hist.pop=[];hist.alg=[];hist.size=[];hist.speed=[];hist.sense=[];hist.diet=[];
   lineages.clear(); linNext=1; treeT.length=0; treeDt=2; lastTreeSample=-1;
+  dishTag=''; rootA=0; rootB=0; versusDone=false;
   chron=[]; yearN=0; yearB0=0; yearD0=0; followLin=0; followName=''; lineBestGen=0; lineWasAlive=false;
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
   for(let i=0;i<70;i++){const [x,y]=randInDish(0.9); creatures.push(makeCreature(founderGenome(baseHue),x,y));}
-  const rootLin=newLineage(0,baseHue);
-  for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
+  if(scenario==='versus'&&versusSeeds){
+    creatures.length=0;
+    rngS=versusSeeds.a|0;
+    const hueA=rand(0,360);
+    for(let i=0;i<35;i++){
+      const a=rand(-0.9,0.9), r=rand(0.25,0.85);
+      const c=makeCreature(founderGenome(hueA),CX-Math.cos(a)*R*r*0.9,CY+Math.sin(a)*R*r*0.7);
+      creatures.push(c);
+    }
+    rootA=newLineage(0,hueA);
+    for(const c of creatures){c.lin=rootA;c.wsum=brainSum(c.br);}
+    const westN=creatures.length;
+    rngS=versusSeeds.b|0;
+    const hueB=(hueA+150+rand(0,60))%360;
+    for(let i=0;i<35;i++){
+      const a=rand(-0.9,0.9), r=rand(0.25,0.85);
+      const c=makeCreature(founderGenome(hueB),CX+Math.cos(a)*R*r*0.9,CY+Math.sin(a)*R*r*0.7);
+      creatures.push(c);
+    }
+    rootB=newLineage(0,hueB);
+    for(let i=westN;i<creatures.length;i++){creatures[i].lin=rootB;creatures[i].wsum=brainSum(creatures[i].br);}
+    rngS=dishSeed|0;
+    logChron('⚔ Two peoples were seeded on opposite shores');
+  }else{
+    const rootLin=newLineage(0,baseHue);
+    for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
+  }
   const algN=scenario==='eden'?2600:scenario==='ice'?1200:1800;
   for(let i=0;i<algN;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   if(scenario==='eden'){foodRate=1.5;foodEl.value=1.5;syncDials();}
@@ -630,6 +659,7 @@ function queryGrid(grid,x,y,r,out){
 
 // ---------- climate: a warm end, a cold end, and a slow year ----------
 let tempAng=0, season=0, scenario='classic', dishId='', dishSeed=0;
+let dishTag='', rootA=0, rootB=0, versusDone=false, versusSeeds=null;
 const CALLCHARS='ABCDEFGHJKMNPQRSTVWXYZ23456789';
 function makeCallsign(){
   const pick=n=>{let t='';for(let i=0;i<n;i++)t+=CALLCHARS[(rnd()*CALLCHARS.length)|0];return t;};
@@ -1397,7 +1427,24 @@ function updateHud(){
   $('stClone').textContent=cloneBirths;
   const q=(simT/SEASON_PERIOD)%1;
   $('stSeason').textContent=scenario==='ice'?'❄ endless winter':(q<0.25?'🌱 spring':q<0.5?'☀ summer':q<0.75?'🍂 autumn':'❄ winter');
-  $('stDish').textContent=dishId+(scenario!=='classic'?' · '+scenario:'');
+  $('stDish').textContent=dishId+(scenario==='daily'?' · daily '+dishTag:scenario!=='classic'?' · '+scenario:'');
+  if(scenario==='versus'&&rootA&&rootB&&!versusDone&&simT>30){
+    const desc=root=>{
+      const inLine=new Set();
+      for(const [id] of lineages){
+        let cur=id,depth=0;
+        while(cur&&depth<30){
+          if(cur===root){inLine.add(id);break;}
+          const L=lineages.get(cur);cur=L?L.parent:0;depth++;
+        }
+      }
+      let n=0;for(const c of creatures)if(inLine.has(c.lin))n++;
+      return n;
+    };
+    const wa=desc(rootA), wb=desc(rootB);
+    if(wa===0&&wb>0){versusDone=true;say('⚔ the west has fallen; the dish belongs to the east');logChron('⚔ The west has fallen after '+Math.floor(simT/60)+' minutes; the east endures');}
+    else if(wb===0&&wa>0){versusDone=true;say('⚔ the east has fallen; the dish belongs to the west');logChron('⚔ The east has fallen after '+Math.floor(simT/60)+' minutes; the west endures');}
+  }
   const spN=speciesCount();
   $('stSpecies').textContent=spN;
   chronYear();
@@ -1619,6 +1666,30 @@ document.querySelectorAll('[data-scen]').forEach(b=>b.addEventListener('click',(
   initWorld(b.dataset.scen,parseSeed($('seedInput').value));
   $('seedInput').value='';
 }));
+$('scenDaily').addEventListener('click',()=>{
+  $('scenModal').classList.remove('show');
+  store.del(SAVE_KEY);catchupLeft=0;
+  const d=new Date().toISOString().slice(0,10);
+  initWorld('daily',parseSeed('soup-'+d));
+  dishTag=d;
+  toolUsed('daily');
+  say('📅 the daily dish: everyone who starts today starts here');
+});
+$('scenVersus').addEventListener('click',()=>{
+  $('scenModal').classList.remove('show');
+  const ta=prompt('seed for the WEST people (number or phrase)','west');
+  if(ta==null)return;
+  const tb=prompt('seed for the EAST people (number or phrase)','east');
+  if(tb==null)return;
+  store.del(SAVE_KEY);catchupLeft=0;
+  const sa=parseSeed(ta)??((Math.random()*4294967296)>>>0);
+  const sb=parseSeed(tb)??((Math.random()*4294967296)>>>0);
+  versusSeeds={a:sa,b:sb};
+  initWorld('versus',(sa^sb)>>>0);
+  versusSeeds=null;
+  toolUsed('versus');
+  say('⚔ the contest begins: west vs east');
+});
 $('scenCancel').addEventListener('click',()=>$('scenModal').classList.remove('show'));
 $('inspClose').addEventListener('click',()=>{selected=null;updateInspector();});
 const foodEl=$('foodRate'),radEl=$('mutRate');
@@ -1632,7 +1703,7 @@ radEl.addEventListener('input',syncDials);
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.14.1';
+const APP_V='1.15.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -1654,7 +1725,8 @@ function saveWorld(){
       lins:[...lineages.entries()],linNext,treeT,treeDt,
       eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10})),eggNext,
       fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
-      chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS}));
+      chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS,
+      dishTag,rootA,rootB,versusDone}));
   }catch(e){}
 }
 function loadWorld(){
@@ -1699,6 +1771,7 @@ function loadWorld(){
   followLin=s.followLin||0; followName=s.followName||''; lineBestGen=s.lineBestGen||0;
   scenario=s.scenario||'classic'; dishId=s.dishId||makeCallsign();
   dishSeed=s.dishSeed>>>0||0; if(typeof s.rngS==='number')rngS=s.rngS|0;
+  dishTag=s.dishTag||''; rootA=s.rootA||0; rootB=s.rootB||0; versusDone=!!s.versusDone;
   lineWasAlive=followLin?true:false;
   initSnow();
   const away=(Date.now()-s.savedAt)/1000;
@@ -1982,6 +2055,8 @@ const BADGES=[
    return bw/creatures.length>0.12&&mw/(creatures.length*30)>0.08;}},
  {id:'firstword',n:'First Word',d:'A people who speak: thirty calls a minute.',t:()=>callRate>=30&&creatures.length>=30},
  {id:'naturalist',n:'Naturalist',d:'Export the data of a living world.',t:()=>records.tools&&records.tools.export},
+ {id:'daily',n:'Day Player',d:'Begin a daily dish.',t:()=>records.tools&&records.tools.daily},
+ {id:'warbringer',n:'Warbringer',d:'Set two peoples against each other.',t:()=>records.tools&&records.tools.versus},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},

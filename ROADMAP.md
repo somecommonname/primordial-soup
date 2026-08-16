@@ -105,6 +105,10 @@ The third kingdom rises, and the plague learns mercy. Death now feeds fungi: cor
 ### v1.14 · Destiny seeds
 Every roll of fate now flows through one seeded generator, so a dish is perfectly reproducible: the new dish picker accepts an optional seed (a number, or any phrase, hashed), and the same seed builds the same world down to every rock, founder genome, and brain weight, with the same callsign. Verified beyond the requirement: two runs of the same seed matched even after ten simulated seconds of evolution. This is the foundation the social tier stands on: a daily dish where the whole world shares one morning seed, and dish versus dish. Also: armed tools now show a live reticle at the cursor with their true blast radius in their own color, so meteor and elixir can never be confused again.
 
+### v1.15 · The daily dish and the war of two shores
+The social tier arrives. 📅 Today's dish: one tap seeds the world from the date itself, so every player on Earth who starts today starts the same world, and the evening's postcards show how differently the same beginning can end. ⚔ Versus: two seeds found two peoples on opposite shores of one arena, their colors forced far enough apart that they are true separate species who cannot interbreed, and the dish referees: when one founding line's last descendant falls, the Chronicle records the victor. Day Player and Warbringer badges bring the gallery to 31.
+*Field notes:* the versus referee was tested by exterminating the west twice, and twice the verdict correctly refused to come: the west survived the first purge through eggs laid before the fall, and the second because dying grazers ate their way back to life in their final frame, one bite of algae outweighing the poison. Only true extinction brought the verdict: the west has fallen, the east endures. A referee that cannot be rushed, and a lifecycle system that defeats genocide by lunch and by egg, were both working exactly as built.
+
 ---
 
 ## Next (each ~a session)
@@ -120,7 +124,7 @@ Every roll of fate now flows through one seeded generator, so a dish is perfectl
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
 
-Fun and attachment: daily dish (one global seed per day, every copy diverges), dish versus dish (two seeds collide in a split world). Amber: a cosmetic prestige idea from David, rewards for dish longevity such as patinas, honorifics, and postcard flourishes, deliberately without blockchain or money; to be designed in the leaderboard phase.
+Fun and attachment: Amber: a cosmetic prestige idea from David, rewards for dish longevity such as patinas, honorifics, and postcard flourishes, deliberately without blockchain or money; to be designed in the leaderboard phase.
 
 Deeper evolution: and proto-culture: behavior spreading without genes once memory and signals exist.
 

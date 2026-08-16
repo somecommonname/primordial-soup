@@ -10,7 +10,7 @@ Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri 
 
 Your dish **persists**: it auto-saves as you play, evolution continues while you are away, and your return triggers a visible fast-forward. Install it as an app from the address bar; it works offline and updates itself. Works on phones: panels fold to their headers, tap to expand.
 
-**Seeds**: new dish accepts an optional seed (any number or phrase). The same seed builds the exact same starting world for anyone, anywhere, down to every rock, genome, and brain weight. Share a seed to share a beginning.
+**Seeds**: new dish accepts an optional seed (any number or phrase); the same seed builds the exact same starting world for anyone, anywhere. The 📅 daily dish gives the whole world one shared morning seed, and ⚔ versus seeds two peoples on opposite shores of one arena to see whose line endures.
 
 ## What the creatures are
 
@@ -42,7 +42,7 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 - **🌳 Tree of life**: a live phylogeny streamgraph with hover tooltips naming any lineage
 - **🔭 The Observatory**: species census, vital signs, record holders one tap away, and full JSON export of your world
 - **📜 The Chronicle**: the dish writes its own yearly history
-- **🏆 Records and 🏅 29 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 31 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
