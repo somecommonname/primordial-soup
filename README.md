@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.18.**
+**A small evolving universe in one HTML file. Now v1.21.**
 
 Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -34,6 +34,8 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 
 - **🔍 inspect** any creature; **✎ name** it; **☆ follow** its bloodline forever; **🎴** turn it into a trading card
 - **Blessings**: 🌿 bloom, 🧬 seed strangers, 🧪 elixir (heal and cure); **Catastrophes**: ☄️ meteor, 🦠 plague, ❄️ ice age
+- **🧪 The Workshop**: design a genome by hand, sliders for all 20 genes with a live portrait, and release four of your design; their blank minds must still evolve
+- **🎵 Leitmotifs**: every creature sings its genome; click one to hear it, and new species announce themselves in song
 - Armed tools show a live reticle with their true blast radius
 - **☀️ sunlight** and **☢️ radiation** dials; **❓ guide** teaches everything in plain bullets
 
@@ -43,7 +45,9 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 - **🔭 The Observatory**: species census, vital signs, record holders one tap away, and full JSON export of your world
 - **📜 The Chronicle**: the dish writes its own yearly history
 - **⏪ The Time Machine**: every dish records its interventions from birth; replay its entire history like film, then **🎬 export the whole story as a video timelapse**
-- **🏆 Records and 🏅 34 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏛 The Museum**: retired worlds rest with their complete history; revivable ones rerun it and live again
+- **🗓 The calendar**: event weeks retheme the shared daily dish (the Great Winter in December, the Age of Plagues at Halloween, the Garden Week in April, the Birthday of the Soup in August)
+- **🏆 Records and 🏅 36 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 

@@ -122,6 +122,13 @@
   #musPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(400px,94vw);display:none;z-index:37;
             max-height:84vh;overflow-y:auto}
   #musPanel.show{display:block}
+  #classPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,94vw);display:none;z-index:37;
+              max-height:86vh;overflow-y:auto}
+  #classPanel.show{display:block}
+  #classRows details{border-bottom:1px solid var(--line);padding:5px 0}
+  #classRows summary{cursor:pointer;font-size:11px;color:var(--cyan);letter-spacing:0.03em}
+  #classRows .cbody{font-size:10px;line-height:1.55;opacity:0.85;padding:6px 2px}
+  #classRows .cbody b{color:var(--ink)}
   .musrow{display:flex;align-items:center;gap:7px;font-size:10px;padding:6px 2px;border-bottom:1px solid var(--line)}
   .musrow .mi{flex:1;line-height:1.5}
   .musrow button{padding:4px 8px;font-size:10px}
@@ -240,6 +247,9 @@
     <button id="btnWorkshop" style="flex:1">🧪 workshop</button>
     <button id="btnMuseum" style="flex:1">🏛 museum</button>
   </div>
+  <div class="row" style="margin-top:8px">
+    <button id="btnClass" style="flex:1">🎓 classroom</button>
+  </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
 
@@ -290,6 +300,13 @@
 </div>
 <div id="treeTip"></div>
 
+<div class="panel" id="classPanel">
+  <button class="close" id="classClose">✕</button>
+  <div class="ptitle">THE CLASSROOM</div>
+  <div style="font-size:10px;opacity:0.75;margin-bottom:8px">Guided experiments on seeded worlds. Every student who sets one up gets the identical dish, so results can be compared.</div>
+  <div id="classRows"></div>
+</div>
+
 <div class="panel" id="musPanel">
   <button class="close" id="musClose">✕</button>
   <div class="ptitle">THE MUSEUM</div>
@@ -333,6 +350,7 @@
     <div class="gl">🎵 Every creature sings its genome: click one to hear it; new species announce themselves in song</div>
     <div class="gl">🏛 Retired worlds rest in the museum; revivable ones rerun their whole history and live again</div>
     <div class="gl">🗓 The calendar: event weeks change the daily dish for everyone (the Great Winter, the Age of Plagues)</div>
+    <div class="gl">🎓 The classroom: guided experiments on shared seeds, compare results with anyone</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -347,7 +365,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 36 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 37 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -1813,7 +1831,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.21.0';
+const APP_V='1.22.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2081,6 +2099,8 @@ $('btnWorkshop').addEventListener('click',()=>{buildWorkshop();$('wkPanel').clas
 $('wkClose').addEventListener('click',()=>$('wkPanel').classList.remove('show'));
 $('btnMuseum').addEventListener('click',()=>{renderMuseum();$('musPanel').classList.add('show');});
 $('musClose').addEventListener('click',()=>$('musPanel').classList.remove('show'));
+$('btnClass').addEventListener('click',()=>{renderClassroom();$('classPanel').classList.add('show');});
+$('classClose').addEventListener('click',()=>$('classPanel').classList.remove('show'));
 $('wkHunter').addEventListener('click',()=>applyPreset(WK_PRESETS.hunter));
 $('wkTank').addEventListener('click',()=>applyPreset(WK_PRESETS.tank));
 $('wkGrazer').addEventListener('click',()=>applyPreset(WK_PRESETS.grazer));
@@ -2196,6 +2216,7 @@ const BADGES=[
  {id:'heirloom',n:'Heirloom',d:'Found a dish from the heirs of another.',t:()=>records.tools&&records.tools.heirloom},
  {id:'creator',n:'Creator',d:'Release a hand designed creature from the workshop.',t:()=>records.tools&&records.tools.workshop},
  {id:'curator',n:'Curator',d:'Revive a world from the museum.',t:()=>records.tools&&records.tools.revive},
+ {id:'graduate',n:'Graduate',d:'Run three different classroom experiments.',t:()=>records.tools&&records.tools.classroom},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -2643,6 +2664,51 @@ function harvestHeirs(){
   return scored.slice(0,8).map(c=>({g:{...c.g},br:c.br.slice()}));
 }
 
+// ---------- the classroom ----------
+const CLASSROOM=[
+ {id:'hammer',t:'1 · Selection under the hammer',seed:'classroom-hammer',scn:'classic',
+  body:'<b>Question:</b> what does predation do to prey bodies?<br><b>Set up</b> releases four designed hunters into a seeded grazer world. <b>Watch</b> the TRAIT DRIFT panel for 3 to 5 minutes: speed and quills climb while the hunt is on. <b>Compare:</b> a classmate who never adds hunters keeps slow, soft grazers. The dish does not know what a hunter is; the genes that flee faster simply die less.',
+  setup(){releaseDesign(CX-40,CY,WK_PRESETS.hunter);logIv('wk',{x:CX-40,y:CY,g:{...WK_PRESETS.hunter}});}},
+ {id:'wartime',t:'2 · Thought is a wartime expense',seed:'classroom-wartime',scn:'classic',
+  body:'<b>Question:</b> when does intelligence pay?<br><b>Set up</b> seeds a calm world, then releases hunters. <b>Watch</b> the BRAIN line in the dish report: it climbs under predation, then sags once the hunters starve or are struck down; try a targeted ☄️ meteor on their packs. Neural tissue costs energy every second: a brain must earn its keep, and in peacetime it cannot.',
+  setup(){releaseDesign(CX+40,CY-30,WK_PRESETS.hunter);logIv('wk',{x:CX+40,y:CY-30,g:{...WK_PRESETS.hunter}});}},
+ {id:'immunity',t:'3 · Nothing free stays honest',seed:'classroom-immunity',scn:'plague',
+  body:'<b>Question:</b> why does the sickness get gentler?<br>Plaguelands start endemic. <b>Watch</b> sick counts in the dish report and inspect survivors: immunity rises while virulence falls, because strains that kill their hosts strand themselves, and immunity that costs energy is only kept while the threat is real. Gentle strains under 0.12 virulence become symbionts: the dot turns teal.',
+  setup(){}},
+ {id:'babel',t:'4 · Speciation, by color and by song',seed:'classroom-babel',scn:'eden',
+  body:'<b>Question:</b> how does one species become two?<br><b>Set up</b> seeds a gentle world with the ☢️ radiation dial high. <b>Watch</b> the TREE OF LIFE: lineages drift apart in color until they no longer court. Click creatures from separate branches and 🔊 listen: their songs have drifted apart with their genes. Distance in hue is distance in music.',
+  setup(){radEl.value=0.45;syncDials();logIv('rad',{v:0.45});}},
+ {id:'winter',t:'5 · The ghost of the ice',seed:'classroom-winter',scn:'ice',
+  body:'<b>Question:</b> what does endless winter select for?<br><b>Watch</b> torpor and comfort in inspected creatures across two in game years, then press ⏪ replay and compare the founders with their great grandchildren. Hibernation spreads, comfort zones migrate cold, and the fast burn out. The cold is not cruel; it is only consistent.',
+  setup(){}},
+];
+let classDone={};
+try{classDone=JSON.parse(store.get('primordialSoup.class')||'{}');}catch(e){}
+function renderClassroom(){
+  const host=$('classRows'); host.innerHTML='';
+  CLASSROOM.forEach(ex=>{
+    const d=document.createElement('details');
+    const sm=document.createElement('summary');
+    sm.textContent=(classDone[ex.id]?'✓ ':'')+ex.t;
+    const b=document.createElement('div');b.className='cbody';b.innerHTML=ex.body;
+    const btn=document.createElement('button');
+    btn.textContent='🧫 set up this experiment';btn.style.marginTop='6px';
+    btn.addEventListener('click',()=>{
+      if(replay)endReplay();
+      museumArchive();
+      store.del(SAVE_KEY);catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
+      initWorld(ex.scn,parseSeed(ex.seed));
+      ex.setup();
+      classDone[ex.id]=1;
+      try{store.set('primordialSoup.class',JSON.stringify(classDone));}catch(e){}
+      if(Object.keys(classDone).length>=3)toolUsed('classroom');
+      $('classPanel').classList.remove('show');
+      say('🎓 experiment ready: '+ex.t.slice(4)+' · seed '+ex.seed);
+    });
+    b.appendChild(btn);d.append(sm,b);host.appendChild(d);
+  });
+}
+
 // ---------- the museum ----------
 const MUS_KEY='primordialSoup.museum';
 function museumList(){try{return JSON.parse(store.get(MUS_KEY)||'[]');}catch(e){return [];}}
@@ -2865,7 +2931,7 @@ function dlBlob(blob,name){
 }
 
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;

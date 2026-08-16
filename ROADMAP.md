@@ -131,6 +131,15 @@ Press 🎬 film inside the time machine and the replay records itself: canvas ca
 ### v1.18 Heirloom dishes (2026-08-16)
 When a world's story ends, it no longer has to end. The 👑 heirloom button in the world picker harvests the eight most evolved living cells, deepest generation first, and founds a new dish from their descendants: fresh terrain, fresh seed, seventy founders drawn from eight bloodlines with fixed founding mutation so replays stay honest. Dynasties chain: the dish report reads SOUP-XXXX · dyn II, the chronicle records the ancestry, and the heirs carry their parents' brains into the new world. Field note: the first heirloom replays diverged, and the cause was a ghost. The pheromone scent field was never cleared between worlds, so every new dish inherited the fading trails of the dead one, and a replay began atop the scent its own history had left behind. One line, scent.fill(0), exorcised it, and hardened the deterministic seed promise for every dish type. Heirloom badge (34).
 
+### v1.19 The Workshop (2026-08-16)
+Design a life by hand: twenty sliders, one per gene plus hue, a live portrait drawn from the genome as you shape it, and three presets to start from (hunter, tank, grazer). Release four of your design anywhere in the dish. Their bodies are yours; their minds are blank, and thought must evolve on its own. Released designs are logged like any intervention, genome and all, so a dish with designed creatures still replays bit identical. In testing, four hand built hunters became five within eight seconds: the design bred. Creator badge (35).
+
+### v1.20 Sound evolution (2026-08-16)
+Every creature sings its genome. The root note comes from hue on a pentatonic scale, the octave from size (the big sing low), tempo from speed, intervals from diet (herbivores major, carnivores minor), timbre from armor (shells sing square waves, quills sawtooth), phrase length from brain power, vibrato from wander. Click any creature to hear its line; when a species diverges, the newborn lineage announces itself in song. Motifs are pure functions of the genome: no randomness, no effect on the simulation stream, so replays stay bit identical and evolution becomes audible as songs drift with the genes that carry them.
+
+### v1.21 The Museum and the calendar (2026-08-16)
+Worlds no longer die when you leave them: replacing a dish retires it to the 🏛 museum with its callsign, dynasty, final census, and, for dishes born since the time machine, the complete seed and intervention log. Revival reruns the whole history at speed and then hands the world back alive, exactly where it stopped, bit identical, its own time machine intact. Twelve worlds rest at a time; the oldest yields its place. And the 🗓 calendar joined the daily dish: event weeks give everyone on earth the same themed world, the Great Winter in late December, the Age of Plagues at Halloween, the Garden Week in April, and the Birthday of the Soup in mid August, which is this very week. Curator badge (36).
+
 ---
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
@@ -141,7 +150,7 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 ## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
 
-The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Workshop: a creature designer lab; build a genome by hand and release it. The Museum: an archive of famous seeds, great bloodlines, and historic dishes. Sound evolution: each species carries a leitmotif; the dish becomes a slowly evolving composition. Annual events: real world weeks where every daily dish shares a theme, the Great Winter, the Age of Plagues. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
+The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
 
 ## Frontier (the "how far can this go" answer)
 
