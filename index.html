@@ -119,6 +119,12 @@
   #wkPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,94vw);display:none;z-index:37;
            max-height:88vh;overflow-y:auto}
   #wkPanel.show{display:block}
+  #musPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(400px,94vw);display:none;z-index:37;
+            max-height:84vh;overflow-y:auto}
+  #musPanel.show{display:block}
+  .musrow{display:flex;align-items:center;gap:7px;font-size:10px;padding:6px 2px;border-bottom:1px solid var(--line)}
+  .musrow .mi{flex:1;line-height:1.5}
+  .musrow button{padding:4px 8px;font-size:10px}
   #guidePanel .close{position:absolute;right:8px;top:8px;border:none;background:none;color:var(--dim)}
   .gh{font-size:9px;letter-spacing:0.22em;color:var(--cyan);margin:12px 0 5px}
   .gl{font-size:11px;color:var(--ink);padding:2px 0;line-height:1.5}
@@ -232,6 +238,7 @@
   </div>
   <div class="row" style="margin-top:8px">
     <button id="btnWorkshop" style="flex:1">🧪 workshop</button>
+    <button id="btnMuseum" style="flex:1">🏛 museum</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -283,6 +290,13 @@
 </div>
 <div id="treeTip"></div>
 
+<div class="panel" id="musPanel">
+  <button class="close" id="musClose">✕</button>
+  <div class="ptitle">THE MUSEUM</div>
+  <div style="font-size:10px;opacity:0.75;margin-bottom:8px">Worlds you have left behind. Revive one and its whole history reruns, then it lives again.</div>
+  <div id="musRows"></div>
+</div>
+
 <div class="panel" id="wkPanel">
   <button class="close" id="wkClose">✕</button>
   <div class="ptitle">THE WORKSHOP</div>
@@ -317,6 +331,8 @@
     <div class="gl">👑 Heirloom: your best bloodlines found the next dish; dynasties chain forever</div>
     <div class="gl">🧪 The workshop: design a genome by hand and release it; the body is yours, the mind must evolve</div>
     <div class="gl">🎵 Every creature sings its genome: click one to hear it; new species announce themselves in song</div>
+    <div class="gl">🏛 Retired worlds rest in the museum; revivable ones rerun their whole history and live again</div>
+    <div class="gl">🗓 The calendar: event weeks change the daily dish for everyone (the Great Winter, the Age of Plagues)</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -331,7 +347,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 35 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 36 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -1736,6 +1752,7 @@ function parseSeed(t){
 document.querySelectorAll('[data-scen]').forEach(b=>b.addEventListener('click',()=>{
   if(replay)endReplay();
   $('scenModal').classList.remove('show');
+  museumArchive();
   store.del(SAVE_KEY);catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
   initWorld(b.dataset.scen,parseSeed($('seedInput').value));
   $('seedInput').value='';
@@ -1743,12 +1760,15 @@ document.querySelectorAll('[data-scen]').forEach(b=>b.addEventListener('click',(
 $('scenDaily').addEventListener('click',()=>{
   if(replay)endReplay();
   $('scenModal').classList.remove('show');
+  museumArchive();
   store.del(SAVE_KEY);catchupLeft=0;
   const d=new Date().toISOString().slice(0,10);versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
-  initWorld('daily',parseSeed('soup-'+d));
+  const ev=annualEvent(d);
+  initWorld(ev?ev.scn:'daily',parseSeed('soup-'+d));
   dishTag=d;
   toolUsed('daily');
-  say('📅 the daily dish: everyone who starts today starts here');
+  if(ev){logChron('🗓 '+ev.name+': a season upon every dish on earth');say('🗓 '+ev.name+': today, everyone plays this world');}
+  else say('📅 the daily dish: everyone who starts today starts here');
 });
 $('scenVersus').addEventListener('click',()=>{
   if(replay)endReplay();
@@ -1757,6 +1777,7 @@ $('scenVersus').addEventListener('click',()=>{
   if(ta==null)return;
   const tb=prompt('seed for the EAST people (number or phrase)','east');
   if(tb==null)return;
+  museumArchive();
   store.del(SAVE_KEY);catchupLeft=0;heirSeeds=null;dynasty=1;parentDish='';
   const sa=parseSeed(ta)??((Math.random()*4294967296)>>>0);
   const sb=parseSeed(tb)??((Math.random()*4294967296)>>>0);
@@ -1771,6 +1792,7 @@ $('scenHeir').addEventListener('click',()=>{
   if(!h){say('👑 an heirloom needs at least 2 living cells: this world has nothing left to give');return;}
   $('scenModal').classList.remove('show');
   const pd=dishId, dy=dynasty;
+  museumArchive();
   store.del(SAVE_KEY);catchupLeft=0;versusSeeds=null;
   heirSeeds=h; dynasty=dy+1; parentDish=pd;
   initWorld('classic',parseSeed($('seedInput').value));
@@ -1791,7 +1813,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.20.0';
+const APP_V='1.21.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2057,6 +2079,8 @@ $('btnReplay').addEventListener('click',startReplay);
 $('rpRec').addEventListener('click',startFilm);
 $('btnWorkshop').addEventListener('click',()=>{buildWorkshop();$('wkPanel').classList.add('show');});
 $('wkClose').addEventListener('click',()=>$('wkPanel').classList.remove('show'));
+$('btnMuseum').addEventListener('click',()=>{renderMuseum();$('musPanel').classList.add('show');});
+$('musClose').addEventListener('click',()=>$('musPanel').classList.remove('show'));
 $('wkHunter').addEventListener('click',()=>applyPreset(WK_PRESETS.hunter));
 $('wkTank').addEventListener('click',()=>applyPreset(WK_PRESETS.tank));
 $('wkGrazer').addEventListener('click',()=>applyPreset(WK_PRESETS.grazer));
@@ -2171,6 +2195,7 @@ const BADGES=[
  {id:'cinematographer',n:'Cinematographer',d:'Film a timelapse of a world entire history.',t:()=>records.tools&&records.tools.film},
  {id:'heirloom',n:'Heirloom',d:'Found a dish from the heirs of another.',t:()=>records.tools&&records.tools.heirloom},
  {id:'creator',n:'Creator',d:'Release a hand designed creature from the workshop.',t:()=>records.tools&&records.tools.workshop},
+ {id:'curator',n:'Curator',d:'Revive a world from the museum.',t:()=>records.tools&&records.tools.revive},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -2443,6 +2468,7 @@ $('btnShare').addEventListener('click',async()=>{
 });
 $('btnImport').addEventListener('click',()=>{
   if(replay)endReplay();
+  museumArchive();
   $('seedTitle').textContent='GERMINATE A SEED · PASTE BELOW';
   $('seedText').value='';
   $('seedMsg').textContent='';
@@ -2617,6 +2643,70 @@ function harvestHeirs(){
   return scored.slice(0,8).map(c=>({g:{...c.g},br:c.br.slice()}));
 }
 
+// ---------- the museum ----------
+const MUS_KEY='primordialSoup.museum';
+function museumList(){try{return JSON.parse(store.get(MUS_KEY)||'[]');}catch(e){return [];}}
+function museumSave(m){try{store.set(MUS_KEY,JSON.stringify(m));}catch(e){}}
+function museumArchive(){
+  if(!worldReady||stepN<600)return;
+  const m=museumList();
+  if(m.length&&m[0].id===dishId&&m[0].stepN===stepN)return;
+  const e={id:dishId,tag:dishTag,scn:scenario,seed:dishSeed,dyn:dynasty,pd:parentDish,
+    year:Math.floor(simT/SEASON_PERIOD),pop:creatures.filter(c=>!c.dead).length,gen:maxGen,
+    born:births,died:deaths,when:new Date().toISOString().slice(0,10),stepN,
+    vs:versusSeeds||null,hs:heirSeeds||null,
+    revivable:!!(ivComplete&&ivLog.length<=1200),
+    ivLog:(ivComplete&&ivLog.length<=1200)?ivLog.slice():null};
+  m.unshift(e);
+  while(m.length>12)m.pop();
+  museumSave(m);
+}
+function museumRevive(i){
+  const m=museumList(), e=m[i];
+  if(!e)return;
+  if(!e.revivable||!e.ivLog){say('🏛 this world left no complete record; it can be admired but not revived');return;}
+  if(replay){say('⏪ finish the current replay first');return;}
+  museumArchive();
+  store.del(SAVE_KEY); catchupLeft=0;
+  versusSeeds=e.vs||null; heirSeeds=e.hs||null; dynasty=e.dyn||1; parentDish=e.pd||'';
+  replay={log:e.ivLog.slice(),target:e.stepN,idx:0,speed:16,paused:false,revive:true};
+  initWorld(e.scn==='daily'?'daily':e.scn,e.seed);
+  dishTag=e.tag||'';
+  replay.active=true;
+  $('replayBar').style.display='flex';
+  $('musPanel').classList.remove('show');
+  toolUsed('revive');
+  say('🏛 reviving '+e.id+': history reruns, then the world lives again');
+}
+function renderMuseum(){
+  const host=$('musRows'); host.innerHTML='';
+  const m=museumList();
+  if(!m.length){host.innerHTML='<div style="font-size:10px;opacity:0.6;padding:8px 0">No worlds archived yet. When you replace a dish, it retires here.</div>';return;}
+  m.forEach((e,i)=>{
+    const row=document.createElement('div');row.className='musrow';
+    const info=document.createElement('div');info.className='mi';
+    info.innerHTML='<b>'+e.id+'</b>'+(e.dyn>1?' · dyn '+roman(e.dyn):'')+' · '+e.scn+' · year '+e.year+
+      '<br><span style="opacity:0.65">gen '+e.gen+' · pop '+e.pop+' · '+e.born+' born · retired '+e.when+'</span>';
+    const rv=document.createElement('button');
+    rv.textContent=e.revivable?'⏪ revive':'archive only';
+    rv.disabled=!e.revivable;
+    rv.addEventListener('click',()=>museumRevive(i));
+    const del=document.createElement('button');del.textContent='✕';
+    del.addEventListener('click',()=>{const mm=museumList();mm.splice(i,1);museumSave(mm);renderMuseum();});
+    row.append(info,rv,del);host.appendChild(row);
+  });
+}
+
+// ---------- the calendar ----------
+function annualEvent(d){
+  const mo=+d.slice(5,7), day=+d.slice(8,10);
+  if(mo===12&&day>=21&&day<=27)return {scn:'ice',name:'The Great Winter'};
+  if(mo===10&&day>=25&&day<=31)return {scn:'plague',name:'The Age of Plagues'};
+  if(mo===4&&day>=20&&day<=26)return {scn:'eden',name:'The Garden Week'};
+  if(mo===8&&day>=13&&day<=19)return {scn:'classic',name:'The Birthday of the Soup'};
+  return null;
+}
+
 // ---------- the workshop ----------
 const WK_LABELS={size:'size',speed:'speed',sense:'vision',diet:'diet',fear:'fear',rThresh:'fertility',wiggle:'wander',herd:'herding',spike:'quills',shell:'shell',warmth:'comfort',immune:'immunity',brainW:'brain power',elong:'length',fin:'fins',jaw:'jaws',eggy:'egg laying',care:'care',torpor:'torpor'};
 const WK_PRESETS={
@@ -2705,8 +2795,16 @@ function startReplay(){
 }
 function endReplay(){
   stopFilm();
+  const wasRevive=replay&&replay.revive;
+  const rlog=replay&&replay.log;
   replay=null;
   $('replayBar').style.display='none';
+  if(wasRevive){
+    ivLog=rlog.filter(v=>v.s<=stepN); ivComplete=true;
+    saveWorld();
+    say('🏛 the world lives again: continue its story');
+    return;
+  }
   if(!loadWorld())initWorld();
   say('⏩ returned to the present');
 }
@@ -2767,7 +2865,7 @@ function dlBlob(blob,name){
 }
 
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;
