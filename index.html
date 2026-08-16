@@ -96,6 +96,10 @@
              padding:7px 12px;display:flex;gap:8px;align-items:center;
              font-family:var(--mono);font-size:11px;color:var(--cyan)}
   #replayBar button{padding:4px 9px;font-size:10px}
+  .wkrow{display:flex;align-items:center;gap:6px;font-size:10px;margin:2px 0}
+  .wkrow .wl{width:80px;opacity:0.8}
+  .wkrow input{flex:1;min-width:0}
+  .wkrow .wv{width:34px;text-align:right;font-family:var(--mono)}
   @media (max-width:900px){#treePanel,#treeShow{display:none!important}}
   #obsPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);display:none;z-index:37;
             max-height:84vh;overflow-y:auto}
@@ -112,6 +116,9 @@
   #guidePanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,94vw);display:none;z-index:37;
               max-height:84vh;overflow-y:auto}
   #guidePanel.show{display:block}
+  #wkPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(340px,94vw);display:none;z-index:37;
+           max-height:88vh;overflow-y:auto}
+  #wkPanel.show{display:block}
   #guidePanel .close{position:absolute;right:8px;top:8px;border:none;background:none;color:var(--dim)}
   .gh{font-size:9px;letter-spacing:0.22em;color:var(--cyan);margin:12px 0 5px}
   .gl{font-size:11px;color:var(--ink);padding:2px 0;line-height:1.5}
@@ -223,6 +230,9 @@
     <button id="btnGuide" style="flex:1">❓ guide</button>
     <button id="btnReplay" style="flex:1">⏪ replay</button>
   </div>
+  <div class="row" style="margin-top:8px">
+    <button id="btnWorkshop" style="flex:1">🧪 workshop</button>
+  </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
 
@@ -273,6 +283,20 @@
 </div>
 <div id="treeTip"></div>
 
+<div class="panel" id="wkPanel">
+  <button class="close" id="wkClose">✕</button>
+  <div class="ptitle">THE WORKSHOP</div>
+  <div style="font-size:10px;opacity:0.75;margin-bottom:6px">You shape the body. The mind starts blank; thought must evolve.</div>
+  <div class="row" style="margin-bottom:6px">
+    <button id="wkHunter" style="flex:1">🦈 hunter</button>
+    <button id="wkTank" style="flex:1">🐢 tank</button>
+    <button id="wkGrazer" style="flex:1">🐇 grazer</button>
+  </div>
+  <canvas id="wkPrev" width="150" height="84" style="display:block;margin:0 auto 6px"></canvas>
+  <div id="wkRows"></div>
+  <button id="wkRelease" style="width:100%;margin-top:8px">🧪 release into the dish</button>
+</div>
+
 <div class="panel" id="guidePanel">
   <button class="close" id="guideClose">✕</button>
   <div class="ptitle">FIELD GUIDE</div>
@@ -291,6 +315,7 @@
     <div class="gl">⏪ The time machine replays your world's whole history like film</div>
     <div class="gl">🎬 Press film during a replay to export the whole story as a video</div>
     <div class="gl">👑 Heirloom: your best bloodlines found the next dish; dynasties chain forever</div>
+    <div class="gl">🧪 The workshop: design a genome by hand and release it; the body is yours, the mind must evolve</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -305,7 +330,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 34 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 35 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -1359,7 +1384,7 @@ function render(){
   // armed tool reticle: see what you are about to do
   if(tool!=='inspect'&&mX>=0&&(mX-CX)**2+(mY-CY)**2<R*R){
     const RT={meteor:['rgba(255,120,90,0.8)',115],elixir:['rgba(255,215,130,0.8)',110],
-      bloom:['rgba(111,224,138,0.8)',55],seed:['rgba(190,140,255,0.8)',20],rock:['rgba(170,195,230,0.8)',32]}[tool];
+      bloom:['rgba(111,224,138,0.8)',55],seed:['rgba(190,140,255,0.8)',20],rock:['rgba(170,195,230,0.8)',32],wk:['rgba(200,255,120,0.8)',26]}[tool];
     if(RT){
       ctx.strokeStyle=RT[0];
       ctx.lineWidth=1.4;
@@ -1664,6 +1689,7 @@ cv.addEventListener('click',e=>{
   const x=e.clientX,y=e.clientY;
   if((x-CX)**2+(y-CY)**2>R*R)return;
   if(replay&&tool!=='inspect'){say('⏪ hands off history: watch, or exit the time machine');return;}
+  if(tool==='wk'){logIv('wk',{x,y,g:{...wkG}});return releaseDesign(x,y,wkG);}
   if(tool==='meteor'){logIv('meteor',{x,y});return meteor(x,y);}
   if(tool==='bloom'){logIv('bloom',{x,y});return bloomAt(x,y);}
   if(tool==='elixir'){logIv('elixir',{x,y});return elixirAt(x,y);}
@@ -1762,7 +1788,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.18.0';
+const APP_V='1.19.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2026,6 +2052,18 @@ $('rpFast').addEventListener('click',()=>{if(replay)replay.speed=16;});
 $('rpExit').addEventListener('click',endReplay);
 $('btnReplay').addEventListener('click',startReplay);
 $('rpRec').addEventListener('click',startFilm);
+$('btnWorkshop').addEventListener('click',()=>{buildWorkshop();$('wkPanel').classList.add('show');});
+$('wkClose').addEventListener('click',()=>$('wkPanel').classList.remove('show'));
+$('wkHunter').addEventListener('click',()=>applyPreset(WK_PRESETS.hunter));
+$('wkTank').addEventListener('click',()=>applyPreset(WK_PRESETS.tank));
+$('wkGrazer').addEventListener('click',()=>applyPreset(WK_PRESETS.grazer));
+$('wkRelease').addEventListener('click',()=>{
+  if(!wkG)buildWorkshop();
+  tool='wk';
+  document.querySelectorAll('[data-tool]').forEach(b=>b.classList.remove('on'));
+  $('wkPanel').classList.remove('show');
+  say('🧪 armed: click the dish to release four of your design');
+});
 $('btnBadges').addEventListener('click',()=>{renderBadges();$('badgePanel').classList.add('show');});
 $('guideClose').addEventListener('click',()=>$('guidePanel').classList.remove('show'));
 $('welcomeGuide').addEventListener('click',()=>$('guidePanel').classList.add('show'));
@@ -2129,6 +2167,7 @@ const BADGES=[
  {id:'historian',n:'Historian',d:'Watch a world begin again in the time machine.',t:()=>records.tools&&records.tools.replay},
  {id:'cinematographer',n:'Cinematographer',d:'Film a timelapse of a world entire history.',t:()=>records.tools&&records.tools.film},
  {id:'heirloom',n:'Heirloom',d:'Found a dish from the heirs of another.',t:()=>records.tools&&records.tools.heirloom},
+ {id:'creator',n:'Creator',d:'Release a hand designed creature from the workshop.',t:()=>records.tools&&records.tools.workshop},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -2551,6 +2590,65 @@ function harvestHeirs(){
   return scored.slice(0,8).map(c=>({g:{...c.g},br:c.br.slice()}));
 }
 
+// ---------- the workshop ----------
+const WK_LABELS={size:'size',speed:'speed',sense:'vision',diet:'diet',fear:'fear',rThresh:'fertility',wiggle:'wander',herd:'herding',spike:'quills',shell:'shell',warmth:'comfort',immune:'immunity',brainW:'brain power',elong:'length',fin:'fins',jaw:'jaws',eggy:'egg laying',care:'care',torpor:'torpor'};
+const WK_PRESETS={
+ hunter:{size:8,speed:95,sense:150,diet:0.95,fear:0.15,rThresh:0.75,wiggle:1.2,herd:0.1,spike:0.1,shell:0,warmth:0.5,immune:0.2,brainW:0.5,elong:0.5,fin:0.6,jaw:0.8,eggy:0.1,care:0.2,torpor:0,hue:0},
+ tank:{size:11,speed:30,sense:60,diet:0.2,fear:0.3,rThresh:0.8,wiggle:1,herd:0.4,spike:0.7,shell:0.85,warmth:0.5,immune:0.4,brainW:0.1,elong:0.1,fin:0.1,jaw:0.2,eggy:0.6,care:0.5,torpor:0.4,hue:120},
+ grazer:{size:5,speed:70,sense:90,diet:0.05,fear:0.8,rThresh:0.68,wiggle:2.2,herd:0.9,spike:0.2,shell:0.1,warmth:0.5,immune:0.25,brainW:0.3,elong:0.3,fin:0.4,jaw:0,eggy:0.3,care:0.4,torpor:0.2,hue:210}};
+let wkG=null, wkBuilt=false;
+function wkDefaults(){const g={};for(const k in GENES){const G=GENES[k];g[k]=G.def!=null?G.def:(G.min+G.max)/2;}g.hue=200;return g;}
+function wkShow(row){
+  const k=row.querySelector('input').dataset.k;
+  const mx=k==='hue'?360:GENES[k].max;
+  row.querySelector('.wv').textContent=(+wkG[k]).toFixed(mx>20?0:2);
+}
+function buildWorkshop(){
+  if(wkBuilt)return; wkBuilt=true;
+  wkG=wkDefaults();
+  const host=$('wkRows');
+  const mk=(k,min,max)=>{
+    const row=document.createElement('div');row.className='wkrow';
+    const lab=document.createElement('span');lab.className='wl';lab.textContent=WK_LABELS[k]||k;
+    const inp=document.createElement('input');inp.type='range';inp.min=min;inp.max=max;inp.step=(max-min)/100;inp.value=wkG[k];inp.dataset.k=k;
+    const val=document.createElement('span');val.className='wv';
+    inp.addEventListener('input',()=>{wkG[k]=+inp.value;wkShow(row);wkPreview();});
+    row.append(lab,inp,val);host.appendChild(row);wkShow(row);
+  };
+  for(const k in GENES)mk(k,GENES[k].min,GENES[k].max);
+  mk('hue',0,360);
+  wkPreview();
+}
+function wkSync(){
+  document.querySelectorAll('#wkRows .wkrow').forEach(r=>{const i=r.querySelector('input');i.value=wkG[i.dataset.k];wkShow(r);});
+  wkPreview();
+}
+function wkPreview(){
+  const g2=$('wkPrev').getContext('2d');g2.clearRect(0,0,150,84);
+  drawMini(g2,{g:wkG},75,42,3);
+}
+function applyPreset(p){
+  wkG=wkDefaults();
+  for(const k in p){
+    if(k==='hue'){wkG.hue=p[k];continue;}
+    if(GENES[k])wkG[k]=clamp(p[k],GENES[k].min,GENES[k].max);
+  }
+  wkSync();
+}
+function releaseDesign(x,y,g){
+  const lin=newLineage(0,g.hue);
+  for(let i=0;i<4;i++){
+    const a=TAU*i/4;
+    const c=makeCreature({...g},x+Math.cos(a)*14,y+Math.sin(a)*14);
+    c.br=freshBrain(0.05); c.wsum=brainSum(c.br); c.lin=lin;
+    creatures.push(c);
+  }
+  births+=4;
+  ping(x,y,'rgba(200,255,120,0.8)',40);
+  toolUsed('workshop');
+  say('🧪 four of your design swim free: their minds are blank, thought must evolve');
+}
+
 // ---------- the time machine ----------
 function applyIv(iv){
   if(iv.t==='meteor')meteor(iv.p.x,iv.p.y);
@@ -2558,6 +2656,7 @@ function applyIv(iv){
   else if(iv.t==='elixir')elixirAt(iv.p.x,iv.p.y);
   else if(iv.t==='rock')rockAt(iv.p.x,iv.p.y);
   else if(iv.t==='seedc')seedCreature(iv.p.x,iv.p.y);
+  else if(iv.t==='wk')releaseDesign(iv.p.x,iv.p.y,iv.p.g);
   else if(iv.t==='plague')plague();
   else if(iv.t==='ice')iceAge();
   else if(iv.t==='food'){foodEl.value=iv.p.v;syncDials();}
@@ -2641,7 +2740,7 @@ function dlBlob(blob,name){
 }
 
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;
