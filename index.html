@@ -126,6 +126,13 @@
   #classPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,94vw);display:none;z-index:37;
               max-height:86vh;overflow-y:auto}
   #classPanel.show{display:block}
+  #boardsPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,94vw);display:none;z-index:37;
+               max-height:84vh;overflow-y:auto}
+  #boardsPanel.show{display:block}
+  .brow{display:flex;gap:8px;padding:4px 2px;border-bottom:1px solid var(--line)}
+  .brow .rk{width:22px;color:var(--dim)}
+  .brow .cs{flex:1}
+  .brow.me .cs{color:#FFBF5E}
   #classRows details{border-bottom:1px solid var(--line);padding:5px 0}
   #classRows summary{cursor:pointer;font-size:11px;color:var(--cyan);letter-spacing:0.03em}
   #classRows .cbody{font-size:10px;line-height:1.55;opacity:0.85;padding:6px 2px}
@@ -244,6 +251,7 @@
     <button id="btnWorkshop">🧪 build</button>
     <button id="btnMuseum">🏛 museum</button>
     <button id="btnClass">🎓 learn</button>
+    <button id="btnBoards">🌐 boards</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -294,6 +302,20 @@
   <button class="wide" id="obsExport">⬇ export dish data (json)</button>
 </div>
 <div id="treeTip"></div>
+
+<div class="panel" id="boardsPanel">
+  <button class="close" id="boardsClose">✕</button>
+  <div class="ptitle">THE BOARDS</div>
+  <div class="row" style="margin-bottom:8px">
+    <button class="bTab on" data-board="daily" style="flex:1">📅 today</button>
+    <button class="bTab" data-board="age" style="flex:1">⏳ oldest</button>
+    <button class="bTab" data-board="gen" style="flex:1">🧬 deepest</button>
+    <button class="bTab" data-board="dynasty" style="flex:1">👑 dynasty</button>
+  </div>
+  <div id="boardsRows" style="font-size:10px;min-height:80px"></div>
+  <button id="boardsPub" style="width:100%;margin-top:8px">🌐 publish this dish</button>
+  <div style="font-size:9px;opacity:0.55;margin-top:6px">Publishing sends only your dish callsign, seed, and statistics. No accounts, no names.</div>
+</div>
 
 <div class="panel" id="classPanel">
   <button class="close" id="classClose">✕</button>
@@ -348,6 +370,8 @@
     <div class="gl">🎓 The classroom: guided experiments on shared seeds, compare results with anyone</div>
     <div class="gl">🏝 The archipelago: one people, three lagoons, narrow straits; geography becomes speciation</div>
     <div class="gl">🌊 The ocean: a wide fertile sea; when the dish grows crowded a faster renderer takes over</div>
+    <div class="gl">🟠 Amber: long lived dishes earn patinas and honorifics; five years is the Amber Seal</div>
+    <div class="gl">🌐 The boards: publish your dish to world rankings; only your callsign travels</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -362,7 +386,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 39 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 41 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -710,6 +734,7 @@ function initWorld(scn,seed){
   dishSeed=(seed!=null?seed:((Math.random()*4294967296)>>>0))>>>0;
   rngS=dishSeed|0;
   dishId=makeCallsign();
+  dishToken=makeToken(); dishPeak=0;
   creatures.length=0; algae.length=0; events.length=0;
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
   lastSample=-1; lastHud=-9; sexBirths=0; cloneBirths=0; lastSpeciesN=1; lastSpeciesMsgT=0;
@@ -821,6 +846,11 @@ let tempAng=0, season=0, scenario='classic', dishId='', dishSeed=0;
 let dishTag='', rootA=0, rootB=0, versusDone=false, versusSeeds=null;
 let stepN=0, ivLog=[], ivComplete=false;
 let heirSeeds=null, dynasty=1, parentDish='';
+let BOARDS_URL='';
+let dishToken='', dishPeak=0;
+function makeToken(){const u=new Uint8Array(16);crypto.getRandomValues(u);return [...u].map(b=>b.toString(16).padStart(2,'0')).join('');}
+function amberTier(){const y=simT/SEASON_PERIOD;return y>=20?4:y>=10?3:y>=5?2:y>=2?1:0;}
+const AMBER_NAMES=['','Amber Fleck','Amber Seal','Deep Amber','Eternal Amber'];
 function roman(n){const t=[[50,'L'],[40,'XL'],[10,'X'],[9,'IX'],[5,'V'],[4,'IV'],[1,'I']];let r='';for(const p of t){while(n>=p[0]){r+=p[1];n-=p[0];}}return r||'I';}
 let replay=null;
 function logIv(t,p){if(replay)return;ivLog.push({s:stepN,t,p:p||null});if(ivLog.length>2400)ivComplete=false,ivLog.shift();}
@@ -1458,6 +1488,12 @@ function render(){
       }
     }
   }
+  const ambT=amberTier();
+  if(ambT>=2){
+    ctx.strokeStyle='rgba(255,191,94,'+(0.05+0.03*ambT)+')';
+    ctx.lineWidth=2+ambT;
+    ctx.beginPath();ctx.arc(CX,CY,R+8,0,TAU);ctx.stroke();
+  }
   // hybrid renderer thresholds (hysteresis so the switch never flickers)
   glCreat=glOK&&(glCreat?creatures.length>220:creatures.length>250);
   glAlg=glOK&&(glAlg?algae.length>1250:algae.length>1500);
@@ -1693,7 +1729,11 @@ function updateHud(){
   $('stClone').textContent=cloneBirths;
   const q=(simT/SEASON_PERIOD)%1;
   $('stSeason').textContent=scenario==='ice'?'❄ endless winter':(q<0.25?'🌱 spring':q<0.5?'☀ summer':q<0.75?'🍂 autumn':'❄ winter');
-  $('stDish').textContent=dishId+(dynasty>1?' · dyn '+roman(dynasty):'')+(scenario==='daily'?' · daily '+dishTag:scenario!=='classic'?' · '+scenario:'');
+  if(creatures.length>dishPeak)dishPeak=creatures.length;
+  const amb=amberTier();
+  if(amb>(records.amber||0)){records.amber=amb;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+  $('stDish').textContent=dishId+(dynasty>1?' · dyn '+roman(dynasty):'')+(scenario==='daily'?' · daily '+dishTag:scenario!=='classic'?' · '+scenario:'')+(amb?' '+'✦'.repeat(amb):'');
+  $('stDish').style.color=amb?'#FFBF5E':'';
   if(scenario==='versus'&&rootA&&rootB&&!versusDone&&simT>30){
     const desc=root=>{
       const inLine=new Set();
@@ -1994,7 +2034,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.24.0';
+const APP_V='1.25.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2018,7 +2058,7 @@ function saveWorld(){
       eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10})),eggNext,
       fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
       chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS,
-      dishTag,rootA,rootB,versusDone,versusSeeds,stepN,ivComplete,ivLog,heirSeeds,dynasty,parentDish}));
+      dishTag,rootA,rootB,versusDone,versusSeeds,stepN,ivComplete,ivLog,heirSeeds,dynasty,parentDish,dishToken,dishPeak}));
   }catch(e){}
 }
 function loadWorld(){
@@ -2067,6 +2107,7 @@ function loadWorld(){
   stepN=s.stepN||0; ivComplete=!!s.ivComplete; ivLog=Array.isArray(s.ivLog)?s.ivLog:[];
   versusSeeds=s.versusSeeds||null;
   heirSeeds=s.heirSeeds||null; dynasty=s.dynasty||1; parentDish=s.parentDish||'';
+  dishToken=s.dishToken||makeToken(); dishPeak=s.dishPeak||0;
   lineWasAlive=followLin?true:false;
   initSnow();
   const away=(Date.now()-s.savedAt)/1000;
@@ -2264,6 +2305,15 @@ $('btnMuseum').addEventListener('click',()=>{renderMuseum();$('musPanel').classL
 $('musClose').addEventListener('click',()=>$('musPanel').classList.remove('show'));
 $('btnClass').addEventListener('click',()=>{renderClassroom();$('classPanel').classList.add('show');});
 $('classClose').addEventListener('click',()=>$('classPanel').classList.remove('show'));
+if(!BOARDS_URL)$('btnBoards').style.display='none';
+$('btnBoards').addEventListener('click',()=>{$('boardsPanel').classList.add('show');renderBoards();});
+$('boardsClose').addEventListener('click',()=>$('boardsPanel').classList.remove('show'));
+document.querySelectorAll('.bTab').forEach(b=>b.addEventListener('click',()=>{
+  curBoard=b.dataset.board;
+  document.querySelectorAll('.bTab').forEach(o=>o.classList.toggle('on',o===b));
+  renderBoards();
+}));
+$('boardsPub').addEventListener('click',publishDish);
 $('wkHunter').addEventListener('click',()=>applyPreset(WK_PRESETS.hunter));
 $('wkTank').addEventListener('click',()=>applyPreset(WK_PRESETS.tank));
 $('wkGrazer').addEventListener('click',()=>applyPreset(WK_PRESETS.grazer));
@@ -2382,6 +2432,8 @@ const BADGES=[
  {id:'graduate',n:'Graduate',d:'Run three different classroom experiments.',t:()=>records.tools&&records.tools.classroom},
  {id:'wayfarer',n:'Wayfarer',d:'Witness ten migrations between lagoons.',t:()=>(records.migrations||0)>=10},
  {id:'legion',n:'Legion',d:'A thousand cells alive in one dish.',t:()=>(records.pop||0)>=1000},
+ {id:'amberbound',n:'Amberbound',d:'Keep one dish alive to the Amber Seal, five full years.',t:()=>(records.amber||0)>=2},
+ {id:'herald',n:'Herald',d:'Publish a dish to the world boards.',t:()=>records.tools&&records.tools.publish},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -2829,6 +2881,48 @@ function harvestHeirs(){
   return scored.slice(0,8).map(c=>({g:{...c.g},br:c.br.slice()}));
 }
 
+// ---------- the boards ----------
+let curBoard='daily';
+async function fetchBoard(b){
+  const day=new Date().toISOString().slice(0,10);
+  const r=await fetch(BOARDS_URL+'/board?b='+b+(b==='daily'?'&day='+day:'')+'&limit=20');
+  return (await r.json()).entries||[];
+}
+async function renderBoards(){
+  const host=$('boardsRows');
+  host.innerHTML='<div style="opacity:0.5;padding:10px 0">reaching the boards...</div>';
+  try{
+    const rows=await fetchBoard(curBoard);
+    if(!rows.length){host.innerHTML='<div style="opacity:0.55;padding:10px 0">No entries yet. Be the first: publish this dish.</div>';return;}
+    host.innerHTML='';
+    rows.forEach((e,i)=>{
+      const d=document.createElement('div');
+      d.className='brow'+(e.dish===dishId?' me':'');
+      d.innerHTML='<span class="rk">'+(i+1)+'</span><span class="cs">'+e.callsign+'</span><span>'+e.label+'</span>';
+      host.appendChild(d);
+    });
+  }catch(err){host.innerHTML='<div style="opacity:0.55;padding:10px 0">The boards are unreachable right now.</div>';}
+}
+async function publishDish(){
+  const stats={years:+(simT/SEASON_PERIOD).toFixed(2),gen:maxGen,peakPop:dishPeak,dynasty,
+    dishTag:scenario==='daily'?dishTag:''};
+  const today=new Date().toISOString().slice(0,10);
+  const boards=['age','gen'];
+  if(scenario==='daily'&&dishTag===today)boards.unshift('daily');
+  if(dynasty>1)boards.push('dynasty');
+  const out=[];
+  try{
+    const r=await fetch(BOARDS_URL+'/submit',{method:'POST',headers:{'content-type':'application/json'},
+      body:JSON.stringify({boards,callsign:dishId,dish:dishId,token:dishToken,seed:dishSeed,scenario,stats})});
+    const j=await r.json();
+    if(j.ok&&Array.isArray(j.results))for(const res of j.results)if(res.rank)out.push(res.board+' #'+res.rank);
+    if(!out.length&&j.error){say('🌐 '+j.error);return;}
+  }catch(e){}
+  say(out.length?'🌐 published: '+out.join(' · '):'🌐 the boards are unreachable right now');
+  if(out.length)toolUsed('publish');
+  renderBoards();
+}
+
 // ---------- the classroom ----------
 const CLASSROOM=[
  {id:'hammer',t:'1 · Selection under the hammer',seed:'classroom-hammer',scn:'classic',
@@ -3096,7 +3190,7 @@ function dlBlob(blob,name){
 }
 
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel','boardsPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;

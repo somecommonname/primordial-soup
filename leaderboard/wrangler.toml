@@ -1,0 +1,8 @@
+name = "soup-boards"
+main = "worker.js"
+compatibility_date = "2026-08-01"
+
+[[d1_databases]]
+binding = "DB"
+database_name = "soup-boards"
+database_id = "REPLACE-AFTER-CREATE"
