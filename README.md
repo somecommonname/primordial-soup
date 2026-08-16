@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.21.**
+**A small evolving universe in one HTML file. Now v1.22.**
 
 Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -47,7 +47,8 @@ Your dish **persists**: it auto-saves as you play, evolution continues while you
 - **⏪ The Time Machine**: every dish records its interventions from birth; replay its entire history like film, then **🎬 export the whole story as a video timelapse**
 - **🏛 The Museum**: retired worlds rest with their complete history; revivable ones rerun it and live again
 - **🗓 The calendar**: event weeks retheme the shared daily dish (the Great Winter in December, the Age of Plagues at Halloween, the Garden Week in April, the Birthday of the Soup in August)
-- **🏆 Records and 🏅 36 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🎓 The Classroom**: five guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
+- **🏆 Records and 🏅 37 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 

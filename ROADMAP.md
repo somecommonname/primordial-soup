@@ -140,6 +140,9 @@ Every creature sings its genome. The root note comes from hue on a pentatonic sc
 ### v1.21 The Museum and the calendar (2026-08-16)
 Worlds no longer die when you leave them: replacing a dish retires it to the 🏛 museum with its callsign, dynasty, final census, and, for dishes born since the time machine, the complete seed and intervention log. Revival reruns the whole history at speed and then hands the world back alive, exactly where it stopped, bit identical, its own time machine intact. Twelve worlds rest at a time; the oldest yields its place. And the 🗓 calendar joined the daily dish: event weeks give everyone on earth the same themed world, the Great Winter in late December, the Age of Plagues at Halloween, the Garden Week in April, and the Birthday of the Soup in mid August, which is this very week. Curator badge (36).
 
+### v1.22 The Classroom (2026-08-16)
+Five guided experiments, each a question, a seeded world, and instructions on what to watch: selection under the hammer (predation reshapes prey bodies), thought is a wartime expense (brains grow only while the hunt is on), nothing free stays honest (virulence attenuates, immunity is rented not owned), speciation by color and by song (lineages drift apart in hue and in leitmotif together), and the ghost of the ice (endless winter selects hibernation and cold comfort). Because experiment worlds are seeded, every student who presses set up gets the identical dish, and a classroom can compare runs like real replicates. Setup releases are logged like any intervention, so experiment worlds replay bit identical in the time machine. Graduate badge for running three (37).
+
 ---
 
 ## Greenhouse (ideas under consideration, not yet scheduled)
@@ -150,7 +153,7 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 ## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
 
-The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Paper: the field notes written up properly as an artificial life research note. The Classroom: teacher mode with guided experiments for schools.
+The Archipelago: multiple dishes connected by currents, creatures migrating between worlds. The Paper: the field notes written up properly as an artificial life research note.
 
 ## Frontier (the "how far can this go" answer)
 
