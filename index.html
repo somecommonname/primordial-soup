@@ -350,7 +350,7 @@
   <div class="ptitle">FIELD GUIDE</div>
   <div id="guideBody">
     <div class="gh">THE CREATURES</div>
-    <div class="gl">🧬 20 genes each, from size and speed to body shape, jaws, egg laying, parental care, and hibernation</div>
+    <div class="gl">🧬 21 genes each, from size and speed to body shape, jaws, egg laying, parental care, hibernation, and masonry</div>
     <div class="gl">💕 They court and breed; babies mix both parents' genes</div>
     <div class="gl">🌈 Color is family; drift too far apart and they become separate species</div>
     <div class="gl">🧠 A real evolvable brain, 💭 memory that lets fear linger</div>
@@ -373,6 +373,7 @@
     <div class="gl">🟠 Amber: long lived dishes earn patinas and honorifics; five years is the Amber Seal</div>
     <div class="gl">🌐 The boards: publish your dish to world rankings; only your callsign travels</div>
     <div class="gl">🐛 Gene duplication grows bodies: segments add storage, armor, and fins, but cost speed and hunger</div>
+    <div class="gl">🪸 Masons lay living reef: it shelters, gathers gardens of algae, and erodes without upkeep</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -387,7 +388,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 42 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 43 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -529,6 +530,7 @@ const GENES={
   eggy:  {min:0,  max:1,   sd:0.5, def:0.03},
   care:  {min:0,  max:1,   sd:0.5, def:0.03},
   torpor:{min:0,  max:1,   sd:0.5, def:0.03},
+  mason: {min:0,  max:1,   sd:0.5, def:0.02},
 };
 let mutRate=0.10;
 function founderGenome(baseHue){
@@ -552,6 +554,7 @@ function founderGenome(baseHue){
     eggy: clamp(0.03+Math.abs(gauss())*0.03, 0, 1),
     care: clamp(0.03+Math.abs(gauss())*0.03, 0, 1),
     torpor: clamp(0.03+Math.abs(gauss())*0.03, 0, 1),
+    mason: clamp(0.02+Math.abs(gauss())*0.02, 0, 1),
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
@@ -923,6 +926,9 @@ function step(dt){
   stepN++;
   simT+=dt;
   if(scenario==='arch'&&stepN%60===0)archMigration();
+  if(stepN%60===0){
+    for(let i=rocks.length-1;i>=0;i--){const rk=rocks[i];if(rk.bio){rk.r-=0.035;if(rk.r<2.2)rocks.splice(i,1);}}
+  }
   season=scenario==='ice'?-0.75:Math.sin(TAU*simT/SEASON_PERIOD);
   const ice=simT<iceUntil;
   // food spawn
@@ -931,7 +937,11 @@ function step(dt){
   let n=rain*dt; if(rnd()<n%1)n++;
   for(let i=0;i<(n|0);i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   // algae drift with the currents, deflecting around rocks
-  for(const a of algae){ flow(a.x,a.y,simT,_fl); a.x+=_fl[0]*dt; a.y+=_fl[1]*dt; rockPush(a,2); }
+  for(const a of algae){
+    flow(a.x,a.y,simT,_fl); a.x+=_fl[0]*dt; a.y+=_fl[1]*dt; rockPush(a,2);
+    const anx=a.x-CX,any2=a.y-CY,anr=anx*anx+any2*any2;
+    if(anr>(R-3)*(R-3)){const q=(R-3)/Math.sqrt(anr);a.x=CX+anx*q;a.y=CY+any2*q;}
+  }
   // marine snow traces the currents
   for(const p of snow){
     flow(p.x,p.y,simT,_fl); p.vx=_fl[0]; p.vy=_fl[1];
@@ -983,7 +993,9 @@ function step(dt){
       queryGrid(aGrid,x,y,18,_n1);
       let near=0;
       for(const o of _n1){if(!o.eaten&&(o.x-x)**2+(o.y-y)**2<324)near++;}
-      if(near<5&&rnd()<clamp(0.2+1.6*tempAt(x,y),0,1))spawnAlgae(x,y);
+      let lim=5,reefBoost=1;
+      for(const rk of rocks){if(rk.bio){const gx=rk.x-x,gy=rk.y-y;if(gx*gx+gy*gy<(rk.r+34)**2){lim=7;reefBoost=1.35;break;}}}
+      if(near<lim&&rnd()<clamp((0.2+1.6*tempAt(x,y))*reefBoost,0,1))spawnAlgae(x,y);
     }
   }
   newborns.length=0;
@@ -1280,6 +1292,22 @@ function step(dt){
           if(mspk2>0.05)c.energy-=mspk2*meal.g.size*7;
         }
       }
+    }
+    // masons: the energy rich lay reef stone, paying for every deposit
+    if(g.mason>0.15&&c.energy>c.cap*0.75&&rnd()<g.mason*0.055*dt*60){
+      c.energy-=6;
+      let best=null,bd=40*40;
+      for(const rk of rocks){if(!rk.bio)continue;const ddx=rk.x-c.x,ddy=rk.y-c.y,dd=ddx*ddx+ddy*ddy;if(dd<bd){bd=dd;best=rk;}}
+      if(best&&best.r<24){
+        best.r+=0.5;
+        if(rnd()<0.3){const sa=rand(0,TAU),sd2=Math.sqrt(rnd())*best.r*0.8;best.spk.push([Math.cos(sa)*sd2,Math.sin(sa)*sd2]);}
+      }else{
+        let bioN=0;for(const rk of rocks)if(rk.bio)bioN++;
+        if(bioN<12&&rocks.length<26){
+          rocks.push({x:c.x-Math.cos(c.dir)*(g.size+5),y:c.y-Math.sin(c.dir)*(g.size+5),r:3,spk:[],bio:true});
+        }
+      }
+      ping(c.x,c.y,'rgba(255,190,150,0.5)',9,1,0.4);
     }
     // reproduce: sexual on contact with a ready kin mate; lonely fallback = self-clone
     const room=creatures.length+newborns.length<POP_CAP;
@@ -1582,12 +1610,12 @@ function render(){
   }
   // rocks
   for(const rk of rocks){
-    ctx.fillStyle='#0B1322';
+    ctx.fillStyle=rk.bio?'#1A1420':'#0B1322';
     ctx.beginPath();ctx.arc(rk.x,rk.y,rk.r,0,TAU);ctx.fill();
     ctx.strokeStyle='rgba(99,140,190,0.16)';ctx.lineWidth=1.5;ctx.stroke();
     ctx.strokeStyle='rgba(160,200,240,0.07)';ctx.lineWidth=3;
     ctx.beginPath();ctx.arc(rk.x,rk.y,rk.r-4,Math.PI*1.05,Math.PI*1.7);ctx.stroke();
-    ctx.fillStyle='rgba(120,160,210,0.10)';
+    ctx.fillStyle=rk.bio?'rgba(235,165,125,0.13)':'rgba(120,160,210,0.10)';
     for(const s of rk.spk)ctx.fillRect(rk.x+s[0],rk.y+s[1],1.6,1.6);
   }
   // creatures
@@ -1817,6 +1845,9 @@ function updateHud(){
   let smx=0;
   for(const cc of creatures)if(!cc.dead&&cc.sg&&cc.sg.length>smx)smx=cc.sg.length;
   if(smx>(records.segMax||0)){records.segMax=smx;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+  let reef=0;
+  for(const rk of rocks)if(rk.bio)reef+=rk.r;
+  if(reef>(records.reefMax||0)){records.reefMax=Math.round(reef);try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
   const amb=amberTier();
   if(amb>(records.amber||0)){records.amber=amb;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
   $('stDish').textContent=dishId+(dynasty>1?' · dyn '+roman(dynasty):'')+(scenario==='daily'?' · daily '+dishTag:scenario!=='classic'?' · '+scenario:'')+(amb?' '+'✦'.repeat(amb):'');
@@ -1942,7 +1973,7 @@ function seedCreature(x,y){
     fear:rand(0,1), rThresh:rand(0.6,0.92), wiggle:rand(0.8,3.5),
     herd:rand(0,1), spike:rand(0,0.8), shell:rand(0,0.8), warmth:rand(0,1), immune:rand(0,0.6), brainW:rand(0,0.7),
     elong:rand(0,0.7), fin:rand(0,0.7), jaw:rand(0,0.7),
-    eggy:rand(0,0.7), care:rand(0,0.7), torpor:rand(0,0.7), hue:rand(0,360),
+    eggy:rand(0,0.7), care:rand(0,0.7), torpor:rand(0,0.7), mason:rand(0,0.5), hue:rand(0,360),
   };
   const p=makeCreature(g,x,y);
   p.br=freshBrain(0.3);p.wsum=brainSum(p.br);
@@ -2121,7 +2152,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.26.0';
+const APP_V='1.27.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2176,7 +2207,7 @@ function loadWorld(){
     applySegs(nc,(Array.isArray(c.sg)?c.sg:[]).map(a=>Array.isArray(a)?{fin:a[0]||0,spike:a[1]||0,shell:a[2]||0}:a));
   }
   for(let i=0;i<s.al.length;i+=2)algae.push({x:tx(s.al[i]),y:ty(s.al[i+1]),eaten:false});
-  for(const rk of s.rocks)rocks.push({x:tx(rk.x),y:ty(rk.y),r:rk.r*sc,spk:rk.spk||[]});
+  for(const rk of s.rocks)rocks.push({x:tx(rk.x),y:ty(rk.y),r:rk.r*sc,spk:rk.spk||[],bio:!!rk.bio});
   for(const j of s.jets)jets.push({...j,off:j.off*sc,width:j.width*sc});
   simT=s.simT;nextId=s.nextId;births=s.births;deaths=s.deaths;
   sexBirths=s.sexBirths||0;cloneBirths=s.cloneBirths||0;
@@ -2526,6 +2557,7 @@ const BADGES=[
  {id:'amberbound',n:'Amberbound',d:'Keep one dish alive to the Amber Seal, five full years.',t:()=>(records.amber||0)>=2},
  {id:'herald',n:'Herald',d:'Publish a dish to the world boards.',t:()=>records.tools&&records.tools.publish},
  {id:'leviathan',n:'Leviathan',d:'Watch evolution grow a four segment body.',t:()=>(records.segMax||0)>=4},
+ {id:'architect',n:'Architect',d:'Creature built reefs totaling forty stone in one dish.',t:()=>(records.reefMax||0)>=40},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -3125,7 +3157,7 @@ function annualEvent(d){
 }
 
 // ---------- the workshop ----------
-const WK_LABELS={size:'size',speed:'speed',sense:'vision',diet:'diet',fear:'fear',rThresh:'fertility',wiggle:'wander',herd:'herding',spike:'quills',shell:'shell',warmth:'comfort',immune:'immunity',brainW:'brain power',elong:'length',fin:'fins',jaw:'jaws',eggy:'egg laying',care:'care',torpor:'torpor'};
+const WK_LABELS={size:'size',speed:'speed',sense:'vision',diet:'diet',fear:'fear',rThresh:'fertility',wiggle:'wander',herd:'herding',spike:'quills',shell:'shell',warmth:'comfort',immune:'immunity',brainW:'brain power',elong:'length',fin:'fins',jaw:'jaws',eggy:'egg laying',care:'care',torpor:'torpor',mason:'masonry'};
 const WK_PRESETS={
  hunter:{size:8,speed:95,sense:150,diet:0.95,fear:0.15,rThresh:0.75,wiggle:1.2,herd:0.1,spike:0.1,shell:0,warmth:0.5,immune:0.2,brainW:0.5,elong:0.5,fin:0.6,jaw:0.8,eggy:0.1,care:0.2,torpor:0,hue:0},
  tank:{size:11,speed:30,sense:60,diet:0.2,fear:0.3,rThresh:0.8,wiggle:1,herd:0.4,spike:0.7,shell:0.85,warmth:0.5,immune:0.4,brainW:0.1,elong:0.1,fin:0.1,jaw:0.2,eggy:0.6,care:0.5,torpor:0.4,hue:120},
