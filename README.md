@@ -1,8 +1,8 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.26.**
+**A small evolving universe in one HTML file. Now v1.27.**
 
-Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
+Creatures with 21 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
 ## Play
 
@@ -16,7 +16,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 
 ## What the creatures are
 
-- **🧬 20 genes**: size, speed, vision, diet, fear, fertility, herding, wander, spikes, shell, comfort zone, immunity, brain power, body shape, fins, jaws, egg laying, parental care, and hibernation, plus color as lineage and mate compatibility
+- **🧬 21 genes**: size, speed, vision, diet, fear, fertility, herding, wander, spikes, shell, comfort zone, immunity, brain power, body shape, fins, jaws, egg laying, parental care, hibernation, and masonry, plus color as lineage and mate compatibility
 - **🧠 A real evolvable brain**: 108 weights with two recurrent memory cells; fear can outlast its cause; mutated and crossed over like any gene, paid for in energy
 - **📣 A voice and ears, 🐜 scent trails**: physical channels only; what any signal means must evolve
 - **💕 Sexual reproduction**: courtship, crossover, true species boundaries
@@ -28,6 +28,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 ## The world
 
 - **🌿 Plants** grow and spread themselves; **🍄 fungi** feed on the fallen and burst into new life
+- **🪸 Reefs**: creatures with the masonry gene pay real energy to lay living stone; reefs block sight, gather algae gardens six times richer in famine, and erode without upkeep
 - **🪨 Rocks** block movement and sight; ambush predation is real; sculpt them by hand
 - **🌊 Currents** sweep the small; the big and the finned resist
 - **🌡 Climate**: a warm end, a cold end, and a four minute year with seasons
@@ -53,7 +54,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **🎓 The Classroom**: five guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
 - **🟠 Amber**: long lived dishes earn patinas and honorifics; two years is a Fleck, five the Amber Seal, ten Deep Amber, twenty Eternal
 - **🌐 The boards**: four world leaderboards (the daily dish, oldest world, deepest generation, longest dynasty); publishing sends only a callsign and statistics, no accounts, no names, and simulated age is checked against the wall clock so cheats bounce
-- **🏆 Records and 🏅 42 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 43 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
