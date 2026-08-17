@@ -506,7 +506,6 @@ function rescue(){
   }
 }
 window.addEventListener('resize',()=>{resize();if(worldReady){initCharts();genTerrain();initSnow();rescue();}});
-window.addEventListener('error',e=>{try{say('⚠ '+e.message);}catch(_){}});
 resize();
 
 // ---------- genome ----------
@@ -1614,7 +1613,7 @@ function render(){
     ctx.beginPath();ctx.arc(rk.x,rk.y,rk.r,0,TAU);ctx.fill();
     ctx.strokeStyle='rgba(99,140,190,0.16)';ctx.lineWidth=1.5;ctx.stroke();
     ctx.strokeStyle='rgba(160,200,240,0.07)';ctx.lineWidth=3;
-    ctx.beginPath();ctx.arc(rk.x,rk.y,rk.r-4,Math.PI*1.05,Math.PI*1.7);ctx.stroke();
+    ctx.beginPath();ctx.arc(rk.x,rk.y,Math.max(1,rk.r-4),Math.PI*1.05,Math.PI*1.7);ctx.stroke();
     ctx.fillStyle=rk.bio?'rgba(235,165,125,0.13)':'rgba(120,160,210,0.10)';
     for(const s of rk.spk)ctx.fillRect(rk.x+s[0],rk.y+s[1],1.6,1.6);
   }
@@ -2152,7 +2151,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.27.0';
+const APP_V='1.27.1';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -3344,6 +3343,35 @@ $('welcomeGo').addEventListener('click',()=>{
   initAudio();
 });
 
+// ---------- error resilience ----------
+const ERR_KEY='primordialSoup.errlog';
+const errStorm={}, errSay={};
+function logErr(msg){
+  try{
+    const line=(msg||'error').toString().slice(0,200);
+    const now=performance.now();
+    let st=errStorm[line];
+    if(!st||now-st.t0>10000)st={n:0,t0:now};
+    st.n++; errStorm[line]=st;
+    if(st.n>5)return;
+    try{
+      const raw=store.get(ERR_KEY);
+      const log=raw?JSON.parse(raw):[];
+      log.push({t:Date.now(),m:line,v:APP_V});
+      while(log.length>8)log.shift();
+      store.set(ERR_KEY,JSON.stringify(log));
+    }catch(e){}
+    const last=errSay[line]||0;
+    if(now-last>=30000){errSay[line]=now;say('⚠ '+line.slice(0,90));}
+  }catch(e){}
+}
+window.addEventListener('error',e=>{
+  try{logErr((e&&e.message||'script error')+' @'+(e&&e.lineno||0)+':'+(e&&e.colno||0));}catch(_){}
+});
+function safeRenderFrame(){
+  try{render();updateHud();}catch(e){logErr('render: '+((e&&e.message)||e));}
+}
+
 // ---------- main loop ----------
 let lastT=performance.now(),acc=0;
 function frame(){
@@ -3356,31 +3384,35 @@ function frame(){
   }
   if(replay&&replay.active){
     replayTick();
-    render();
-    updateHud();
+    safeRenderFrame();
     requestAnimationFrame(frame);
     return;
   }
   if(!paused){
-    if(catchupLeft>0){
-      const burst=Math.min(20,catchupLeft);
-      for(let i=0;i<burst;i++)step(1/60);
-      catchupLeft-=burst; sample(); acc=0;
-      if(catchupLeft<=0)say('⏩ while you slept: '+(births-cuB0)+' born, '+(deaths-cuD0)+' died'+(maxGen>cuG0?', now gen '+maxGen:''));
-    }else{
-      acc+=dt*speedMult;
-      let guard=0;
-      while(acc>=1/60&&guard<12){step(1/60);guard++;acc-=1/60;}
-      if(guard>=12)acc=0;
-      sample();
+    try{
+      if(catchupLeft>0){
+        const burst=Math.min(20,catchupLeft);
+        for(let i=0;i<burst;i++)step(1/60);
+        catchupLeft-=burst; sample(); acc=0;
+        if(catchupLeft<=0)say('⏩ while you slept: '+(births-cuB0)+' born, '+(deaths-cuD0)+' died'+(maxGen>cuG0?', now gen '+maxGen:''));
+      }else{
+        acc+=dt*speedMult;
+        let guard=0;
+        while(acc>=1/60&&guard<12){step(1/60);guard++;acc-=1/60;}
+        if(guard>=12)acc=0;
+        sample();
+      }
+    }catch(e){
+      logErr('step: '+((e&&e.message)||e));
+      paused=true; $('btnPause').textContent='▶';
+      say('⚠ the dish paused itself; export your world and report this');
     }
   }
   if((catchupLeft>0)!==hintCU){hintCU=catchupLeft>0;
     $('hint').textContent=hintCU?'⏩ THE DISH KEPT LIVING · CATCHING UP':'CLICK A CELL TO INSPECT';}
   const nowMs=performance.now();
   if(worldReady&&catchupLeft<=0&&nowMs-lastSaveT>5000){saveWorld();lastSaveT=nowMs;}
-  render();
-  updateHud();
+  safeRenderFrame();
   const ib=$('btnIce');
   if(simT<iceUntil){ib.disabled=true;ib.textContent='❄️ '+Math.ceil(iceUntil-simT)+'s';}
   else{ib.disabled=false;ib.textContent='❄️ ice age';}
