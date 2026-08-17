@@ -56,10 +56,14 @@ function scoreFor(board, s) {
 
 async function handleSubmit(req, env) {
   if ((req.headers.get('content-length') | 0) > MAX_BODY) return json({ error: 'too large' }, 413);
+  let raw;
+  try { raw = await req.text(); } catch (e) { return json({ error: 'bad json' }, 400); }
+  if (raw.length > MAX_BODY) return json({ error: 'too large' }, 413);
   let b;
-  try { b = await req.json(); } catch (e) { return json({ error: 'bad json' }, 400); }
+  try { b = JSON.parse(raw); } catch (e) { return json({ error: 'bad json' }, 400); }
+  if (typeof b !== 'object' || b === null) return json({ error: 'bad json' }, 400);
 
-  const { callsign, dish, token, stats } = b || {};
+  const { callsign, dish, token, stats } = b;
   const boards = Array.isArray(b.boards) ? b.boards : [b.board];
   if (!boards.length || boards.length > 4 || !boards.every(x => BOARDS.includes(x))) {
     return json({ error: 'unknown board' }, 400);
@@ -77,6 +81,15 @@ async function handleSubmit(req, env) {
   if (drow && drow.submits > 2000) return json({ error: 'rate limit' }, 429);
   const firstseen = drow ? drow.firstseen : now;
 
+  // per IP limit: guard against mass dish creation and flooding
+  const iphash = await sha256(req.headers.get('CF-Connecting-IP') || 'unknown');
+  const ipRow = await env.DB.prepare(
+    'INSERT INTO ips(iphash, day, submits, dishes) VALUES(?1, ?2, 1, ?3) ' +
+    'ON CONFLICT(iphash, day) DO UPDATE SET submits=submits+1, dishes=dishes+?3 ' +
+    'RETURNING submits, dishes'
+  ).bind(iphash, utcDay(now), drow ? 0 : 1).first();
+  if (ipRow && (ipRow.submits > 300 || ipRow.dishes > 40)) return json({ error: 'rate limit' }, 429);
+
   // rate limit: at most one submit per dish per 30 seconds
   const recent = await env.DB.prepare('SELECT lastseen FROM dishes WHERE dish=?1 AND lastseen>?2').bind(dish, now - 30000).first();
   if (recent) return json({ error: 'slow down' }, 429);
@@ -85,6 +98,9 @@ async function handleSubmit(req, env) {
   const years = Math.max(0, +stats.years || 0);
   const elapsedYears = ((now - firstseen) / 1000) * SPEED_CEIL / SEASON_SECONDS + CATCHUP_GRACE_YEARS;
   if (years > elapsedYears) return json({ error: 'implausible age; the dish is younger than that' }, 422);
+  if ((stats.gen | 0) > elapsedYears * 25 + 30) return json({ error: 'implausible generation; too many births for the time elapsed' }, 422);
+  if ((stats.dynasty | 0) > elapsedYears + 2) return json({ error: 'implausible dynasty; too many heirs for the time elapsed' }, 422);
+  if ((stats.peakPop | 0) > 2500) return json({ error: 'implausible peak population; past the physical ceiling' }, 422);
 
   const statsJson = JSON.stringify(stats).slice(0, 4000);
   await env.DB.prepare(

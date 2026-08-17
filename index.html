@@ -2151,7 +2151,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.27.1';
+const APP_V='1.28.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2795,13 +2795,15 @@ function unb64url(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+
 async function packSeed(){
   saveWorld();
   const raw=store.get(SAVE_KEY)||'';
+  let clean=raw;
+  try{const o=JSON.parse(raw);delete o.dishToken;clean=JSON.stringify(o);}catch(e){}
   try{
     if(window.CompressionStream){
-      const buf=await new Response(new Blob([raw]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer();
+      const buf=await new Response(new Blob([clean]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer();
       return 'D1.'+b64url(new Uint8Array(buf));
     }
   }catch(e){}
-  return 'P0.'+b64url(new TextEncoder().encode(raw));
+  return 'P0.'+b64url(new TextEncoder().encode(clean));
 }
 async function unpackSeed(t){
   t=t.trim();
@@ -3063,6 +3065,9 @@ const CLASSROOM=[
  {id:'winter',t:'5 · The ghost of the ice',seed:'classroom-winter',scn:'ice',
   body:'<b>Question:</b> what does endless winter select for?<br><b>Watch</b> torpor and comfort in inspected creatures across two in game years, then press ⏪ replay and compare the founders with their great grandchildren. Hibernation spreads, comfort zones migrate cold, and the fast burn out. The cold is not cruel; it is only consistent.',
   setup(){}},
+ {id:'reef',t:'6 · The reef and the freeloader',seed:'classroom-reef',scn:'classic',
+  body:'<b>Question:</b> can builders survive the cheats?<br><b>Set up</b> releases a colony of masons: they pay real energy to lay living stone, and algae grow denser at reef edges. <b>Watch</b> the coral tinted rocks rise, then watch who grazes the gardens: everyone, mason or not. Building is a public good. <b>Compare</b> over ten minutes: do masonry genes persist in the census, or do freeloaders inherit the reef? When the builders die out, watch their reef erode away with them.',
+  setup(){releaseDesign(CX-50,CY,{...wkDefaults(),size:6,speed:60,sense:100,diet:0.05,fear:0.5,rThresh:0.7,wiggle:1.5,herd:0.5,brainW:0.2,mason:0.85,hue:30});logIv('wk',{x:CX-50,y:CY,g:{...wkDefaults(),size:6,speed:60,sense:100,diet:0.05,fear:0.5,rThresh:0.7,wiggle:1.5,herd:0.5,brainW:0.2,mason:0.85,hue:30}});}},
 ];
 let classDone={};
 try{classDone=JSON.parse(store.get('primordialSoup.class')||'{}');}catch(e){}

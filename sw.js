@@ -1,4 +1,4 @@
-const CACHE='soup-v41';
+const CACHE='soup-v42';
 const ASSETS=['./','./index.html','./roadmap.html','./ROADMAP.md','./icon.svg','./manifest.webmanifest'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));
@@ -8,6 +8,7 @@ self.addEventListener('activate',e=>{
 });
 self.addEventListener('fetch',e=>{
   if(e.request.method!=='GET')return;
+  if(new URL(e.request.url).origin!==self.location.origin){e.respondWith(fetch(e.request));return;}
   e.respondWith(caches.match(e.request).then(hit=>{
     const net=fetch(e.request).then(r=>{
       if(r.ok){const cl=r.clone();caches.open(CACHE).then(c=>c.put(e.request,cl));}

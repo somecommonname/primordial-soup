@@ -51,7 +51,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **⏪ The Time Machine**: every dish records its interventions from birth; replay its entire history like film, then **🎬 export the whole story as a video timelapse**
 - **🏛 The Museum**: retired worlds rest with their complete history; revivable ones rerun it and live again
 - **🗓 The calendar**: event weeks retheme the shared daily dish (the Great Winter in December, the Age of Plagues at Halloween, the Garden Week in April, the Birthday of the Soup in August)
-- **🎓 The Classroom**: five guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
+- **🎓 The Classroom**: six guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
 - **🟠 Amber**: long lived dishes earn patinas and honorifics; two years is a Fleck, five the Amber Seal, ten Deep Amber, twenty Eternal
 - **🌐 The boards**: four world leaderboards (the daily dish, oldest world, deepest generation, longest dynasty); publishing sends only a callsign and statistics, no accounts, no names, and simulated age is checked against the wall clock so cheats bounce
 - **🏆 Records and 🏅 43 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
