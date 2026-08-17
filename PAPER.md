@@ -1,10 +1,10 @@
 # Field Notes from a Petri Dish: Emergent Findings from a Browser-Based Evolution Simulator
 
-*This is a first draft, for David and Claude to revise.*
+*Second edition draft, for David and Claude to revise.*
 
 ## Abstract
 
-Primordial Soup is a browser based artificial life simulator, one HTML file, where creatures with 20 genes and a 108 weight recurrent neural brain eat, hunt, court, breed, speak, and leave scent trails in a persistent dish. No behavior is scripted: every channel is physically implemented and paid for in energy, with meaning left to selection. Across twenty three shipped versions the dish produced unplanned outcomes: creatures that evolved to sit still near food, an omnivore niche that outlasted apex predators, quills chosen over armor, brains that grew under predation and shrank in peace, and a parasite that evolved into a partner. These findings come from single creature telemetry, seeded deterministic runs, and accelerated runs measured in minutes, not theory. They show that honest costs generate real selection pressure in a small toy system, not open-ended evolution, which remains the project's unmet frontier.
+Primordial Soup is a browser based artificial life simulator, one HTML file, where creatures with 20 genes and a 108 weight recurrent neural brain eat, hunt, court, breed, speak, and leave scent trails in a persistent dish. No behavior is scripted: every channel is physically implemented and paid for in energy, with meaning left to selection. Across twenty three shipped versions the dish produced unplanned outcomes: creatures that evolved to sit still near food, an omnivore niche that outlasted apex predators, quills chosen over armor, brains that grew under predation and shrank in peace, and a parasite that evolved into a partner. This second edition adds four more: calls that spread through populations everywhere while meaning proved seed dependent, present only as a faint trace in most runs; real allopatric speciation once three sealed lagoons finally isolated a single founding population; bodies that grow new segments through gene duplication rather than tuning the genes they started with; and a reef building gene whose garden feeds builders and freeloaders alike. These findings come from single creature telemetry, seeded deterministic runs, and accelerated runs measured in minutes, not theory. They show that honest costs generate real selection pressure in a small toy system, not open-ended evolution, which remains the project's unmet frontier, though this edition's duplicating bodies are a first small step onto that ladder.
 
 ## 1. The System
 
@@ -30,7 +30,7 @@ Universal energy costs. No mechanic is free. Neural weights, calls, and scent de
 
 ## 3. Findings
 
-Seven results stand out from the roadmap's field notes.
+Eleven results stand out from the roadmap's field notes.
 
 ### 3.1 Couch potato evolution
 
@@ -60,11 +60,29 @@ The first parasite build (v1.2) saturated the dish, 89 percent infected, within 
 
 Version 1.15's versus mode declares a winner only at true extinction. Testing that referee by exterminating one side twice produced two refusals to call the game: eggs laid before the final blow hatched and kept the line alive the first time; dying creatures grazed enough algae to survive poison the second, one bite outweighing the damage. Only a third, complete wipe ended the line: lifecycle and grazing systems made the dish harder to kill than expected.
 
+### 3.8 Speech spreads everywhere; meaning is seed dependent
+
+Calls (v1.8) were built with no meaning wired in, leaving evolution to decide what, if anything, they would come to mean. In a single seeded dish, seed 424242, calling caught on fast: the call rate rose from near zero to roughly 170 per minute by generation 20. Whether the calls said anything was tracked separately, as an approach index comparing how often hearers closed in on a caller against a silent control. Early in the dish's life the index read 0.112 versus a 0.085 control, already a thin margin; by generation 20 it had collapsed to 0.004 versus negative 0.022, hearers approaching callers no better than chance: a cacophony, not a culture.
+
+Replication across five fresh seeds, same protocol, confirmed half of that finding and overturned the other half. Speech itself replicated cleanly: call rates in all five climbed into the common range, reaching 116 to 378 per minute by the late window, evolution finds the channel every time. Meaninglessness did not replicate as cleanly: only two of the five seeds kept their late approach index down near or below the control, matching the original cacophony, while the other three held a late approach minus control gap of 0.07 to 0.08 on large hearer samples, a modest but real tilt the original seed never showed. The honest conclusion: vocalization is a universal outcome of this model; call directed orientation is seed dependent, appearing faintly in most runs. One caveat covers all of it: hearer counts are drawn from consecutive frames of the same moving creatures rather than independent samples, so every number here is a trend, not a significance test.
+
+### 3.9 Geography finally speciates
+
+An early finding, kept in the roadmap since v0.3, was that panmixia prevents native speciation: a population stays one species under free gene flow no matter how far its genes drift locally, as section 3.5 found again in the climate dish. The archipelago scenario (v1.23) removes that free mixing on purpose. One founding population is scattered across three lagoons, sealed off from each other by reef walls with a single narrow strait linking each pair. Geography did what open water never did: seven species formed from one lineage within ten simulated minutes, the allopatric speciation that the old well mixed dish never produced. An unplanned mechanism emerged alongside it: slide along rock collision, ordinary physics built for a single boulder, turns the reef walls into guide rails that funnel wanderers through the straits, about a dozen crossings a minute. Walls meant only to divide the population turned out to also govern how it mixes back together.
+
+### 3.10 Bodies from duplication
+
+Version 1.26 let genomes physically grow for the first time. A mutation can now duplicate an existing body segment, and each duplicate carries its own copy of the fin, quill, and shell genes, with real costs attached: 45 percent more energy storage per segment and 26 percent more metabolism, plus a speed penalty and a wider turning circle. Every world still starts bodiless, exactly as before, so a body is discovered, not given: in the first test dish, run under raised mutation, two creatures grew their first segment within two minutes. This is the first rung of open endedness rather than a finished climb: new structure can now appear that was not present at the start, which no amount of parameter tuning can do, but the trait vocabulary available to each segment (fins, quills, shell) is still fixed by the code. Growing a second kind of segment is not yet possible; growing a first one now is.
+
+### 3.11 The reef and the freeloader
+
+Version 1.27 adds a twenty first gene, masonry: an energy rich creature can pay six energy to lay a stone of eroding reef, and deposits near an existing reef make it grow. The stone is real terrain, blocking sight and movement like any rock, and it erodes without upkeep, so a reef is a living thing that dies with its keepers. The payoff shows up in the garden around it: currents collect nutrients at reef edges, so algae sprout faster and pack denser there. Measured at grazed equilibrium in a hungry dish, the reef circle held six times the standing crop of a mirrored control, eighteen algae samples versus three, across a dish thirty two algae cells wide; in times of plenty the same effect disappears into saturation, masked rather than absent. The garden a reef grows feeds every grazer nearby, mason or not, so building is a public good with an obvious cheat available to anyone unwilling to pay the six energy. The dish now runs that experiment permanently: whether builders can outlast freeloaders, or get quietly outcompeted by the very abundance they create.
+
 ## 4. Honest Limitations
 
 Population sizes are small: one canvas thread comfortably holds about a thousand creatures, and the apex predator finding above rests on just two to three individuals, barely distinguishable from noise. Planned WebGL work would raise the ceiling roughly tenfold, but nothing here exceeded four figures of population.
 
-Timescales are short. Most findings above come from single digit minute runs: three for brain weight, four for quills, eleven for a radiation driven count of 81 lineages, eighteen for the climate watch, long enough to see a gene shift but short against timescales usually tied to speciation in nature.
+Timescales are short. Most findings above come from single digit minute runs: three for brain weight, four for quills, eleven for a radiation driven count of 81 lineages, eighteen for the climate watch, long enough to see a gene shift but short against timescales usually tied to speciation in nature. Several findings in this edition still rest on a single seed and a short run each: the archipelago, body plan, and reef results above await replication. The speech result was the first to go through that process, and it came back mixed: five fresh seeds confirmed that calls become common everywhere but only partly confirmed that they stay meaningless, a reminder that a single seed result here can be half right.
 
 Determinism is real but local. Seeded runs reproduce exactly, rock for rock and weight for weight, on a given build and machine, enough for checkable experiments and shareable seeds. Whether the same seed reproduces identically across different hardware or browsers has never been tested.
 
@@ -72,7 +90,9 @@ Parameter evolution is not open-endedness. Every trait moves within a gene range
 
 ## 5. Open Questions
 
-Proto-culture. Calls, scent trails, and memory now all exist, everything needed for behavior to spread through signals rather than genes. Whether it happens, a call or trail pattern moving through a population faster than genes could carry it, is untested, and would be the first evidence here of culture in a minimal sense, rather than instinct.
+Proto-culture, an answer with an asterisk. Calls, scent trails, and memory all exist, everything needed for behavior to spread through signals rather than genes. Section 3.8 has now tested it across six seeds and returned a mixed answer: speech itself is universal, but real orientation toward a caller showed up faintly in only about half the runs. The open question is no longer whether meaning can appear at all; it can, faintly, in the right seed. It is whether that trace orientation can ever amplify into something like reliable signaling rather than stay a permanent low hum, and what about a seed, terrain, founder genomes, or plain chance, tips a dish into the meaning bearing group instead of the cacophony group.
+
+Whether reefs outlast freeloaders. Section 3.11 leaves the dish running a permanent, unresolved experiment: masons pay real energy to grow a public good that feeds every grazer nearby, cheats included. Whether builders can hold a reef together across generations against creatures that only ever graze it, or whether freeloading quietly wins and reefs stay a young dish's phenomenon that mature dishes lose, is open, and unlike the short test runs above, it is a question the dish can only answer by running a long time.
 
 Virulence attenuation in the wild. The mutualism pathway in section 3.6 was verified as a working mechanism during a live epidemic in a test dish, but a mechanism firing correctly once differs from an unprompted general tendency. Whether ordinary, unseeded dishes walk their parasites down into symbionts as a rule, rather than by chance, remains open.
 
