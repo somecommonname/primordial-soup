@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.25.**
+**A small evolving universe in one HTML file. Now v1.26.**
 
 Creatures with 20 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -21,6 +21,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **📣 A voice and ears, 🐜 scent trails**: physical channels only; what any signal means must evolve
 - **💕 Sexual reproduction**: courtship, crossover, true species boundaries
 - **🦴 Morphology**: eels, sailfins, and crushers are visibly different animals with different physics
+- **🐛 Segmented bodies**: gene duplication can grow the genome itself; segments add energy storage, armor, and fins at the price of speed, agility, and hunger, and every creature starts bodiless, so bodies must evolve
 - **🥚 Lifecycles**: eggs that incubate and can be stolen, guarded nests, provisioning parents, torpor for the cold and starving
 - **🦔 Quills and shells** with honest tradeoffs; **🦠 parasites** with evolving virulence; gentle strains become helpful **symbionts**
 
@@ -52,7 +53,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **🎓 The Classroom**: five guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
 - **🟠 Amber**: long lived dishes earn patinas and honorifics; two years is a Fleck, five the Amber Seal, ten Deep Amber, twenty Eternal
 - **🌐 The boards**: four world leaderboards (the daily dish, oldest world, deepest generation, longest dynasty); publishing sends only a callsign and statistics, no accounts, no names, and simulated age is checked against the wall clock so cheats bounce
-- **🏆 Records and 🏅 41 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 42 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
