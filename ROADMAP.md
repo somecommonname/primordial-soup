@@ -179,6 +179,8 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 The greenhouse stands empty for the first time: every seedling planted on 2026-08-15 has shipped. New seeds welcome at the idea box.
 
+Planted 2026-08-18, from David: the Hall of Legends. A leaderboard inside the dish itself: per creature records remembered for the life of the world, the eldest that ever lived, the deepest thinker (most hidden neurons), the most developed body, the greatest hunter, the most devoted parent, each with its name and lineage. Alongside them, family standings: which bloodlines have dominated, for how long, and who reigns now. A dish should remember its own heroes; the chronicle tells the story, the Hall keeps the score. Later, legends could be submitted to the world boards as their own gallery.
+
 ## Frontier (the "how far can this go" answer)
 
 - **Neural brains.** Replace the fixed seek/flee/wander program with a tiny evolvable network (inputs: food/threat/kin vectors, energy; outputs: turn, thrust). Behavior itself then evolves: ambush, migration, hoarding, deception could appear *unprogrammed*. This is the jump from tuning an animal to growing one.
