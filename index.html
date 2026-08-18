@@ -365,7 +365,7 @@
     <div class="gl">👑 Heirloom: your best bloodlines found the next dish; dynasties chain forever</div>
     <div class="gl">🧪 The workshop: design a genome by hand and release it; the body is yours, the mind must evolve</div>
     <div class="gl">🎵 Every creature sings its genome: click one to hear it; new species announce themselves in song</div>
-    <div class="gl">🏛 Retired worlds rest in the museum; revivable ones rerun their whole history and live again</div>
+    <div class="gl">🏛 Retired worlds rest in the museum and revive in an instant, exactly where they stopped</div>
     <div class="gl">🗓 The calendar: event weeks change the daily dish for everyone (the Great Winter, the Age of Plagues)</div>
     <div class="gl">🎓 The classroom: guided experiments on shared seeds, compare results with anyone</div>
     <div class="gl">🏝 The archipelago: one people, three lagoons, narrow straits; geography becomes speciation</div>
@@ -1540,7 +1540,7 @@ function uiRnd(){uiRngS=uiRngS+0x6D2B79F5|0;let t=Math.imul(uiRngS^uiRngS>>>15,1
 function uiGauss(){let u=0,v=0;while(!u)u=uiRnd();while(!v)v=uiRnd();
   return Math.sqrt(-2*Math.log(u))*Math.cos(TAU*v);}
 const snow=[];
-function initSnow(){snow.length=0;for(let i=0;i<140;i++)snow.push({x:rand(0,W),y:rand(0,H),vx:0,vy:0});}
+function initSnow(){snow.length=0;for(let i=0;i<140;i++)snow.push({x:uiRnd()*W,y:uiRnd()*H,vx:0,vy:0});}
 
 // ---------- webgl fast renderer: thousands of bodies, one draw call ----------
 const glRGB=(()=>{const cache={};return h=>{h=((h|0)%360+360)%360;let c=cache[h];if(c)return c;
@@ -2259,7 +2259,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.31.1';
+const APP_V='1.32.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -3222,21 +3222,67 @@ function museumArchive(){
   if(!worldReady||stepN<600)return;
   const m=museumList();
   if(m.length&&m[0].id===dishId&&m[0].stepN===stepN)return;
+  saveWorld();
+  const raw=store.get(SAVE_KEY)||'';
   const e={id:dishId,tag:dishTag,scn:scenario,seed:dishSeed,dyn:dynasty,pd:parentDish,
     year:Math.floor(simT/SEASON_PERIOD),pop:creatures.filter(c=>!c.dead).length,gen:maxGen,
     born:births,died:deaths,when:new Date().toISOString().slice(0,10),stepN,
     vs:versusSeeds||null,hs:heirSeeds||null,
     revivable:!!(ivComplete&&ivLog.length<=1200),
-    ivLog:(ivComplete&&ivLog.length<=1200)?ivLog.slice():null};
+    ivLog:(ivComplete&&ivLog.length<=1200)?ivLog.slice():null,
+    blob:null};
   m.unshift(e);
   while(m.length>12)m.pop();
   museumSave(m);
+  const eid=e.id, esn=e.stepN;
+  (async()=>{
+    try{
+      let clean=raw;
+      try{const o=JSON.parse(raw);delete o.dishToken;clean=JSON.stringify(o);}catch(err){}
+      let blob=null;
+      if(window.CompressionStream){
+        const buf=await new Response(new Blob([clean]).stream().pipeThrough(new CompressionStream('deflate'))).arrayBuffer();
+        blob='D1.'+b64url(new Uint8Array(buf));
+      }else if(clean.length<250000){
+        blob='P0.'+b64url(new TextEncoder().encode(clean));
+      }
+      if(!blob)return;
+      const mm=museumList();
+      const idx=mm.findIndex(x=>x.id===eid&&x.stepN===esn);
+      if(idx<0)return;
+      mm[idx].blob=blob;
+      let total=0;
+      for(const x of mm)total+=(x.blob?x.blob.length:0);
+      for(let j=mm.length-1;j>=0&&total>2500000;j--){
+        if(mm[j].blob&&!(mm[j].id===eid&&mm[j].stepN===esn)){total-=mm[j].blob.length;mm[j].blob=null;}
+      }
+      museumSave(mm);
+    }catch(err){}
+  })();
 }
-function museumRevive(i){
+async function museumRevive(i){
   const m=museumList(), e=m[i];
   if(!e)return;
-  if(!e.revivable||!e.ivLog){say('🏛 this world left no complete record; it can be admired but not revived');return;}
   if(replay){say('⏪ finish the current replay first');return;}
+  if(e.blob){
+    try{
+      const raw=await unpackSeed(e.blob);
+      const o=JSON.parse(raw);
+      o.savedAt=Date.now();
+      museumArchive();
+      store.set(SAVE_KEY,JSON.stringify(o));
+      catchupLeft=0;
+      if(loadWorld()){
+        catchupLeft=0;
+        $('musPanel').classList.remove('show');
+        toolUsed('revive');
+        say('🏛 '+e.id+' lives again, exactly where it stopped');
+        return;
+      }
+    }catch(err){}
+    say('🏛 the snapshot would not open; replaying history instead');
+  }
+  if(!e.revivable||!e.ivLog){say('🏛 this world left no complete record; it can be admired but not revived');return;}
   museumArchive();
   store.del(SAVE_KEY); catchupLeft=0;
   versusSeeds=e.vs||null; heirSeeds=e.hs||null; dynasty=e.dyn||1; parentDish=e.pd||'';
@@ -3259,8 +3305,9 @@ function renderMuseum(){
     info.innerHTML='<b>'+e.id+'</b>'+(e.dyn>1?' · dyn '+roman(e.dyn):'')+' · '+e.scn+' · year '+e.year+
       '<br><span style="opacity:0.65">gen '+e.gen+' · pop '+e.pop+' · '+e.born+' born · retired '+e.when+'</span>';
     const rv=document.createElement('button');
-    rv.textContent=e.revivable?'⏪ revive':'archive only';
-    rv.disabled=!e.revivable;
+    const canRevive=!!(e.blob||(e.revivable&&e.ivLog));
+    rv.textContent=e.blob?'⚡ revive':(e.revivable?'⏪ revive':'archive only');
+    rv.disabled=!canRevive;
     rv.addEventListener('click',()=>museumRevive(i));
     const del=document.createElement('button');del.textContent='✕';
     del.addEventListener('click',()=>{const mm=museumList();mm.splice(i,1);museumSave(mm);renderMuseum();});
@@ -3383,12 +3430,24 @@ function endReplay(){
 }
 function replayTick(){
   if(!replay||replay.paused)return;
-  let burst=Math.min(replay.speed,replay.target-stepN);
-  while(burst-->0){
-    while(replay.idx<replay.log.length&&replay.log[replay.idx].s<=stepN){
-      applyIv(replay.log[replay.idx]);replay.idx++;
+  if(replay.speed>=400){
+    const t0=performance.now();
+    while(stepN<replay.target&&performance.now()-t0<90){
+      for(let k=0;k<40&&stepN<replay.target;k++){
+        while(replay.idx<replay.log.length&&replay.log[replay.idx].s<=stepN){
+          applyIv(replay.log[replay.idx]);replay.idx++;
+        }
+        step(1/60);
+      }
     }
-    step(1/60);
+  }else{
+    let burst=Math.min(replay.speed,replay.target-stepN);
+    while(burst-->0){
+      while(replay.idx<replay.log.length&&replay.log[replay.idx].s<=stepN){
+        applyIv(replay.log[replay.idx]);replay.idx++;
+      }
+      step(1/60);
+    }
   }
   sample();
   const prog=Math.min(100,Math.round(100*stepN/Math.max(1,replay.target)));
