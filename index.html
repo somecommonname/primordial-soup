@@ -456,6 +456,7 @@
   <button id="rpPause">⏸</button>
   <button id="rpSlow">4×</button>
   <button id="rpFast">16×</button>
+  <button id="rpNow">⏭ now</button>
   <button id="rpRec">🎬 film</button>
   <button id="rpExit">exit</button>
 </div>
@@ -2258,7 +2259,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.31.0';
+const APP_V='1.31.1';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2530,6 +2531,7 @@ $('btnGuide').addEventListener('click',()=>$('guidePanel').classList.add('show')
 $('rpPause').addEventListener('click',()=>{if(replay){replay.paused=!replay.paused;$('rpPause').textContent=replay.paused?'▶':'⏸';}});
 $('rpSlow').addEventListener('click',()=>{if(replay)replay.speed=4;});
 $('rpFast').addEventListener('click',()=>{if(replay)replay.speed=16;});
+$('rpNow').addEventListener('click',()=>{if(replay){replay.speed=400;replay.paused=false;$('rpPause').textContent='⏸';say('⏭ sprinting to the present');}});
 $('rpExit').addEventListener('click',endReplay);
 $('btnReplay').addEventListener('click',startReplay);
 $('rpRec').addEventListener('click',startFilm);
