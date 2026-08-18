@@ -376,6 +376,7 @@
     <div class="gl">🪸 Masons lay living reef: it shelters, gathers gardens of algae, and erodes without upkeep</div>
     <div class="gl">🐣 Newborns start small and grow into their inherited form; only adults can breed</div>
     <div class="gl">⚗️ Digestion is chemistry: plant and meat gut enzymes evolve separately from appetite, and a wide gut costs extra to run</div>
+    <div class="gl">🧠 Brains can grow hidden neurons by duplication: deeper thought unlocks new computation and burns real energy</div>
     <div class="gh">THE WORLD</div>
     <div class="gl">🌿 Plants grow and spread themselves in patches</div>
     <div class="gl">🪨 Rocks block movement and sight; ambushes are real</div>
@@ -390,7 +391,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 45 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 46 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -672,10 +673,52 @@ function migrateBrain(old){
   for(let r=0;r<5;r++)for(let i=0;i<15;i++)b[r*18+i]=old[r*15+i]||0;
   return b;
 }
-function brainSum(b){let t=0;for(let i=0;i<BRAIN_N;i++)t+=Math.abs(b[i]);return t;}
+function brainSum(b){let t=0;for(let i=0;i<b.length;i++)t+=Math.abs(b[i]);return t;}
+function brainLen(bh){return 24*bh+108;}
+function brainGrow(b,bh){
+  if(bh>=8)return null;
+  const EW=18+bh, nEW=EW+1, src=bh?(rnd()*bh)|0:-1;
+  const nb=new Array(brainLen(bh+1));
+  for(let j=0;j<bh;j++)for(let i=0;i<18;i++)nb[j*18+i]=b[j*18+i];
+  for(let i=0;i<18;i++)nb[bh*18+i]=(src>=0?b[src*18+i]:0)+gauss()*0.05;
+  const base=bh*18, nbase=(bh+1)*18;
+  for(let k=0;k<6;k++){
+    for(let i=0;i<EW;i++)nb[nbase+k*nEW+i]=b[base+k*EW+i];
+    nb[nbase+k*nEW+EW]=(src>=0?b[base+k*EW+18+src]:0)+gauss()*0.05;
+  }
+  return nb;
+}
+function brainShrink(b,bh){
+  if(bh<1)return null;
+  const EW=18+bh, nEW=EW-1, drop=(rnd()*bh)|0;
+  const nb=new Array(brainLen(bh-1));
+  let r=0;
+  for(let j=0;j<bh;j++){if(j===drop)continue;for(let i=0;i<18;i++)nb[r*18+i]=b[j*18+i];r++;}
+  const base=bh*18, nbase=(bh-1)*18;
+  for(let k=0;k<6;k++){
+    let ci=0;
+    for(let i=0;i<EW;i++){if(i===18+drop)continue;nb[nbase+k*nEW+ci]=b[base+k*EW+i];ci++;}
+  }
+  return nb;
+}
+function mutateStruct(br,bh){
+  if(rnd()<0.02){const g2=brainGrow(br,bh);if(g2)return {br:g2,bh:bh+1};}
+  if(rnd()<0.015){const s2=brainShrink(br,bh);if(s2)return {br:s2,bh:bh-1};}
+  return {br,bh};
+}
+function crossBrainT(a,bha,b2,bhb){
+  const pickA=rnd()<0.5;
+  const S=pickA?a:b2, sh=pickA?bha:bhb, O=pickA?b2:a, oh=pickA?bhb:bha;
+  const out=S.slice();
+  const sharedH=Math.min(sh,oh);
+  for(let j=0;j<sharedH;j++)for(let i=0;i<18;i++)if(rnd()<0.5)out[j*18+i]=O[j*18+i];
+  const sEW=18+sh,oEW=18+oh,sBase=sh*18,oBase=oh*18;
+  for(let k=0;k<6;k++)for(let i=0;i<18+sharedH;i++)if(rnd()<0.5)out[sBase+k*sEW+i]=O[oBase+k*oEW+i];
+  return {br:out,bh:sh};
+}
 function mutateBrain(b){
   const c=b.slice();
-  for(let i=0;i<BRAIN_N;i++)c[i]+=gauss()*mutRate*0.6;
+  for(let i=0;i<c.length;i++)c[i]+=gauss()*mutRate*0.6;
   return c;
 }
 function crossBrain(a,b){
@@ -691,7 +734,7 @@ function makeCreature(g,x,y,energy,gen){
           guardId:0, guardEgg:0, guardUntil:-1,
           br:freshBrain(0.05), wsum:0, thrustMod:1, m0:0, m1:0, lastCall:0,
           sg:[], trail:[], segBurn:1, segThr:1, segTurn:1, segMass:1, segSpk:0, segShl:0,
-          sgBurnB:1, sgThrB:1, sgTurnB:1, sgMassB:1, sgSpkB:0, sgShlB:0, gk:1};
+          sgBurnB:1, sgThrB:1, sgTurnB:1, sgMassB:1, sgSpkB:0, sgShlB:0, gk:1, bh:0};
   applyGrowth(c);
   return c;
 }
@@ -774,7 +817,7 @@ function archTerrain(){
     archRock(CX+ax*R*0.90,CY+ay*R*0.90,R*0.11);
   }
 }
-let lastMigSayT=-99;
+let lastMigSayT=-99, chron2=false;
 function archMigration(){
   if(replay)return;
   const L=archLagoons();
@@ -815,7 +858,7 @@ function initWorld(scn,seed){
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
   if(scenario==='arch')archTerrain();
-  lastMigSayT=-99;
+  lastMigSayT=-99; chron2=false;
   const fN=scenario==='ocean'?120:70;
   for(let i=0;i<fN;i++){const [x,y]=randInDish(0.9); const fc=makeCreature(founderGenome(baseHue),x,y); fc.age=12; applyGrowth(fc); creatures.push(fc);}
   if(scenario==='versus'&&versusSeeds){
@@ -853,7 +896,7 @@ function initWorld(scn,seed){
       g.hue=(g.hue+gauss()*6+360)%360;
       const [x,y]=randInDish(0.85);
       const c=makeCreature(g,x,y);
-      c.br=h.br.map(w=>w+gauss()*0.05); c.wsum=brainSum(c.br);
+      c.br=h.br.map(w=>w+gauss()*0.05); c.bh=h.bh||0; c.wsum=brainSum(c.br);
       c.age=12;
       applySegs(c,(h.sg||[]).map(o=>({...o})));
       c.lin=roots[k];
@@ -986,7 +1029,7 @@ function step(dt){
     const eg=eggs[i];
     if(simT>=eg.hatch){
       const child=makeCreature(eg.g,eg.x,eg.y,null,eg.gen);
-      child.br=eg.br;child.wsum=brainSum(eg.br);
+      child.br=eg.br;child.bh=eg.bh||0;child.wsum=brainSum(eg.br);
       applySegs(child,(eg.sg||[]).map(o=>Array.isArray(o)?{fin:o[0]||0,spike:o[1]||0,shell:o[2]||0}:o));
       child.energy=Math.min(eg.energy,child.cap);
       child.lin=eg.lin;
@@ -1174,15 +1217,27 @@ function step(dt){
       }
       const sI=Math.min(1,s0/1.5);
       const inp=[fS,fC,fN,tS,tC,tN,c.energy/c.cap,Tc,clamp(kinN/6,0,1),1,c.m0,c.m1,hS,hC,hI,sI,sS,sC];
-      const b=c.br;
+      const b=c.br, bh=c.bh||0, EW=18+bh, base=bh*18;
       let o0=0,o1=0,w0=0,w1=0,vc=0,vs=0;
       for(let i=0;i<18;i++){
-        o0+=inp[i]*b[i];
-        o1+=inp[i]*b[18+i];
-        w0+=inp[i]*b[36+i];
-        w1+=inp[i]*b[54+i];
-        vc+=inp[i]*b[72+i];
-        vs+=inp[i]*b[90+i];
+        const v=inp[i];
+        o0+=v*b[base+i];
+        o1+=v*b[base+EW+i];
+        w0+=v*b[base+2*EW+i];
+        w1+=v*b[base+3*EW+i];
+        vc+=v*b[base+4*EW+i];
+        vs+=v*b[base+5*EW+i];
+      }
+      for(let j=0;j<bh;j++){
+        let a=0; const off=j*18;
+        for(let i=0;i<18;i++)a+=inp[i]*b[off+i];
+        const v=Math.tanh(a), k=18+j;
+        o0+=v*b[base+k];
+        o1+=v*b[base+EW+k];
+        w0+=v*b[base+2*EW+k];
+        w1+=v*b[base+3*EW+k];
+        vc+=v*b[base+4*EW+k];
+        vs+=v*b[base+5*EW+k];
       }
       o0=Math.tanh(o0);o1=Math.tanh(o1);
       c.m0=clamp(c.m0*0.9944+0.03*Math.tanh(w0),-1,1);
@@ -1352,19 +1407,21 @@ function step(dt){
         const invested=(c.energy+mate.energy)*0.34;
         const asEgg=rnd()<(g.eggy+mate.g.eggy)/2;
         const childLin=lineageOf(c.lin,mg.hue);
-        const childBr=mutateBrain(crossBrain(c.br||freshBrain(0.05),mate.br||freshBrain(0.05)));
+        const xb=crossBrainT(c.br||freshBrain(0.05),c.bh||0,mate.br||freshBrain(0.05),mate.bh||0);
+        const st=mutateStruct(mutateBrain(xb.br),xb.bh);
+        const childBr=st.br, childBh=st.bh;
         c.energy*=0.63; mate.energy*=0.63;
         c.kids++; mate.kids++; c.lastRep=c.age; mate.lastRep=mate.age;
         c.mateT=0; mate.mateT=0;
         if(asEgg){
-          const eg={id:eggNext++,x:(c.x+mate.x)/2,y:(c.y+mate.y)/2,g:mg,br:childBr,sg:msg,
+          const eg={id:eggNext++,x:(c.x+mate.x)/2,y:(c.y+mate.y)/2,g:mg,br:childBr,bh:childBh,sg:msg,
             lin:childLin,gen:Math.max(c.gen,mate.gen)+1,energy:invested*1.35,hatch:simT+14};
           eggs.push(eg);
           if(g.care>0.15){c.guardEgg=eg.id;c.guardId=0;c.guardUntil=c.age+8+g.care*15;}
           sfx('mate');
         }else{
           const child=makeCreature(mg,(c.x+mate.x)/2,(c.y+mate.y)/2,null,Math.max(c.gen,mate.gen)+1);
-          child.br=childBr;child.wsum=brainSum(child.br);
+          child.br=childBr;child.bh=childBh;child.wsum=brainSum(child.br);
           applySegs(child,msg);
           child.lin=childLin;
           child.energy=Math.min(invested,child.cap);
@@ -1380,7 +1437,8 @@ function step(dt){
         const cg=mutate(g);
         const child=makeCreature(cg, c.x+gauss()*10, c.y+gauss()*10, null, c.gen+1);
         applySegs(child,segInherit(c.sg,c.sg,cg));
-        child.br=mutateBrain(c.br||freshBrain(0.05));
+        const cst=mutateStruct(mutateBrain(c.br||freshBrain(0.05)),c.bh||0);
+        child.br=cst.br;child.bh=cst.bh;
         child.wsum=brainSum(child.br);
         child.lin=lineageOf(c.lin,cg.hue);
         child.energy=Math.min(c.energy*0.45,child.cap);
@@ -1877,6 +1935,10 @@ function updateHud(){
     if(cc.dead)continue;
     if(cc.sg&&cc.sg.length>smx)smx=cc.sg.length;
     if(!records.grew&&cc.gen>1&&cc.age>=12){records.grew=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+    if(cc.bh>0){
+      if(!chron2){chron2=true;logChron('🧠 A second thought: the first hidden neuron has evolved');say('🧠 a second thought: somewhere in the dish, the first hidden neuron');}
+      if(!records.think2&&cc.age>=12){records.think2=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+    }
   }
   if(!records.chem){
     let gA=0,gB=0,gG=0;
@@ -2196,7 +2258,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.30.0';
+const APP_V='1.31.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2211,14 +2273,14 @@ function saveWorld(){
       gen:c.gen,kids:c.kids,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
       phase:Math.round(c.phase*100)/100,lin:c.lin||0,cname:c.cname||0,par:c.par?+c.par.vir.toFixed(3):0,
       br:(c.br||[]).map(w=>Math.round(w*100)/100),m:[Math.round((c.m0||0)*100)/100,Math.round((c.m1||0)*100)/100],
-      sg:(c.sg||[]).map(o=>[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100]),g:c.g}));
+      sg:(c.sg||[]).map(o=>[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100]),bh:c.bh||0,g:c.g}));
     const al=new Array(algae.length*2);
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
     store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
       foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt,
-      eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10,sg:(e.sg||[]).map(o=>Array.isArray(o)?o:[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100])})),eggNext,
+      eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10,bh:e.bh||0,sg:(e.sg||[]).map(o=>Array.isArray(o)?o:[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100])})),eggNext,
       fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
       chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS,
       dishTag,rootA,rootB,versusDone,versusSeeds,stepN,ivComplete,ivLog,heirSeeds,dynasty,parentDish,dishToken,dishPeak}));
@@ -2241,10 +2303,14 @@ function loadWorld(){
     for(const k in GENES)if(typeof c.g[k]!=='number')c.g[k]=GENES[k].def!==undefined?GENES[k].def:(GENES[k].min+GENES[k].max)/2;
     let br=Array.isArray(c.br)?c.br:freshBrain(0.05);
     if(br.length===20||br.length===48||br.length===75)br=migrateBrain(br);
-    if(br.length!==BRAIN_N)br=freshBrain(0.05);
+    let bh=(c.bh|0)||0;
+    if(br.length!==brainLen(bh)){
+      if(br.length===BRAIN_N)bh=0;
+      else{br=freshBrain(0.05);bh=0;}
+    }
     const mm=Array.isArray(c.m)?c.m:[0,0];
     creatures.push({...c,x:tx(c.x),y:ty(c.y),dead:false,lock:null,lockT:0,mateT:0,
-      par:(typeof c.par==='number'&&c.par>0)?{vir:c.par}:null,br,wsum:brainSum(br),thrustMod:1,
+      par:(typeof c.par==='number'&&c.par>0)?{vir:c.par}:null,br,bh,wsum:brainSum(br),thrustMod:1,
       m0:mm[0]||0,m1:mm[1]||0,lastCall:0,
       cname:(typeof c.cname==='string')?c.cname:null});
     const nc=creatures[creatures.length-1];
@@ -2606,6 +2672,7 @@ const BADGES=[
  {id:'architect',n:'Architect',d:'Creature built reefs totaling forty stone in one dish.',t:()=>(records.reefMax||0)>=40},
  {id:'comingofage',n:'Coming of Age',d:'Watch a creature born in your dish grow to adulthood.',t:()=>!!records.grew},
  {id:'alchemist',n:'Alchemist',d:'Three gut chemistries share one dish: plant, meat, and the costly generalist.',t:()=>!!records.chem},
+ {id:'secondthought',n:'Second Thought',d:'A hidden neuron evolves and its bearer reaches adulthood.',t:()=>!!records.think2},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -3052,7 +3119,7 @@ function harvestHeirs(){
   const alive=creatures.filter(c=>!c.dead);
   if(alive.length<2)return null;
   const scored=alive.slice().sort((a,b)=>(b.gen+b.energy/b.cap)-(a.gen+a.energy/a.cap));
-  return scored.slice(0,8).map(c=>({g:{...c.g},br:c.br.slice(),sg:(c.sg||[]).map(o=>({...o}))}));
+  return scored.slice(0,8).map(c=>({g:{...c.g},br:c.br.slice(),bh:c.bh||0,sg:(c.sg||[]).map(o=>({...o}))}));
 }
 
 // ---------- the boards ----------
