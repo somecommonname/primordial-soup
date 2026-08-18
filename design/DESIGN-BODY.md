@@ -1,6 +1,6 @@
 # The Body Mountain: design document
 
-*Status: DRAFT. Constraints and decision framework written before the encoding survey concluded, so the requirements could not be bent to fit a favorite answer. The encoding decision section is appended after the survey.*
+*Status: DECIDED 2026-08-18. Constraints were written before the survey concluded so the requirements could not be bent to fit a favorite answer; the decisions below were made after reading ENCODING-SURVEY.md and the emergence rate study.*
 
 The goal, in one sentence: a creature should be able to evolve a body part we never drew, and that part should genuinely matter, so that the day a lineage grows a paddle of its own invention, the paddle propels it.
 
@@ -51,3 +51,23 @@ Each phase is its own release, tested to the standing invariants, shippable alon
 ## Watch window note
 
 Wild emergence data for hidden neurons (v1.31) is accumulating in daily dishes during this design phase. If structural brain mutations prove too rare to observe at all in real play, the same rates will be too rare for body branching, and the mutation economics get revisited before Phase 1 ships.
+
+## Decisions
+
+**1. The genome is a direct tree of parts.** Today's segment array, generalized to allow branching: each part names its parent, and the encoding is the tree itself, not a grammar or network that generates one. The survey confirmed what the requirements predicted: directness is the only representation where lossless migration (a chain is a tree that never branched), crossover viability, one file cost, and cached evaluation all fall out for free. L systems were the only generative family to clear every constraint and are noted as the one technique worth revisiting if richer symmetric branching ever becomes a priority; grammar indirection is not worth its cost today.
+
+**2. Ganglion crossover aligns by tree position.** NEAT solved crossover between different structures with innovation numbers; our part tree supplies the same alignment for free through a fixed order walk. Shared positions cross weight by weight, unshared subtrees travel whole from the structure parent, exactly the pattern proven by v1.31's crossBrainT. We borrow NEAT's idea, not its machinery.
+
+**3. Locomotion is analytic per part phase oscillators.** Each fin part contributes a thrust vector computed in closed form from an oscillation phase driven by its ganglion output, with torque from off axis placement. No constraint solver, deterministic by the same pattern as every existing formula, a few multiplies per part. The survey's cost analysis confirmed this is the only affordable option where a paddle is genuinely a paddle: placement, count, and phase all evolve, and the physics rewards them honestly.
+
+**4. Mutation economics: lower the rent, not raise the rate.** The emergence study (five seeds, 5,745 births, default dials) found structures appear in the first minute of every world; scarcity was never the bottleneck. Segments are selected out by cost: 26 percent metabolism per segment retains only 6.5 percent of expected carriers, while hidden neurons at their gentler price retain 83 percent at peak. Before Phase 1 ships, the per segment burn drops toward 15 percent, verified by a before and after emergence study. Branching rates start at the segment duplication rate and are tuned from measurement, never from taste.
+
+## Build order
+
+1. Segment economics rebalance (pre Phase 1, its own measured release).
+2. Phase 1, The First Branch: trees, branching duplication, part model, both renderers.
+3. Phase 2, The Paddle: analytic locomotion.
+4. Phase 3, The Organ: sensors and mouths on the body plan.
+
+Each phase ships alone, tested to the standing invariants, with emergence measured after each.
+
