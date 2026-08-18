@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.30.**
+**A small evolving universe in one HTML file. Now v1.31.**
 
 Creatures with 23 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -17,7 +17,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 ## What the creatures are
 
 - **🧬 23 genes**: size, speed, vision, diet, fear, fertility, herding, wander, spikes, shell, comfort zone, immunity, brain power, body shape, fins, jaws, egg laying, parental care, hibernation, masonry, and two gut enzymes, plus color as lineage and mate compatibility
-- **🧠 A real evolvable brain**: 108 weights with two recurrent memory cells; fear can outlast its cause; mutated and crossed over like any gene, paid for in energy
+- **🧠 A real evolvable brain that can grow**: 108 weights and two recurrent memory cells to start, but hidden neurons can be added by duplication, unlocking nonlinear computation the flat brain literally cannot express; every neuron burns energy, so depth must earn its keep
 - **📣 A voice and ears, 🐜 scent trails**: physical channels only; what any signal means must evolve
 - **💕 Sexual reproduction**: courtship, crossover, true species boundaries
 - **🦴 Morphology**: eels, sailfins, and crushers are visibly different animals with different physics
@@ -56,7 +56,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **🎓 The Classroom**: six guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
 - **🟠 Amber**: long lived dishes earn patinas and honorifics; two years is a Fleck, five the Amber Seal, ten Deep Amber, twenty Eternal
 - **🌐 The boards**: four world leaderboards (the daily dish, oldest world, deepest generation, longest dynasty); publishing sends only a callsign and statistics, no accounts, no names, and simulated age is checked against the wall clock so cheats bounce
-- **🏆 Records and 🏅 45 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 46 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
