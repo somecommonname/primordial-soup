@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.36.**
+**A small evolving universe in one HTML file. Now v1.37.**
 
 Creatures with 23 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -56,6 +56,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **🏛 The Museum**: retired worlds rest with a compressed snapshot and their complete history; revival is instant, exactly where the world stopped, and the history stays watchable as a film
 - **🗓 The calendar**: event weeks retheme the shared daily dish (the Great Winter in December, the Age of Plagues at Halloween, the Garden Week in April, the Birthday of the Soup in August)
 - **🎓 The Classroom**: six guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
+- **👑 The Hall of Legends**: every dish remembers its own heroes by name, the eldest that ever lived, the deepest mind, the greatest body, the hunter, and the most devoted parent, alongside family standings for which bloodlines reign and since when
 - **🟠 Amber**: long lived dishes earn patinas and honorifics; two years is a Fleck, five the Amber Seal, ten Deep Amber, twenty Eternal
 - **🌐 The boards**: four world leaderboards (the daily dish, oldest world, deepest generation, longest dynasty); publishing sends only a callsign and statistics, no accounts, no names, and simulated age is checked against the wall clock so cheats bounce
 - **🏆 Records and 🏅 50 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
