@@ -373,6 +373,7 @@
     <div class="gl">🟠 Amber: long lived dishes earn patinas and honorifics; five years is the Amber Seal</div>
     <div class="gl">🌐 The boards: publish your dish to world rankings; only your callsign travels</div>
     <div class="gl">🐛 Bodies are trees now: parts can fork, mirror into symmetry, and branch into shapes nobody drew</div>
+    <div class="gl">🏊 Paddles are real: fins beat in a wave, side fins add thrust and torque, and lopsided bodies swim in curves</div>
     <div class="gl">🪸 Masons lay living reef: it shelters, gathers gardens of algae, and erodes without upkeep</div>
     <div class="gl">🐣 Newborns start small and grow into their inherited form; only adults can breed</div>
     <div class="gl">⚗️ Digestion is chemistry: plant and meat gut enzymes evolve separately from appetite, and a wide gut costs extra to run</div>
@@ -391,7 +392,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 47 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 48 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -621,7 +622,7 @@ function applyGrowth(c){
   const n=c.sg?c.sg.length:0;
   c.cap=12*c.g.size*c.g.size*(1+0.45*n*f)*gk*gk;
   c.segBurn=1+((c.sgBurnB||1)-1)*f;
-  c.segThr=1+((c.sgThrB||1)-1)*f;
+  c.segF=f;
   c.segTurn=1+((c.sgTurnB||1)-1)*f;
   c.segMass=1+((c.sgMassB||1)-1)*f;
   c.segSpk=(c.sgSpkB||0)*f;
@@ -637,10 +638,15 @@ function applySegs(c,sg){
   }
   c.sg=sg;
   const n=sg.length;
-  let fins=0,spk=0,shl=0;
-  for(const o of sg){fins+=o.fin;if(o.spike>spk)spk=o.spike;if(o.shell>shl)shl=o.shell;}
+  let spk=0,shl=0;
+  for(let i=0;i<n;i++){
+    const o=sg[i], p=o.par;
+    o.dep=(p<0?0:sg[p].dep)+1;
+    o.axOff=(p<0?0:sg[p].axOff)+o.ang;
+    if(o.spike>spk)spk=o.spike;
+    if(o.shell>shl)shl=o.shell;
+  }
   c.sgBurnB=1+0.10*n;
-  c.sgThrB=(1+0.30*fins)/(1+0.20*n);
   c.sgTurnB=1/(1+0.12*n);
   c.sgMassB=1/(1+0.25*n);
   c.sgSpkB=spk; c.sgShlB=shl;
@@ -879,7 +885,7 @@ function archTerrain(){
     archRock(CX+ax*R*0.90,CY+ay*R*0.90,R*0.11);
   }
 }
-let lastMigSayT=-99, chron2=false, chronB=false;
+let lastMigSayT=-99, chron2=false, chronB=false, chronP=false;
 function archMigration(){
   if(replay)return;
   const L=archLagoons();
@@ -920,7 +926,7 @@ function initWorld(scn,seed){
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
   if(scenario==='arch')archTerrain();
-  lastMigSayT=-99; chron2=false; chronB=false;
+  lastMigSayT=-99; chron2=false; chronB=false; chronP=false;
   const fN=scenario==='ocean'?120:70;
   for(let i=0;i<fN;i++){const [x,y]=randInDish(0.9); const fc=makeCreature(founderGenome(baseHue),x,y); fc.age=12; applyGrowth(fc); creatures.push(fc);}
   if(scenario==='versus'&&versusSeeds){
@@ -1343,8 +1349,24 @@ function step(dt){
     }else{
       c.dir+=gauss()*g.wiggle*dt;
     }
-    // move
-    const sp=g.speed*(1+0.35*g.fin)*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1)*(c.torpid?(1-0.8*g.torpor):1)*(c.segThr||1);
+    // move: paddles beat in a wave down the body; thrust by cosine, torque by sine
+    let padThr=1;
+    if(c.sg&&c.sg.length){
+      const fseg=c.segF||0, n2=c.sg.length;
+      let padF=0, padT=0;
+      const wf=6+4*g.speed/125;
+      for(let pi=0;pi<n2;pi++){
+        const o=c.sg[pi];
+        if(o.fin<=0.1)continue;
+        const osc=1+0.35*Math.sin(simT*wf+c.phase+o.dep*0.8);
+        const ef=o.fin*osc;
+        padF+=ef*Math.cos(o.axOff);
+        padT+=ef*Math.sin(o.axOff)*o.dep*0.3;
+      }
+      padThr=1+((1+0.30*padF)/(1+0.20*n2)-1)*fseg;
+      c.dir+=padT*0.6*fseg*dt;
+    }
+    const sp=g.speed*(1+0.35*g.fin)*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1)*(c.torpid?(1-0.8*g.torpor):1)*padThr;
     flow(c.x,c.y,simT,_fl);
     const cf=clamp(0.85-gsz*0.05,0.15,0.8)*(1-0.3*g.fin)*(c.segMass||1);
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
@@ -2012,6 +2034,12 @@ function updateHud(){
       if(forked){
         if(!chronB){chronB=true;logChron('🌿 The first branch: a body forked');say('🌿 the first branch: a body has forked');}
         if(!records.branch&&cc.age>=12){records.branch=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+        let paddler=false;
+        for(const o of cc.sg)if(o.ang!==0&&o.fin>0.5){paddler=true;break;}
+        if(paddler){
+          if(!chronP){chronP=true;logChron('🏊 The first paddle: a side fin learned to row');say('🏊 the first paddle: a side fin learned to row');}
+          if(!records.paddle&&cc.age>=12){records.paddle=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+        }
       }
     }
   }
@@ -2333,7 +2361,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.34.0';
+const APP_V='1.35.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2750,6 +2778,7 @@ const BADGES=[
  {id:'alchemist',n:'Alchemist',d:'Three gut chemistries share one dish: plant, meat, and the costly generalist.',t:()=>!!records.chem},
  {id:'secondthought',n:'Second Thought',d:'A hidden neuron evolves and its bearer reaches adulthood.',t:()=>!!records.think2},
  {id:'firstbranch',n:'First Branch',d:'A body forks: the first branched creature reaches adulthood.',t:()=>!!records.branch},
+ {id:'paddler',n:'The Paddler',d:'A strong side fin evolves and its rower reaches adulthood.',t:()=>!!records.paddle},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
