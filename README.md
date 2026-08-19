@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.37.**
+**A small evolving universe in one HTML file. Now v1.38.**
 
 Creatures with 23 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
