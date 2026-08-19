@@ -602,7 +602,7 @@ function applySegs(c,sg){
   const n=sg.length;
   let fins=0,spk=0,shl=0;
   for(const o of sg){fins+=o.fin;if(o.spike>spk)spk=o.spike;if(o.shell>shl)shl=o.shell;}
-  c.sgBurnB=1+0.26*n;
+  c.sgBurnB=1+0.10*n;
   c.sgThrB=(1+0.30*fins)/(1+0.20*n);
   c.sgTurnB=1/(1+0.12*n);
   c.sgMassB=1/(1+0.25*n);
@@ -2259,7 +2259,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.32.0';
+const APP_V='1.33.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
