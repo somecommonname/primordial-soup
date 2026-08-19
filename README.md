@@ -1,6 +1,6 @@
 # 🧫 Primordial Soup
 
-**A small evolving universe in one HTML file. Now v1.35.**
+**A small evolving universe in one HTML file. Now v1.36.**
 
 Creatures with 23 genes and a 108 weight recurrent neural brain swim in a petri dish where they eat, hunt, court, breed with genetic crossover, speciate, remember, speak, leave scent trails, lay eggs, guard nests, hibernate, and grow bodies with real shapes. Nothing is scripted: predators, herds, jackal omnivores, quilled defenders, cold-adapted peoples, wartime brains, and devoted mothers all *evolved* in testing rather than being programmed. You play the environment.
 
@@ -23,6 +23,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **🦴 Morphology**: eels, sailfins, and crushers are visibly different animals with different physics
 - **🌿 Tree bodies**: the body plan is a tree, not a chain; parts fork off any parent at evolved angles, a mirror mutation mints bilateral symmetry in one step, and shapes nobody drew emerge from selection
 - **🏊 Real paddles**: fins beat in a traveling wave down the body; a paddle's angle decides how much it pushes and how much it turns, lopsided bodies swim in curves, and mirrored fins run true, so symmetry is not decoration, it is engineering
+- **👁 Organs on the body plan**: eyes can open anywhere and see farther where they face, extra mouths graze where they sit on the body, every organ pays metabolic rent, and a newly grown part tends to arrive with its own neuron
 - **🐣 Growing up**: newborns start at a third of adult size and grow smoothly into their inherited form by age twelve; a juvenile is genuinely smaller, weaker prey with a smaller bite, and only adults can breed or be courted
 - **⚗️ Gut chemistry**: what a creature can digest evolves separately from what it wants to eat; plant and meat enzymes are their own genes, generalist guts pay a running tax, and a born hunter with no protease starves on its own kills until selection aligns behavior with chemistry
 - **🥚 Lifecycles**: eggs that incubate and can be stolen, guarded nests, provisioning parents, torpor for the cold and starving
@@ -57,7 +58,7 @@ When a dish grows past a few hundred cells, a WebGL renderer takes over and draw
 - **🎓 The Classroom**: six guided experiments on shared seeds; every student sets up the identical world, so results can be compared across a whole class
 - **🟠 Amber**: long lived dishes earn patinas and honorifics; two years is a Fleck, five the Amber Seal, ten Deep Amber, twenty Eternal
 - **🌐 The boards**: four world leaderboards (the daily dish, oldest world, deepest generation, longest dynasty); publishing sends only a callsign and statistics, no accounts, no names, and simulated age is checked against the wall clock so cheats bounce
-- **🏆 Records and 🏅 48 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
+- **🏆 Records and 🏅 50 badges** that survive every world; **🆔 every dish has a callsign** like SOUP-K7F3-9Q
 
 ## Sharing
 
