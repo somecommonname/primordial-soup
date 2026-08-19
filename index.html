@@ -608,7 +608,7 @@ function segInherit(pa,pb,g){
     if(tip)out.push({fin:tip.fin,spike:tip.spike,shell:tip.shell,par:out.length-1,ang:clamp(tip.ang*0.5,-1.4,1.4)});
     else{const m=makeSegFrom(g);m.par=-1;m.ang=0;out.push(m);}
   }
-  if(out.length<6&&rnd()<0.015){
+  if(out.length<6&&rnd()<0.035){
     const p=(rnd()*(out.length+1)|0)-1;
     const base=p>=0?out[p]:null;
     const nb=base?{fin:base.fin,spike:base.spike,shell:base.shell,eye:base.eye||0,mouth:base.mouth||0}:makeSegFrom(g);
@@ -623,7 +623,7 @@ function segInherit(pa,pb,g){
       out.push({fin:src.fin,spike:src.spike,shell:src.shell,eye:src.eye||0,mouth:src.mouth||0,par:src.par,ang:-src.ang});
     }
   }
-  if(out.length&&rnd()<0.01){
+  if(out.length&&rnd()<0.02){
     const oi=(rnd()*out.length)|0;
     if(rnd()<0.5)out[oi].eye=clamp((out[oi].eye||0)+0.3+rnd()*0.4,0,1);
     else out[oi].mouth=clamp((out[oi].mouth||0)+0.3+rnd()*0.4,0,1);
@@ -2462,7 +2462,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.37.0';
+const APP_V='1.38.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
