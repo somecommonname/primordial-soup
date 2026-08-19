@@ -374,6 +374,7 @@
     <div class="gl">🌐 The boards: publish your dish to world rankings; only your callsign travels</div>
     <div class="gl">🐛 Bodies are trees now: parts can fork, mirror into symmetry, and branch into shapes nobody drew</div>
     <div class="gl">🏊 Paddles are real: fins beat in a wave, side fins add thrust and torque, and lopsided bodies swim in curves</div>
+    <div class="gl">👁 Organs live on the body plan: eyes see farther where they face, extra mouths graze where they sit, and new parts tend to arrive with their own neuron</div>
     <div class="gl">🪸 Masons lay living reef: it shelters, gathers gardens of algae, and erodes without upkeep</div>
     <div class="gl">🐣 Newborns start small and grow into their inherited form; only adults can breed</div>
     <div class="gl">⚗️ Digestion is chemistry: plant and meat gut enzymes evolve separately from appetite, and a wide gut costs extra to run</div>
@@ -392,7 +393,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 48 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 50 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -567,7 +568,7 @@ function founderGenome(baseHue){
     hue: (baseHue+gauss()*14+360)%360,
   };
 }
-function makeSegFrom(g){return {fin:clamp(g.fin*0.5+Math.abs(gauss())*0.05,0,1),spike:clamp(Math.abs(gauss())*0.03,0,1),shell:clamp(Math.abs(gauss())*0.03,0,1)};}
+function makeSegFrom(g){return {fin:clamp(g.fin*0.5+Math.abs(gauss())*0.05,0,1),spike:clamp(Math.abs(gauss())*0.03,0,1),shell:clamp(Math.abs(gauss())*0.03,0,1),eye:clamp(Math.abs(gauss())*0.02,0,1),mouth:clamp(Math.abs(gauss())*0.02,0,1)};}
 function segInherit(pa,pb,g){
   const a=pa||[],b=pb||[];
   const S=rnd()<0.5?a:b, O=S===a?b:a;
@@ -578,6 +579,8 @@ function segInherit(pa,pb,g){
     out.push({fin:clamp(src.fin+gauss()*mutRate*0.5,0,1),
               spike:clamp(src.spike+gauss()*mutRate*0.5,0,1),
               shell:clamp(src.shell+gauss()*mutRate*0.5,0,1),
+              eye:clamp((src.eye||0)+gauss()*mutRate*0.4,0,1),
+              mouth:clamp((src.mouth||0)+gauss()*mutRate*0.4,0,1),
               par:(typeof st.par==='number')?st.par:i-1,
               ang:(typeof st.ang==='number')?st.ang:0});
   }
@@ -589,7 +592,7 @@ function segInherit(pa,pb,g){
   if(out.length<6&&rnd()<0.015){
     const p=(rnd()*(out.length+1)|0)-1;
     const base=p>=0?out[p]:null;
-    const nb=base?{fin:base.fin,spike:base.spike,shell:base.shell}:makeSegFrom(g);
+    const nb=base?{fin:base.fin,spike:base.spike,shell:base.shell,eye:base.eye||0,mouth:base.mouth||0}:makeSegFrom(g);
     nb.par=p; nb.ang=(rnd()<0.5?-1:1)*(0.5+rnd()*0.9);
     out.push(nb);
   }
@@ -598,8 +601,13 @@ function segInherit(pa,pb,g){
     for(let i=0;i<out.length;i++)if(out[i].ang!==0)cands.push(i);
     if(cands.length){
       const src=out[cands[(rnd()*cands.length)|0]];
-      out.push({fin:src.fin,spike:src.spike,shell:src.shell,par:src.par,ang:-src.ang});
+      out.push({fin:src.fin,spike:src.spike,shell:src.shell,eye:src.eye||0,mouth:src.mouth||0,par:src.par,ang:-src.ang});
     }
+  }
+  if(out.length&&rnd()<0.01){
+    const oi=(rnd()*out.length)|0;
+    if(rnd()<0.5)out[oi].eye=clamp((out[oi].eye||0)+0.3+rnd()*0.4,0,1);
+    else out[oi].mouth=clamp((out[oi].mouth||0)+0.3+rnd()*0.4,0,1);
   }
   if(out.length&&rnd()<0.02){
     const isParent=new Array(out.length).fill(false);
@@ -635,22 +643,39 @@ function applySegs(c,sg){
     const o=sg[i];
     if(typeof o.par!=='number'||o.par>=i)o.par=i-1;
     if(typeof o.ang!=='number')o.ang=0;
+    if(typeof o.eye!=='number')o.eye=0;
+    if(typeof o.mouth!=='number')o.mouth=0;
   }
   c.sg=sg;
   const n=sg.length;
-  let spk=0,shl=0;
+  let spk=0,shl=0,eyeMx=0,mouthSum=0,eyeSum=0;
   for(let i=0;i<n;i++){
     const o=sg[i], p=o.par;
     o.dep=(p<0?0:sg[p].dep)+1;
     o.axOff=(p<0?0:sg[p].axOff)+o.ang;
+    o.ux=(p<0?0:sg[p].ux)+Math.cos(Math.PI+o.axOff);
+    o.uy=(p<0?0:sg[p].uy)+Math.sin(Math.PI+o.axOff);
     if(o.spike>spk)spk=o.spike;
     if(o.shell>shl)shl=o.shell;
+    if(o.eye>eyeMx)eyeMx=o.eye;
+    eyeSum+=o.eye; mouthSum+=o.mouth;
   }
-  c.sgBurnB=1+0.10*n;
+  c.sgEye=eyeMx; c.sgMouth=mouthSum;
+  c.sgBurnB=1+0.10*n+0.05*mouthSum+0.04*eyeSum;
   c.sgTurnB=1/(1+0.12*n);
   c.sgMassB=1/(1+0.25*n);
   c.sgSpkB=spk; c.sgShlB=shl;
   applyGrowth(c);
+}
+function eyeSees(c,dx,dy){
+  const b=Math.atan2(dy,dx)-c.dir;
+  for(const o of c.sg){
+    if(o.eye<=0.15)continue;
+    let d=b-o.axOff;
+    while(d>Math.PI)d-=TAU; while(d<-Math.PI)d+=TAU;
+    if(Math.abs(d)<0.75)return true;
+  }
+  return false;
 }
 function segPos(c,i){
   const t=c.trail;
@@ -769,8 +794,8 @@ function brainShrink(b,bh){
   }
   return nb;
 }
-function mutateStruct(br,bh){
-  if(rnd()<0.02){const g2=brainGrow(br,bh);if(g2)return {br:g2,bh:bh+1};}
+function mutateStruct(br,bh,grewPart){
+  if(rnd()<(grewPart?0.5:0.02)){const g2=brainGrow(br,bh);if(g2)return {br:g2,bh:bh+1};}
   if(rnd()<0.015){const s2=brainShrink(br,bh);if(s2)return {br:s2,bh:bh-1};}
   return {br,bh};
 }
@@ -885,7 +910,7 @@ function archTerrain(){
     archRock(CX+ax*R*0.90,CY+ay*R*0.90,R*0.11);
   }
 }
-let lastMigSayT=-99, chron2=false, chronB=false, chronP=false;
+let lastMigSayT=-99, chron2=false, chronB=false, chronP=false, chronE=false, chronM=false;
 function archMigration(){
   if(replay)return;
   const L=archLagoons();
@@ -926,7 +951,7 @@ function initWorld(scn,seed){
   const baseHue=rand(140,280);
   genTerrain(); initSnow();
   if(scenario==='arch')archTerrain();
-  lastMigSayT=-99; chron2=false; chronB=false; chronP=false;
+  lastMigSayT=-99; chron2=false; chronB=false; chronP=false; chronE=false; chronM=false;
   const fN=scenario==='ocean'?120:70;
   for(let i=0;i<fN;i++){const [x,y]=randInDish(0.9); const fc=makeCreature(founderGenome(baseHue),x,y); fc.age=12; applyGrowth(fc); creatures.push(fc);}
   if(scenario==='versus'&&versusSeeds){
@@ -1098,7 +1123,7 @@ function step(dt){
     if(simT>=eg.hatch){
       const child=makeCreature(eg.g,eg.x,eg.y,null,eg.gen);
       child.br=eg.br;child.bh=eg.bh||0;child.wsum=brainSum(eg.br);
-      applySegs(child,(eg.sg||[]).map((o,i)=>Array.isArray(o)?{fin:o[0]||0,spike:o[1]||0,shell:o[2]||0,par:(typeof o[3]==='number')?o[3]:i-1,ang:o[4]||0}:o));
+      applySegs(child,(eg.sg||[]).map((o,i)=>Array.isArray(o)?{fin:o[0]||0,spike:o[1]||0,shell:o[2]||0,par:(typeof o[3]==='number')?o[3]:i-1,ang:o[4]||0,eye:o[5]||0,mouth:o[6]||0}:o));
       child.energy=Math.min(eg.energy,child.cap);
       child.lin=eg.lin;
       if(creatures.length<POP_CAP){creatures.push(child);births++;sexBirths++;sfx('birth');
@@ -1171,14 +1196,14 @@ function step(dt){
     let mate=null,mateD2=1e12,mateScore=-1;
     let kinN=0,kinX=0,kinY=0,kinCos=0,kinSin=0;
     const herdR2=sense*sense*0.72;
-    queryGrid(cGrid,c.x,c.y,sense,_n2);
+    queryGrid(cGrid,c.x,c.y,(c.sgEye>0.15?sense*1.5:sense),_n2);
     const fleeRange=sense*(0.4+0.6*g.fear);
     for(const o of _n2){ if(o===c||o.dead)continue;
       const d2=(o.x-c.x)**2+(o.y-c.y)**2;
       const hd=hueDist(o.g.hue,g.hue);
       const kin=hd<55;
       if(hungry && g.diet>0.35 && o.g.size*(1+0.55*o.g.shell)<g.size*0.83){
-        if(!prey && d2<sense*sense && d2<preyD2){preyD2=d2;prey=o;}
+        if(!prey && (d2<sense*sense || (c.sgEye>0.15 && d2<sense*sense*2.25 && eyeSees(c,o.x-c.x,o.y-c.y))) && d2<preyD2){preyD2=d2;prey=o;}
         const br=g.size+o.g.size*0.3+3;
         if(d2<br*br && d2<biteD2){biteD2=d2;bite=o;}
       }
@@ -1408,6 +1433,24 @@ function step(dt){
         }
       }
     }
+    if(c.sgMouth>0.15&&c.energy<c.cap&&g.diet<0.92){
+      const spm=g.size*(c.gk||1)*1.5, co3=Math.cos(c.dir), si4=Math.sin(c.dir);
+      for(const om of c.sg){
+        if(om.mouth<=0.15)continue;
+        const mx=c.x+(co3*om.ux-si4*om.uy)*spm;
+        const my=c.y+(si4*om.ux+co3*om.uy)*spm;
+        const mr=(g.size*0.6+3)**2, eff=0.5+0.5*om.mouth;
+        for(const a of _n1){
+          if(a.eaten)continue;
+          if((a.x-mx)**2+(a.y-my)**2<mr){
+            a.eaten=true;
+            c.energy+=ALGAE_E*Math.pow(g.enzA,1.3)*0.98*eff*((c.par&&c.par.vir<0.12)?1.06:1);
+            if(c.energy>=c.cap){c.energy=c.cap;break;}
+          }
+        }
+        if(c.energy>=c.cap)break;
+      }
+    }
     // scavenge fungus: death feeds anyone willing
     if(c.energy<c.cap*0.92&&fungi.length){
       for(let fi=fungi.length-1;fi>=0;fi--){
@@ -1492,7 +1535,7 @@ function step(dt){
         const asEgg=rnd()<(g.eggy+mate.g.eggy)/2;
         const childLin=lineageOf(c.lin,mg.hue);
         const xb=crossBrainT(c.br||freshBrain(0.05),c.bh||0,mate.br||freshBrain(0.05),mate.bh||0);
-        const st=mutateStruct(mutateBrain(xb.br),xb.bh);
+        const st=mutateStruct(mutateBrain(xb.br),xb.bh,msg.length>Math.max(c.sg?c.sg.length:0,mate.sg?mate.sg.length:0));
         const childBr=st.br, childBh=st.bh;
         c.energy*=0.63; mate.energy*=0.63;
         c.kids++; mate.kids++; c.lastRep=c.age; mate.lastRep=mate.age;
@@ -1520,8 +1563,9 @@ function step(dt){
       if(c.mateT>5){
         const cg=mutate(g);
         const child=makeCreature(cg, c.x+gauss()*10, c.y+gauss()*10, null, c.gen+1);
-        applySegs(child,segInherit(c.sg,c.sg,cg));
-        const cst=mutateStruct(mutateBrain(c.br||freshBrain(0.05)),c.bh||0);
+        const csg=segInherit(c.sg,c.sg,cg);
+        applySegs(child,csg);
+        const cst=mutateStruct(mutateBrain(c.br||freshBrain(0.05)),c.bh||0,csg.length>(c.sg?c.sg.length:0));
         child.br=cst.br;child.bh=cst.bh;
         child.wsum=brainSum(child.br);
         child.lin=lineageOf(c.lin,cg.hue);
@@ -1823,6 +1867,16 @@ function render(){
           ctx.strokeStyle='rgba(200,220,255,0.45)';ctx.lineWidth=1.1;
           ctx.beginPath();ctx.arc(P[0],P[1],ss+1.5,0,TAU);ctx.stroke();
         }
+        if(so.eye>0.4){
+          ctx.fillStyle='rgba(240,248,255,0.9)';
+          ctx.beginPath();ctx.arc(P[0]+Math.cos(P[2])*ss*0.4,P[1]+Math.sin(P[2])*ss*0.4,Math.max(1,ss*0.28),0,TAU);ctx.fill();
+          ctx.fillStyle='rgba(10,14,24,0.95)';
+          ctx.beginPath();ctx.arc(P[0]+Math.cos(P[2])*ss*0.5,P[1]+Math.sin(P[2])*ss*0.5,Math.max(0.6,ss*0.13),0,TAU);ctx.fill();
+        }
+        if(so.mouth>0.4){
+          ctx.strokeStyle='rgba(255,160,140,0.8)';ctx.lineWidth=1.2;
+          ctx.beginPath();ctx.arc(P[0],P[1],ss*0.55,P[2]-0.6,P[2]+0.6);ctx.stroke();
+        }
       }
     }
     const vit=clamp(c.energy/c.cap,0,1);
@@ -2036,6 +2090,12 @@ function updateHud(){
         if(!records.branch&&cc.age>=12){records.branch=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
         let paddler=false;
         for(const o of cc.sg)if(o.ang!==0&&o.fin>0.5){paddler=true;break;}
+        for(const o of cc.sg){
+          if(o.eye>0.4&&!chronE){chronE=true;logChron('👁 The first eye opened away from the head');say('👁 the first eye opened away from the head');}
+          if(o.eye>0.4&&!records.eye&&cc.age>=12){records.eye=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+          if(o.mouth>0.4&&!chronM){chronM=true;logChron('👄 A second mouth learned to eat');say('👄 a second mouth learned to eat');}
+          if(o.mouth>0.4&&!records.mouth&&cc.age>=12){records.mouth=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+        }
         if(paddler){
           if(!chronP){chronP=true;logChron('🏊 The first paddle: a side fin learned to row');say('🏊 the first paddle: a side fin learned to row');}
           if(!records.paddle&&cc.age>=12){records.paddle=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
@@ -2361,7 +2421,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.35.0';
+const APP_V='1.36.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2376,14 +2436,14 @@ function saveWorld(){
       gen:c.gen,kids:c.kids,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
       phase:Math.round(c.phase*100)/100,lin:c.lin||0,cname:c.cname||0,par:c.par?+c.par.vir.toFixed(3):0,
       br:(c.br||[]).map(w=>Math.round(w*100)/100),m:[Math.round((c.m0||0)*100)/100,Math.round((c.m1||0)*100)/100],
-      sg:(c.sg||[]).map((o,i)=>[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100]),bh:c.bh||0,g:c.g}));
+      sg:(c.sg||[]).map((o,i)=>[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100,Math.round((o.eye||0)*100)/100,Math.round((o.mouth||0)*100)/100]),bh:c.bh||0,g:c.g}));
     const al=new Array(algae.length*2);
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
     store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
       foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt,
-      eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10,bh:e.bh||0,sg:(e.sg||[]).map((o,i)=>Array.isArray(o)?o:[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100])})),eggNext,
+      eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10,bh:e.bh||0,sg:(e.sg||[]).map((o,i)=>Array.isArray(o)?o:[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100,Math.round((o.eye||0)*100)/100,Math.round((o.mouth||0)*100)/100])})),eggNext,
       fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
       chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS,
       dishTag,rootA,rootB,versusDone,versusSeeds,stepN,ivComplete,ivLog,heirSeeds,dynasty,parentDish,dishToken,dishPeak}));
@@ -2418,7 +2478,7 @@ function loadWorld(){
       cname:(typeof c.cname==='string')?c.cname:null});
     const nc=creatures[creatures.length-1];
     nc.trail=[];
-    applySegs(nc,(Array.isArray(c.sg)?c.sg:[]).map((a,i)=>Array.isArray(a)?{fin:a[0]||0,spike:a[1]||0,shell:a[2]||0,par:(typeof a[3]==='number')?a[3]:i-1,ang:a[4]||0}:a));
+    applySegs(nc,(Array.isArray(c.sg)?c.sg:[]).map((a,i)=>Array.isArray(a)?{fin:a[0]||0,spike:a[1]||0,shell:a[2]||0,par:(typeof a[3]==='number')?a[3]:i-1,ang:a[4]||0,eye:a[5]||0,mouth:a[6]||0}:a));
   }
   for(let i=0;i<s.al.length;i+=2)algae.push({x:tx(s.al[i]),y:ty(s.al[i+1]),eaten:false});
   for(const rk of s.rocks)rocks.push({x:tx(rk.x),y:ty(rk.y),r:rk.r*sc,spk:rk.spk||[],bio:!!rk.bio});
@@ -2779,6 +2839,8 @@ const BADGES=[
  {id:'secondthought',n:'Second Thought',d:'A hidden neuron evolves and its bearer reaches adulthood.',t:()=>!!records.think2},
  {id:'firstbranch',n:'First Branch',d:'A body forks: the first branched creature reaches adulthood.',t:()=>!!records.branch},
  {id:'paddler',n:'The Paddler',d:'A strong side fin evolves and its rower reaches adulthood.',t:()=>!!records.paddle},
+ {id:'eyesaft',n:'Eyes Aft',d:'An eye opens on a body part and its bearer reaches adulthood.',t:()=>!!records.eye},
+ {id:'secondmouth',n:'Second Mouth',d:'A mouth evolves on a body part and its bearer reaches adulthood.',t:()=>!!records.mouth},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
