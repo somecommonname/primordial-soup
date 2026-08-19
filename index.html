@@ -126,6 +126,14 @@
   #classPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,94vw);display:none;z-index:37;
               max-height:86vh;overflow-y:auto}
   #classPanel.show{display:block}
+  #legendsPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,94vw);display:none;z-index:37;
+                max-height:84vh;overflow-y:auto}
+  #legendsPanel.show{display:block}
+  .lgrow{display:flex;align-items:center;gap:8px;font-size:10.5px;padding:5px 2px;border-bottom:1px solid var(--line)}
+  .lgrow .lt{width:92px;color:var(--dim);letter-spacing:0.04em}
+  .lgrow .sw{width:9px;height:9px;border-radius:50%;flex:none}
+  .lgrow .ln{flex:1}
+  .lgrow .lv{font-family:var(--mono);opacity:0.8}
   #boardsPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,94vw);display:none;z-index:37;
                max-height:84vh;overflow-y:auto}
   #boardsPanel.show{display:block}
@@ -252,6 +260,7 @@
     <button id="btnMuseum">🏛 museum</button>
     <button id="btnClass">🎓 learn</button>
     <button id="btnBoards">🌐 boards</button>
+    <button id="btnLegends">👑 legends</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -317,6 +326,15 @@
   <div style="font-size:9px;opacity:0.55;margin-top:6px">Publishing sends only your dish callsign, seed, and statistics. No accounts, no names.</div>
 </div>
 
+<div class="panel" id="legendsPanel">
+  <button class="close" id="legendsClose">✕</button>
+  <div class="ptitle">HALL OF LEGENDS</div>
+  <div style="font-size:10px;opacity:0.75;margin-bottom:8px">The heroes this dish remembers, and the houses that reign.</div>
+  <div id="legendsRows"></div>
+  <div class="ptitle" style="margin-top:12px">FAMILY STANDINGS</div>
+  <div id="houseRows"></div>
+</div>
+
 <div class="panel" id="classPanel">
   <button class="close" id="classClose">✕</button>
   <div class="ptitle">THE CLASSROOM</div>
@@ -375,6 +393,7 @@
     <div class="gl">🐛 Bodies are trees now: parts can fork, mirror into symmetry, and branch into shapes nobody drew</div>
     <div class="gl">🏊 Paddles are real: fins beat in a wave, side fins add thrust and torque, and lopsided bodies swim in curves</div>
     <div class="gl">👁 Organs live on the body plan: eyes see farther where they face, extra mouths graze where they sit, and new parts tend to arrive with their own neuron</div>
+    <div class="gl">👑 The Hall of Legends remembers each dish's heroes by name, and which bloodline reigns</div>
     <div class="gl">🪸 Masons lay living reef: it shelters, gathers gardens of algae, and erodes without upkeep</div>
     <div class="gl">🐣 Newborns start small and grow into their inherited form; only adults can breed</div>
     <div class="gl">⚗️ Digestion is chemistry: plant and meat gut enzymes evolve separately from appetite, and a wide gut costs extra to run</div>
@@ -667,6 +686,23 @@ function applySegs(c,sg){
   c.sgSpkB=spk; c.sgShlB=shl;
   applyGrowth(c);
 }
+function legendBid(k,cc,score,min,disp){
+  if(score<min)return;
+  const cur=legends[k];
+  if(!cur||score>cur.v){
+    legends[k]={n:nameOf(cc),lin:cc.lin||0,hue:Math.round(cc.g.hue),v:score,d:disp,y:Math.floor(simT/SEASON_PERIOD)};
+  }
+}
+function hueWord(h){
+  h=((h%360)+360)%360;
+  if(h<15||h>=330)return 'rose';
+  if(h<45)return 'amber';
+  if(h<75)return 'gold';
+  if(h<160)return 'green';
+  if(h<205)return 'teal';
+  if(h<265)return 'blue';
+  return 'violet';
+}
 function eyeSees(c,dx,dy){
   const b=Math.atan2(dy,dx)-c.dir;
   for(const o of c.sg){
@@ -827,7 +863,7 @@ function makeCreature(g,x,y,energy,gen){
           guardId:0, guardEgg:0, guardUntil:-1,
           br:freshBrain(0.05), wsum:0, thrustMod:1, m0:0, m1:0, lastCall:0,
           sg:[], trail:[], segBurn:1, segThr:1, segTurn:1, segMass:1, segSpk:0, segShl:0,
-          sgBurnB:1, sgThrB:1, sgTurnB:1, sgMassB:1, sgSpkB:0, sgShlB:0, gk:1, bh:0};
+          sgBurnB:1, sgThrB:1, sgTurnB:1, sgMassB:1, sgSpkB:0, sgShlB:0, gk:1, bh:0, kills:0};
   applyGrowth(c);
   return c;
 }
@@ -933,7 +969,7 @@ function initWorld(scn,seed){
   dishSeed=(seed!=null?seed:((Math.random()*4294967296)>>>0))>>>0;
   rngS=dishSeed|0;
   dishId=makeCallsign();
-  dishToken=makeToken(); dishPeak=0;
+  dishToken=makeToken(); dishPeak=0; legends={};
   creatures.length=0; algae.length=0; events.length=0;
   nextId=1;
   births=0; deaths=0; maxGen=1; simT=0; iceUntil=-1; selected=null; extinctAt=-1;
@@ -1052,7 +1088,7 @@ let dishTag='', rootA=0, rootB=0, versusDone=false, versusSeeds=null;
 let stepN=0, ivLog=[], ivComplete=false;
 let heirSeeds=null, dynasty=1, parentDish='';
 let BOARDS_URL='';
-let dishToken='', dishPeak=0;
+let dishToken='', dishPeak=0, legends={};
 function makeToken(){const u=new Uint8Array(16);crypto.getRandomValues(u);return [...u].map(b=>b.toString(16).padStart(2,'0')).join('');}
 function amberTier(){const y=simT/SEASON_PERIOD;return y>=20?4:y>=10?3:y>=5?2:y>=2?1:0;}
 const AMBER_NAMES=['','Amber Fleck','Amber Seal','Deep Amber','Eternal Amber'];
@@ -1490,7 +1526,7 @@ function step(dt){
       const rr=(g.size*(c.gk||1)+meal.g.size*(meal.gk||1)*0.3+3);
       if(d2<rr*rr){
         if(g.size*(c.gk||1)*(1+0.35*g.jaw)>1.2*meal.g.size*(meal.gk||1)*(1+0.55*meal.g.shell)*(1+0.35*(meal.segShl||0))){
-          meal.dead=true; meal.killed=true; deaths++; dKill++; c.lock=null; c.lockT=0;
+          meal.dead=true; meal.killed=true; deaths++; dKill++; c.kills=(c.kills||0)+1; c.lock=null; c.lockT=0;
           const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.enzB,1.6))*((c.par&&c.par.vir<0.12)?1.06:1);
           c.energy=Math.min(c.cap,c.energy+flesh);
           const mspk=meal.g.spike+0.6*(meal.segSpk||0);
@@ -2102,6 +2138,11 @@ function updateHud(){
         }
       }
     }
+    legendBid('eldest',cc,cc.age,20,Math.floor(cc.age)+'s of life');
+    if((cc.bh||0)>0)legendBid('thinker',cc,(cc.bh||0)*1000+Math.min(999,cc.wsum||0),1000,(cc.bh||0)+((cc.bh||0)>1?' hidden neurons':' hidden neuron'));
+    if(cc.sg&&cc.sg.length>=2)legendBid('grown',cc,cc.sg.length,2,cc.sg.length+' body parts');
+    if((cc.kills||0)>=3)legendBid('hunter',cc,cc.kills,3,cc.kills+' kills');
+    if((cc.kids||0)>=4)legendBid('parent',cc,cc.kids,4,cc.kids+' children');
   }
   if(!records.chem){
     let gA=0,gB=0,gG=0;
@@ -2421,7 +2462,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.36.0';
+const APP_V='1.37.0';
 const SAVE_KEY='primordialSoup.save';
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
@@ -2433,7 +2474,7 @@ function saveWorld(){
   try{
     const cs=creatures.map(c=>({id:c.id,x:Math.round(c.x*10)/10,y:Math.round(c.y*10)/10,
       dir:Math.round(c.dir*100)/100,energy:Math.round(c.energy),cap:c.cap,age:Math.round(c.age*10)/10,
-      gen:c.gen,kids:c.kids,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
+      gen:c.gen,kids:c.kids,kills:c.kills||0,lifespan:Math.round(c.lifespan),lastRep:Math.round(c.lastRep*10)/10,
       phase:Math.round(c.phase*100)/100,lin:c.lin||0,cname:c.cname||0,par:c.par?+c.par.vir.toFixed(3):0,
       br:(c.br||[]).map(w=>Math.round(w*100)/100),m:[Math.round((c.m0||0)*100)/100,Math.round((c.m1||0)*100)/100],
       sg:(c.sg||[]).map((o,i)=>[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100,Math.round((o.eye||0)*100)/100,Math.round((o.mouth||0)*100)/100]),bh:c.bh||0,g:c.g}));
@@ -2446,7 +2487,7 @@ function saveWorld(){
       eggs:eggs.map(e=>({id:e.id,x:Math.round(e.x),y:Math.round(e.y),g:e.g,br:e.br.map(w=>Math.round(w*100)/100),lin:e.lin,gen:e.gen,energy:Math.round(e.energy),hatch:Math.round((e.hatch-simT)*10)/10,bh:e.bh||0,sg:(e.sg||[]).map((o,i)=>Array.isArray(o)?o:[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100,Math.round((o.eye||0)*100)/100,Math.round((o.mouth||0)*100)/100])})),eggNext,
       fungi:fungi.map(f=>({x:Math.round(f.x),y:Math.round(f.y),e:Math.round(f.e),age:Math.round(f.age*10)/10})),
       chron,yearN,yearB0,yearD0,followLin,followName,lineBestGen,scenario,dishId,dishSeed,rngS,
-      dishTag,rootA,rootB,versusDone,versusSeeds,stepN,ivComplete,ivLog,heirSeeds,dynasty,parentDish,dishToken,dishPeak}));
+      dishTag,rootA,rootB,versusDone,versusSeeds,stepN,ivComplete,ivLog,heirSeeds,dynasty,parentDish,dishToken,dishPeak,legends}));
   }catch(e){}
 }
 function loadWorld(){
@@ -2504,7 +2545,7 @@ function loadWorld(){
   stepN=s.stepN||0; ivComplete=!!s.ivComplete; ivLog=Array.isArray(s.ivLog)?s.ivLog:[];
   versusSeeds=s.versusSeeds||null;
   heirSeeds=s.heirSeeds||null; dynasty=s.dynasty||1; parentDish=s.parentDish||'';
-  dishToken=s.dishToken||makeToken(); dishPeak=s.dishPeak||0;
+  dishToken=s.dishToken||makeToken(); dishPeak=s.dishPeak||0; legends=s.legends||{};
   lineWasAlive=followLin?true:false;
   initSnow();
   const away=(Date.now()-s.savedAt)/1000;
@@ -2702,6 +2743,8 @@ $('wkClose').addEventListener('click',()=>$('wkPanel').classList.remove('show'))
 $('btnMuseum').addEventListener('click',()=>{renderMuseum();$('musPanel').classList.add('show');});
 $('musClose').addEventListener('click',()=>$('musPanel').classList.remove('show'));
 $('btnClass').addEventListener('click',()=>{renderClassroom();$('classPanel').classList.add('show');});
+$('btnLegends').addEventListener('click',()=>{renderLegends();$('legendsPanel').classList.add('show');});
+$('legendsClose').addEventListener('click',()=>$('legendsPanel').classList.remove('show'));
 $('classClose').addEventListener('click',()=>$('classPanel').classList.remove('show'));
 if(!BOARDS_URL)$('btnBoards').style.display='none';
 $('btnBoards').addEventListener('click',()=>{$('boardsPanel').classList.add('show');renderBoards();});
@@ -3332,6 +3375,40 @@ async function publishDish(){
   renderBoards();
 }
 
+// ---------- the hall of legends ----------
+const LEGEND_ROWS=[['eldest','THE ELDEST'],['thinker','DEEPEST MIND'],['grown','GREATEST BODY'],['hunter','THE HUNTER'],['parent','MOST DEVOTED']];
+function renderLegends(){
+  const host=$('legendsRows'); host.innerHTML='';
+  let any=false;
+  for(const [k,t] of LEGEND_ROWS){
+    const L=legends[k];
+    const row=document.createElement('div');row.className='lgrow';
+    if(L){
+      any=true;
+      row.innerHTML='<span class="lt">'+t+'</span><span class="sw" style="background:hsl('+L.hue+',80%,60%)"></span>'+
+        '<span class="ln"><b>'+L.n+'</b> of the '+hueWord(L.hue)+' line</span>'+
+        '<span class="lv">'+L.d+' · y'+L.y+'</span>';
+    }else{
+      row.innerHTML='<span class="lt">'+t+'</span><span class="ln" style="opacity:0.45">no legend yet</span>';
+    }
+    host.appendChild(row);
+  }
+  const hh=$('houseRows'); hh.innerHTML='';
+  const counts=new Map();
+  for(const c of creatures){if(c.dead)continue;counts.set(c.lin||0,(counts.get(c.lin||0)||0)+1);}
+  const top=[...counts.entries()].sort((x,y)=>y[1]-x[1]).slice(0,5);
+  if(!top.length)hh.innerHTML='<div style="font-size:10px;opacity:0.45;padding:6px 0">The dish lies empty.</div>';
+  for(const [lin,nliv] of top){
+    const L=lineages.get(lin);
+    const hue=L?L.hue:0, y0=L?Math.floor(L.t0/SEASON_PERIOD):0;
+    const row=document.createElement('div');row.className='lgrow';
+    row.innerHTML='<span class="sw" style="background:hsl('+hue+',80%,60%)"></span>'+
+      '<span class="ln">the '+hueWord(hue)+' line</span>'+
+      '<span class="lv">'+nliv+' living · since y'+y0+'</span>';
+    hh.appendChild(row);
+  }
+}
+
 // ---------- the classroom ----------
 const CLASSROOM=[
  {id:'hammer',t:'1 · Selection under the hammer',seed:'classroom-hammer',scn:'classic',
@@ -3663,7 +3740,7 @@ function dlBlob(blob,name){
 }
 
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel','boardsPanel'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel','boardsPanel','legendsPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;
