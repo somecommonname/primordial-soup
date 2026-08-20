@@ -1,0 +1,5168 @@
+{
+ "study": "collision-ecology",
+ "question": "Does complexity born in the archipelago incubator survive when poured into an open classic world?",
+ "gameVersion": "1.39.1",
+ "commit": "e7e947b",
+ "runDate": "2026-08-19",
+ "sourceFile": "index.html (unmodified throughout; git diff --stat verified empty before and after the study)",
+ "background": "v1.39 added collisions: collideArrive(payload) spawns visitor creatures from {tag,cs:[{g,sg,br,bh}]} at the dish rim, founding new lineages (one newLineage() call per arrival), and logIv('collide',payload) makes it a logged, replay-valid intervention. Mate compatibility is hue-based (hueDist<40 degrees, index.html line ~1262), so the pour lets us test whether an archipelago-incubated lineage's structure (per prior study incubator-trials.json: refugia let eyed, multi-part bodies persist to 120 minutes) survives, spreads, or vanishes when dropped into an open, unstructured dish, and whether hue distance gates that outcome.",
+ "protocol": {
+  "bootstrapVerified": "viewport forced to 1280x720 before bootstrap; resize() -> R=334 confirmed (R===min(W,H)/2-26); worldReady/initCharts/paused=true bootstrap block run verbatim; versusSeeds/heirSeeds/dynasty/parentDish reset before every initWorld",
+  "sterileProtocolFollowed": "every pour executed as logIv('collide',payload) immediately followed by collideArrive(payload) -- the exact shipped path (same code shelfPour() uses in-game) -- with payload.cs built from live donor creature data {g,sg,br,bh} (br rounded to 3 decimals via Array.from) captured strictly before the recipient's initWorld/pour; no creature array was ever hand-edited",
+  "executionNote": "run as sequential chunked JS execs against persistent in-page state (window.__study, monkey-patched helpers) in the same browser tab for the entire study; step(1/60) called directly in wall-clock-budgeted loops (~25-27s per exec, well under the ~30s tool ceiling), never resetting state mid-run; each full recipient world's 60-minute post-pour phase happened to complete in a single exec call (10-20s of real time at population ~10-60)",
+  "donorPrep": "initWorld('arch', seed) run up to 324000 steps (90 min), sampled every 16200 steps (4.5 min), stopping early the first sample where eyed>=3 OR branched>=3 (structure-crop-ready, per protocol); harvested up to 12 living creatures preferring sg.length>0 or any-segment eye>0.4, recording {g,sg,br,bh}; donor mean hue = mean hue of the harvested crop actually poured (not the whole donor population)",
+  "prep8400": "for Arm 2's reverse pour: initWorld('classic', 8400+k) run exactly 36000 steps (10 min), then 12 living creatures harvested with NO structure preference ('plain classic natives') -- confirmed 0/12 had any body segments in every one of the 4 preps",
+  "recipientProtocol": "initWorld(scenario, recipientSeed) -> run 36000 steps (10 min, establishes natives) -> pour -> run 216000 more steps (60 min), snapshot taken every 10800 steps (3 min) ALIGNED TO THE POUR STEP (not to absolute step 0), so checkpoints land exactly at pour+3,+6,+9,...,+60 minutes",
+  "seeds": {
+   "donors_arch": [
+    8101,
+    8102,
+    8103,
+    8104
+   ],
+   "prep8400_classic_for_arm2_pour_material": [
+    8401,
+    8402,
+    8403,
+    8404
+   ],
+   "arm1_classic_recipients": [
+    8201,
+    8202,
+    8203,
+    8204
+   ],
+   "arm2_arch_recipients": [
+    8301,
+    8302,
+    8303,
+    8304
+   ],
+   "arm3_classic_recipients": [
+    8501,
+    8502,
+    8503,
+    8504
+   ]
+  },
+  "fieldDefinitions": {
+   "pop": "creatures.length (living only; the engine compacts dead creatures out of the array every step)",
+   "withParts": "creatures with sg.length>0 (>=1 body segment beyond the base body)",
+   "branched": "withParts creatures where some segment o has o.par!==index-1 OR o.ang!==0 -- the game's own 'first branch' detection logic (index.html ~line 2139); note this triggers on a single angled appendage, not only true Y-forks",
+   "eyed": "creatures with a segment where o.eye>0.4 (checked independently of branched/paddler status)",
+   "paddlers": "creatures with a segment where o.ang!==0 AND o.fin>0.5",
+   "maxParts": "max sg.length among living creatures at sample time",
+   "visitorLineagePop": "count of living creatures whose .lin is EXACTLY one of the lineage ids created by collideArrive at this pour (captured via linNext diff before/after collideArrive). Strict: a visitor's own descendant that has drifted hue far enough to found a NEW sub-lineage (lineageOf() hue drift >30 degrees from founding hue) is NOT counted here even though it is visitor-descended -- this is a conservative, exact-label proxy, not a full pedigree.",
+   "hybridsCumulative": "cumulative count, since this replicate's pour, of sexual-reproduction events whose two parents have exactly one of {mother,father} with .lin in the visitor-arrival set (XOR). Captured by a non-invasive runtime observer wrapped around segInherit/makeCreature/applySegs: pure pass-through wrappers that record parent identity via array-reference lookup and call straight through to the original, unmodified functions -- zero RNG consumption, zero change to simulation state or outcome, verified deterministic. Same strict-lineage-id caveat as visitorLineagePop applies (undercounts once a lineage sub-forks)."
+  },
+  "instrumentationCaveat": "Because visitorLineagePop and hybridsCumulative both use the STRICT arrival-lineage-id set, they undercount true visitor ancestry once hue drift forks a new sub-lineage or once admixed genes are carried by a creature now labeled with a native lineage id. The raw eyed/branched/withParts/maxParts counts are population-wide (not lineage-gated) and can include native-only convergent structure. The two views are complementary and both reported; neither alone cleanly isolates 'visitor-caused' structure from 'the recipient world's own tendency to sprout structure' (per this project's own crown-and-replication.json finding that classic worlds sometimes do this unaided)."
+ },
+ "donors": {
+  "8101": {
+   "seed": 8101,
+   "samples": [
+    {
+     "stepN": 16200,
+     "simT": 270,
+     "pop": 33,
+     "withParts": 1,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 32400,
+     "simT": 540,
+     "pop": 30,
+     "withParts": 4,
+     "branched": 4,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    }
+   ],
+   "finalStepN": 32400,
+   "finalSimT": 539.9999999998375,
+   "meanHue": 172.21,
+   "poolSize": 30,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 1,
+     "maxEye": 0,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 175.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 174.8,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.038,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 152.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 190.6,
+     "brainHidden": 2
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 184.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 128.7,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 154.9,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 141.1,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 152.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 233.2,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 186.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 192.5,
+     "brainHidden": 0
+    }
+   ]
+  },
+  "8102": {
+   "seed": 8102,
+   "samples": [
+    {
+     "stepN": 16200,
+     "simT": 270,
+     "pop": 35,
+     "withParts": 0,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 0,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 32400,
+     "simT": 540,
+     "pop": 42,
+     "withParts": 7,
+     "branched": 2,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 48600,
+     "simT": 810,
+     "pop": 38,
+     "withParts": 6,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 64800,
+     "simT": 1080,
+     "pop": 27,
+     "withParts": 7,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 81000,
+     "simT": 1350,
+     "pop": 22,
+     "withParts": 4,
+     "branched": 3,
+     "eyed": 1,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    }
+   ],
+   "finalStepN": 81000,
+   "finalSimT": 1349.999999999101,
+   "meanHue": 267.72,
+   "poolSize": 22,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 1,
+     "maxEye": 0.476,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 254.3,
+     "brainHidden": 2
+    },
+    {
+     "parts": 2,
+     "maxEye": 0.026,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 270.9,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.164,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 265.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 284.9,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 269.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 259.8,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 273.2,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 260.8,
+     "brainHidden": 2
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 261.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 245,
+     "brainHidden": 2
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 297.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 269.6,
+     "brainHidden": 0
+    }
+   ]
+  },
+  "8103": {
+   "seed": 8103,
+   "samples": [
+    {
+     "stepN": 16200,
+     "simT": 270,
+     "pop": 39,
+     "withParts": 3,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 32400,
+     "simT": 540,
+     "pop": 35,
+     "withParts": 3,
+     "branched": 1,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 48600,
+     "simT": 810,
+     "pop": 22,
+     "withParts": 0,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 0,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 64800,
+     "simT": 1080,
+     "pop": 29,
+     "withParts": 4,
+     "branched": 3,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    }
+   ],
+   "finalStepN": 64800,
+   "finalSimT": 1079.9999999993465,
+   "meanHue": 271.78,
+   "poolSize": 29,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 1,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 286.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.016,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 278.1,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.003,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 272.8,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.01,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 289.4,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 263.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 288.2,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 275.1,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 248.1,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 243.1,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 273.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 273,
+     "brainHidden": 2
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 270.3,
+     "brainHidden": 1
+    }
+   ]
+  },
+  "8104": {
+   "seed": 8104,
+   "samples": [
+    {
+     "stepN": 16200,
+     "simT": 270,
+     "pop": 42,
+     "withParts": 14,
+     "branched": 2,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 32400,
+     "simT": 540,
+     "pop": 30,
+     "withParts": 7,
+     "branched": 1,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    },
+    {
+     "stepN": 48600,
+     "simT": 810,
+     "pop": 26,
+     "withParts": 7,
+     "branched": 4,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 0
+    }
+   ],
+   "finalStepN": 48600,
+   "finalSimT": 809.999999999592,
+   "meanHue": 259.41,
+   "poolSize": 26,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 2,
+     "maxEye": 0.121,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 245.3,
+     "brainHidden": 1
+    },
+    {
+     "parts": 2,
+     "maxEye": 0.01,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 254.8,
+     "brainHidden": 2
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.019,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 222.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.009,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 263.2,
+     "brainHidden": 1
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.007,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 271.5,
+     "brainHidden": 1
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.013,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 255.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 1,
+     "maxEye": 0.015,
+     "hasBranch": true,
+     "hasPaddle": false,
+     "hue": 272.3,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 269.9,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 253.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 267.9,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 253,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 283.6,
+     "brainHidden": 0
+    }
+   ]
+  }
+ },
+ "prep8400_plainClassicNativesForArm2": {
+  "8401": {
+   "seed": 8401,
+   "finalStepN": 36000,
+   "finalSimT": 599.999999999783,
+   "meanHue": 233.51,
+   "poolSize": 35,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 200.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 203,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 221.1,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 251.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 226.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 250.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 233.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 237.8,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 241.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 240.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 247.5,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 248.4,
+     "brainHidden": 1
+    }
+   ]
+  },
+  "8402": {
+   "seed": 8402,
+   "finalStepN": 36000,
+   "finalSimT": 599.999999999783,
+   "meanHue": 210.32,
+   "poolSize": 23,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 213,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 218.1,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 217.2,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 229.1,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 199.5,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 174.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 254.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 205.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 212.5,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 199,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 183.2,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 217.8,
+     "brainHidden": 0
+    }
+   ]
+  },
+  "8403": {
+   "seed": 8403,
+   "finalStepN": 36000,
+   "finalSimT": 599.999999999783,
+   "meanHue": 258.22,
+   "poolSize": 47,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 316,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 222.1,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 258.2,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 297.3,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 220.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 252.7,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 255.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 247.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 293.5,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 277,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 243.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 214.4,
+     "brainHidden": 0
+    }
+   ]
+  },
+  "8404": {
+   "seed": 8404,
+   "finalStepN": 36000,
+   "finalSimT": 599.999999999783,
+   "meanHue": 215.05,
+   "poolSize": 35,
+   "pickedCount": 12,
+   "cropSummary": [
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 226.6,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 245.4,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 199.7,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 179.7,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 210.9,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 233.9,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 178.5,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 217.8,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 236,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 225.4,
+     "brainHidden": 1
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 193.6,
+     "brainHidden": 0
+    },
+    {
+     "parts": 0,
+     "maxEye": 0,
+     "hasBranch": false,
+     "hasPaddle": false,
+     "hue": 232.9,
+     "brainHidden": 0
+    }
+   ]
+  }
+ },
+ "arm1_islandToMainland": {
+  "design": "initWorld('classic', 8200+k) -> 10min native establishment -> pour donor k's archipelago crop -> 60min tracked",
+  "replicates": [
+   {
+    "k": 1,
+    "recipientSeed": 8201,
+    "donorSeed": 8101,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 25,
+     "meanHue": 220.5643629305554
+    },
+    "pour": {
+     "newLins": [
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53,
+      54
+     ],
+     "arrivedCount": 12,
+     "popAfter": 37,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+12.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 6,
+     "at": "+24.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 23,
+      "visitorLineagePop": 3,
+      "nativeProxyPop": 20,
+      "withParts": 8,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 18
+     },
+     "+18min": {
+      "pop": 34,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 34,
+      "withParts": 32,
+      "branched": 28,
+      "eyed": 4,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 19
+     },
+     "+36min": {
+      "pop": 24,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 24,
+      "withParts": 10,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 19
+     },
+     "+60min": {
+      "pop": 25,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 25,
+      "withParts": 5,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 19
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 25,
+     "withParts": 5,
+     "branched": 3,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 19
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 30,
+      "withParts": 7,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 11,
+      "hybridsCumulative": 13
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 23,
+      "withParts": 8,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 3,
+      "hybridsCumulative": 18
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 34,
+      "withParts": 14,
+      "branched": 13,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 1,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 34,
+      "withParts": 29,
+      "branched": 20,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 29,
+      "withParts": 25,
+      "branched": 19,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 34,
+      "withParts": 32,
+      "branched": 28,
+      "eyed": 4,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 28,
+      "withParts": 22,
+      "branched": 22,
+      "eyed": 3,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 27,
+      "withParts": 17,
+      "branched": 17,
+      "eyed": 6,
+      "paddlers": 1,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 20,
+      "withParts": 6,
+      "branched": 6,
+      "eyed": 5,
+      "paddlers": 1,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 18,
+      "withParts": 3,
+      "branched": 2,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 23,
+      "withParts": 7,
+      "branched": 1,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 24,
+      "withParts": 10,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 21,
+      "withParts": 7,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 21,
+      "withParts": 10,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 22,
+      "withParts": 14,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 2,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 26,
+      "withParts": 16,
+      "branched": 8,
+      "eyed": 0,
+      "paddlers": 6,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 19,
+      "withParts": 6,
+      "branched": 5,
+      "eyed": 2,
+      "paddlers": 1,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 18,
+      "withParts": 6,
+      "branched": 1,
+      "eyed": 1,
+      "paddlers": 1,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 19,
+      "withParts": 8,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 25,
+      "withParts": 5,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 19
+     }
+    ]
+   },
+   {
+    "k": 2,
+    "recipientSeed": 8202,
+    "donorSeed": 8102,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 52,
+     "meanHue": 263.3477994930388
+    },
+    "pour": {
+     "newLins": [
+      66,
+      67,
+      68,
+      69,
+      70,
+      71,
+      72,
+      73,
+      74,
+      75,
+      76,
+      77
+     ],
+     "arrivedCount": 12,
+     "popAfter": 64,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+51.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 0,
+     "at": "+3.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 14,
+      "visitorLineagePop": 13,
+      "nativeProxyPop": 1,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "hybridsCumulative": 12
+     },
+     "+18min": {
+      "pop": 28,
+      "visitorLineagePop": 28,
+      "nativeProxyPop": 0,
+      "withParts": 3,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 57
+     },
+     "+36min": {
+      "pop": 21,
+      "visitorLineagePop": 21,
+      "nativeProxyPop": 0,
+      "withParts": 8,
+      "branched": 8,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 90
+     },
+     "+60min": {
+      "pop": 18,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 18,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 134
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 18,
+     "withParts": 1,
+     "branched": 1,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 134
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 23,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 20,
+      "hybridsCumulative": 10
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 14,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 13,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 18,
+      "withParts": 2,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 16,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 22,
+      "withParts": 7,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 10,
+      "hybridsCumulative": 30
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 20,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 15,
+      "hybridsCumulative": 48
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 28,
+      "withParts": 3,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 28,
+      "hybridsCumulative": 57
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 24,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 23,
+      "hybridsCumulative": 57
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 32,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 32,
+      "hybridsCumulative": 57
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 20,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 19,
+      "hybridsCumulative": 59
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 14,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 13,
+      "hybridsCumulative": 70
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 18,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 17,
+      "hybridsCumulative": 80
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 21,
+      "withParts": 8,
+      "branched": 8,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 21,
+      "hybridsCumulative": 90
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 20,
+      "withParts": 18,
+      "branched": 13,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 14,
+      "hybridsCumulative": 97
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 19,
+      "withParts": 15,
+      "branched": 11,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 9,
+      "hybridsCumulative": 107
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 16,
+      "withParts": 7,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 7,
+      "hybridsCumulative": 112
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 18,
+      "withParts": 8,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 4,
+      "hybridsCumulative": 132
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 22,
+      "withParts": 5,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 134
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 16,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 134
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 14,
+      "withParts": 4,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 134
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 18,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 134
+     }
+    ]
+   },
+   {
+    "k": 3,
+    "recipientSeed": 8203,
+    "donorSeed": 8103,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 29,
+     "meanHue": 194.10327540111516
+    },
+    "pour": {
+     "newLins": [
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52,
+      53
+     ],
+     "arrivedCount": 12,
+     "popAfter": 41,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+12.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 0,
+     "at": "+3.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 28,
+      "visitorLineagePop": 11,
+      "nativeProxyPop": 17,
+      "withParts": 10,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "hybridsCumulative": 9
+     },
+     "+18min": {
+      "pop": 26,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 26,
+      "withParts": 6,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 12
+     },
+     "+36min": {
+      "pop": 18,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 18,
+      "withParts": 4,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 12
+     },
+     "+60min": {
+      "pop": 5,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 5,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 12
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 5,
+     "withParts": 2,
+     "branched": 2,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 12
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 27,
+      "withParts": 9,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 13,
+      "hybridsCumulative": 6
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 28,
+      "withParts": 10,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 11,
+      "hybridsCumulative": 9
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 31,
+      "withParts": 15,
+      "branched": 14,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 1,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 32,
+      "withParts": 17,
+      "branched": 14,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 25,
+      "withParts": 8,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 26,
+      "withParts": 6,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 28,
+      "withParts": 12,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 24,
+      "withParts": 8,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 1,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 28,
+      "withParts": 7,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 27,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 17,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 18,
+      "withParts": 4,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 12,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 7,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 10,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 10,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 12,
+      "withParts": 4,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 6,
+      "withParts": 3,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 10,
+      "withParts": 5,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 5,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 12
+     }
+    ]
+   },
+   {
+    "k": 4,
+    "recipientSeed": 8204,
+    "donorSeed": 8104,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 23,
+     "meanHue": 217.0985583379669
+    },
+    "pour": {
+     "newLins": [
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46
+     ],
+     "arrivedCount": 12,
+     "popAfter": 35,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+3.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 0,
+     "at": "+3.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 17,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 17,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 2
+     },
+     "+18min": {
+      "pop": 16,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 16,
+      "withParts": 6,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 2
+     },
+     "+36min": {
+      "pop": 10,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 10,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 2
+     },
+     "+60min": {
+      "pop": 12,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 12,
+      "withParts": 5,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "hybridsCumulative": 2
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 12,
+     "withParts": 5,
+     "branched": 2,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 3,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 2
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 20,
+      "withParts": 7,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 17,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 19,
+      "withParts": 4,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 19,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 16,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 16,
+      "withParts": 6,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 16,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 12,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 16,
+      "withParts": 3,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 12,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 10,
+      "withParts": 5,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 10,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 11,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 10,
+      "withParts": 4,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 18,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 14,
+      "withParts": 2,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 14,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 8,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 11,
+      "withParts": 3,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 12,
+      "withParts": 5,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 2
+     }
+    ]
+   }
+  ]
+ },
+ "arm2_reversePour": {
+  "design": "initWorld('arch', 8300+k) -> 10min native establishment -> pour 12 plain classic natives (prep8400 8400+k) -> 60min tracked. Tests whether plain mainland bodies dilute the archipelago nursery's structure-preserving tendency.",
+  "replicates": [
+   {
+    "k": 1,
+    "recipientSeed": 8301,
+    "donorSeed": 8401,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 31,
+     "meanHue": 247.48452124392648
+    },
+    "pour": {
+     "newLins": [
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61
+     ],
+     "arrivedCount": 12,
+     "popAfter": 43,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+15.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 8,
+     "at": "+51.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 28,
+      "visitorLineagePop": 11,
+      "nativeProxyPop": 17,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "hybridsCumulative": 34
+     },
+     "+18min": {
+      "pop": 21,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 21,
+      "withParts": 10,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 78
+     },
+     "+36min": {
+      "pop": 24,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 24,
+      "withParts": 14,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 78
+     },
+     "+60min": {
+      "pop": 13,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 13,
+      "withParts": 3,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 78
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 13,
+     "withParts": 3,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 78
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 31,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 19,
+      "hybridsCumulative": 16
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 28,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 11,
+      "hybridsCumulative": 34
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 25,
+      "withParts": 8,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 12,
+      "hybridsCumulative": 56
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 18,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 3,
+      "hybridsCumulative": 69
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 19,
+      "withParts": 2,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 21,
+      "withParts": 10,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 26,
+      "withParts": 14,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 24,
+      "withParts": 10,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 25,
+      "withParts": 14,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 21,
+      "withParts": 11,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 23,
+      "withParts": 15,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 24,
+      "withParts": 14,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 21,
+      "withParts": 10,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 13,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 16,
+      "withParts": 2,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 16,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 18,
+      "withParts": 12,
+      "branched": 10,
+      "eyed": 8,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 19,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 16,
+      "withParts": 4,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 13,
+      "withParts": 3,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 78
+     }
+    ]
+   },
+   {
+    "k": 2,
+    "recipientSeed": 8302,
+    "donorSeed": 8402,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 24,
+     "meanHue": 260.6938763525417
+    },
+    "pour": {
+     "newLins": [
+      39,
+      40,
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50
+     ],
+     "arrivedCount": 12,
+     "popAfter": 36,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+6.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 1,
+     "at": "+30.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 21,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 21,
+      "withParts": 8,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 15
+     },
+     "+18min": {
+      "pop": 18,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 18,
+      "withParts": 8,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 15
+     },
+     "+36min": {
+      "pop": 20,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 20,
+      "withParts": 14,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 15
+     },
+     "+60min": {
+      "pop": 12,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 12,
+      "withParts": 10,
+      "branched": 10,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "hybridsCumulative": 15
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 12,
+     "withParts": 10,
+     "branched": 10,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 3,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 15
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 27,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 4,
+      "hybridsCumulative": 6
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 21,
+      "withParts": 8,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 20,
+      "withParts": 9,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 24,
+      "withParts": 16,
+      "branched": 10,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 24,
+      "withParts": 10,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 18,
+      "withParts": 8,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 22,
+      "withParts": 11,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 23,
+      "withParts": 14,
+      "branched": 10,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 23,
+      "withParts": 10,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 20,
+      "withParts": 7,
+      "branched": 6,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 19,
+      "withParts": 7,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 20,
+      "withParts": 14,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 22,
+      "withParts": 20,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 21,
+      "withParts": 21,
+      "branched": 2,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 16,
+      "withParts": 16,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 21,
+      "withParts": 21,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 22,
+      "withParts": 22,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 23,
+      "withParts": 21,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 18,
+      "withParts": 14,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 12,
+      "withParts": 10,
+      "branched": 10,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 15
+     }
+    ]
+   },
+   {
+    "k": 3,
+    "recipientSeed": 8303,
+    "donorSeed": 8403,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 44,
+     "meanHue": 216.97432600502754
+    },
+    "pour": {
+     "newLins": [
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62,
+      63,
+      64,
+      65
+     ],
+     "arrivedCount": 12,
+     "popAfter": 56,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+6.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 3,
+     "at": "+21.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 43,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 43,
+      "withParts": 27,
+      "branched": 9,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 29
+     },
+     "+18min": {
+      "pop": 22,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 22,
+      "withParts": 21,
+      "branched": 8,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 29
+     },
+     "+36min": {
+      "pop": 18,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 18,
+      "withParts": 6,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 29
+     },
+     "+60min": {
+      "pop": 9,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 9,
+      "withParts": 4,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 29
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 9,
+     "withParts": 4,
+     "branched": 4,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 29
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 28,
+      "withParts": 13,
+      "branched": 8,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 4,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 43,
+      "withParts": 27,
+      "branched": 9,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 32,
+      "withParts": 24,
+      "branched": 10,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 34,
+      "withParts": 31,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 29,
+      "withParts": 28,
+      "branched": 4,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 22,
+      "withParts": 21,
+      "branched": 8,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 25,
+      "withParts": 17,
+      "branched": 11,
+      "eyed": 3,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 21,
+      "withParts": 6,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 11,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 10,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 12,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 18,
+      "withParts": 6,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 11,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 13,
+      "withParts": 7,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 14,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 9,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 7,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 7,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 3,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 9,
+      "withParts": 4,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 29
+     }
+    ]
+   },
+   {
+    "k": 4,
+    "recipientSeed": 8304,
+    "donorSeed": 8404,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 29,
+     "meanHue": 245.44921825715298
+    },
+    "pour": {
+     "newLins": [
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61,
+      62
+     ],
+     "arrivedCount": 12,
+     "popAfter": 41,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+21.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 0,
+     "at": "+3.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 35,
+      "visitorLineagePop": 19,
+      "nativeProxyPop": 16,
+      "withParts": 3,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 56
+     },
+     "+18min": {
+      "pop": 21,
+      "visitorLineagePop": 3,
+      "nativeProxyPop": 18,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 188
+     },
+     "+36min": {
+      "pop": 22,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 22,
+      "withParts": 7,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 189
+     },
+     "+60min": {
+      "pop": 15,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 15,
+      "withParts": 15,
+      "branched": 15,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 189
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 15,
+     "withParts": 15,
+     "branched": 15,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 2,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 189
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 38,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 21,
+      "hybridsCumulative": 23
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 35,
+      "withParts": 3,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 19,
+      "hybridsCumulative": 56
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 33,
+      "withParts": 6,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 12,
+      "hybridsCumulative": 100
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 26,
+      "withParts": 7,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 7,
+      "hybridsCumulative": 134
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 29,
+      "withParts": 8,
+      "branched": 8,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 4,
+      "hybridsCumulative": 168
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 21,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 3,
+      "hybridsCumulative": 188
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 22,
+      "withParts": 10,
+      "branched": 10,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 33,
+      "withParts": 30,
+      "branched": 30,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 28,
+      "withParts": 15,
+      "branched": 15,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 18,
+      "withParts": 4,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 15,
+      "withParts": 3,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 22,
+      "withParts": 7,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 17,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 11,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 14,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 11,
+      "withParts": 4,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 14,
+      "withParts": 6,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 8,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 2,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 15,
+      "withParts": 15,
+      "branched": 15,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 189
+     }
+    ]
+   }
+  ]
+ },
+ "arm3_hueControl": {
+  "design": "repeats Arm 1's recipient protocol at a NEW recipient seed (8500+k) using the SAME donor crop as the matching Arm 1 replicate; classifies each replicate by circular hue distance (engine's own hueDist()) between donor-crop mean hue and recipient native mean hue at the pre-pour moment: HYBRIDIZING if gap<40 degrees (matches the mate-compatibility gate), INVASIVE if gap>60 degrees, else AMBIGUOUS. Natural seed-driven hues produced 3 HYBRIDIZING (gap 33.65, 34.37, 36.83) and 1 INVASIVE (gap 76.53) without any forcing.",
+  "replicates": [
+   {
+    "k": 1,
+    "recipientSeed": 8501,
+    "donorSeed": 8101,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 36,
+     "meanHue": 205.86341674058025
+    },
+    "pour": {
+     "newLins": [
+      50,
+      51,
+      52,
+      53,
+      54,
+      55,
+      56,
+      57,
+      58,
+      59,
+      60,
+      61
+     ],
+     "arrivedCount": 12,
+     "popAfter": 48,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+21.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 0,
+     "at": "+3.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 35,
+      "visitorLineagePop": 22,
+      "nativeProxyPop": 13,
+      "withParts": 12,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 48
+     },
+     "+18min": {
+      "pop": 29,
+      "visitorLineagePop": 6,
+      "nativeProxyPop": 23,
+      "withParts": 9,
+      "branched": 9,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 173
+     },
+     "+36min": {
+      "pop": 27,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 27,
+      "withParts": 15,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 183
+     },
+     "+60min": {
+      "pop": 23,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 23,
+      "withParts": 4,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 183
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 23,
+     "withParts": 4,
+     "branched": 3,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 183
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 26,
+      "withParts": 7,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 7,
+      "hybridsCumulative": 23
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 35,
+      "withParts": 12,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 22,
+      "hybridsCumulative": 48
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 34,
+      "withParts": 15,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 24,
+      "hybridsCumulative": 81
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 34,
+      "withParts": 15,
+      "branched": 15,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 17,
+      "hybridsCumulative": 116
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 29,
+      "withParts": 14,
+      "branched": 14,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 7,
+      "hybridsCumulative": 152
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 29,
+      "withParts": 9,
+      "branched": 9,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 6,
+      "hybridsCumulative": 173
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 25,
+      "withParts": 19,
+      "branched": 11,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 29,
+      "withParts": 17,
+      "branched": 12,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 27,
+      "withParts": 7,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 21,
+      "withParts": 5,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 25,
+      "withParts": 14,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 27,
+      "withParts": 15,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 28,
+      "withParts": 12,
+      "branched": 10,
+      "eyed": 0,
+      "paddlers": 1,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 28,
+      "withParts": 5,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 32,
+      "withParts": 18,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 30,
+      "withParts": 15,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 32,
+      "withParts": 19,
+      "branched": 6,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 29,
+      "withParts": 10,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 26,
+      "withParts": 4,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 23,
+      "withParts": 4,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 183
+     }
+    ],
+    "donorMeanHue": 172.21,
+    "hueGap": 33.65,
+    "classification": "HYBRIDIZING"
+   },
+   {
+    "k": 2,
+    "recipientSeed": 8502,
+    "donorSeed": 8102,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 35,
+     "meanHue": 233.346034346948
+    },
+    "pour": {
+     "newLins": [
+      41,
+      42,
+      43,
+      44,
+      45,
+      46,
+      47,
+      48,
+      49,
+      50,
+      51,
+      52
+     ],
+     "arrivedCount": 12,
+     "popAfter": 47,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+24.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 4,
+     "at": "+42.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 17,
+      "visitorLineagePop": 15,
+      "nativeProxyPop": 2,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "hybridsCumulative": 17
+     },
+     "+18min": {
+      "pop": 23,
+      "visitorLineagePop": 1,
+      "nativeProxyPop": 22,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 73
+     },
+     "+36min": {
+      "pop": 18,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 18,
+      "withParts": 5,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 79
+     },
+     "+60min": {
+      "pop": 21,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 21,
+      "withParts": 4,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 79
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 21,
+     "withParts": 4,
+     "branched": 3,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 79
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 30,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 22,
+      "hybridsCumulative": 9
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 17,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 15,
+      "hybridsCumulative": 17
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 23,
+      "withParts": 5,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 22,
+      "hybridsCumulative": 19
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 28,
+      "withParts": 3,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 19,
+      "hybridsCumulative": 36
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 22,
+      "withParts": 3,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 6,
+      "hybridsCumulative": 59
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 23,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 1,
+      "hybridsCumulative": 73
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 32,
+      "withParts": 8,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 2,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 29,
+      "withParts": 11,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 28,
+      "withParts": 7,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 23,
+      "withParts": 4,
+      "branched": 4,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 21,
+      "withParts": 2,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 18,
+      "withParts": 5,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 24,
+      "withParts": 10,
+      "branched": 3,
+      "eyed": 2,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 22,
+      "withParts": 10,
+      "branched": 0,
+      "eyed": 4,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 21,
+      "withParts": 5,
+      "branched": 0,
+      "eyed": 2,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 22,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 18,
+      "withParts": 6,
+      "branched": 2,
+      "eyed": 2,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 16,
+      "withParts": 7,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 19,
+      "withParts": 11,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 21,
+      "withParts": 4,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 79
+     }
+    ],
+    "donorMeanHue": 267.72,
+    "hueGap": 34.37,
+    "classification": "HYBRIDIZING"
+   },
+   {
+    "k": 3,
+    "recipientSeed": 8503,
+    "donorSeed": 8103,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 36,
+     "meanHue": 234.9493986047071
+    },
+    "pour": {
+     "newLins": [
+      33,
+      34,
+      35,
+      36,
+      37,
+      38,
+      39,
+      40,
+      41,
+      42,
+      43,
+      44
+     ],
+     "arrivedCount": 12,
+     "popAfter": 48,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+6.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 7,
+     "at": "+27.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 16,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 16,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 14
+     },
+     "+18min": {
+      "pop": 24,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 24,
+      "withParts": 7,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 14
+     },
+     "+36min": {
+      "pop": 14,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 14,
+      "withParts": 6,
+      "branched": 4,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 14
+     },
+     "+60min": {
+      "pop": 21,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 21,
+      "withParts": 4,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "hybridsCumulative": 14
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 21,
+     "withParts": 4,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 1,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 14
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 27,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 5,
+      "hybridsCumulative": 10
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 16,
+      "withParts": 2,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 11,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 23,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 16,
+      "withParts": 3,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 24,
+      "withParts": 7,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 21,
+      "withParts": 9,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 28,
+      "withParts": 14,
+      "branched": 11,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 19,
+      "withParts": 9,
+      "branched": 8,
+      "eyed": 7,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 21,
+      "withParts": 15,
+      "branched": 14,
+      "eyed": 4,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 15,
+      "withParts": 9,
+      "branched": 9,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 14,
+      "withParts": 6,
+      "branched": 4,
+      "eyed": 1,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 17,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 11,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 23,
+      "withParts": 2,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 17,
+      "withParts": 3,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 18,
+      "withParts": 1,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 15,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 17,
+      "withParts": 1,
+      "branched": 1,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 21,
+      "withParts": 4,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 14
+     }
+    ],
+    "donorMeanHue": 271.78,
+    "hueGap": 36.83,
+    "classification": "HYBRIDIZING"
+   },
+   {
+    "k": 4,
+    "recipientSeed": 8504,
+    "donorSeed": 8104,
+    "prePour": {
+     "stepN": 36000,
+     "pop": 33,
+     "meanHue": 182.87650181568432
+    },
+    "pour": {
+     "newLins": [
+      25,
+      26,
+      27,
+      28,
+      29,
+      30,
+      31,
+      32,
+      33,
+      34,
+      35,
+      36
+     ],
+     "arrivedCount": 12,
+     "popAfter": 45,
+     "atStepN": 36000
+    },
+    "visitorLineageExtinctAt": "+18.0min",
+    "visitorLineageSurvivedTo60min": false,
+    "peakEyedPostPour": {
+     "count": 11,
+     "at": "+18.0min"
+    },
+    "checkpoints_6_18_36_60": {
+     "+6min": {
+      "pop": 31,
+      "visitorLineagePop": 4,
+      "nativeProxyPop": 27,
+      "withParts": 12,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "hybridsCumulative": 1
+     },
+     "+18min": {
+      "pop": 35,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 35,
+      "withParts": 31,
+      "branched": 16,
+      "eyed": 11,
+      "paddlers": 0,
+      "maxParts": 3,
+      "hybridsCumulative": 4
+     },
+     "+36min": {
+      "pop": 29,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 29,
+      "withParts": 29,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "hybridsCumulative": 4
+     },
+     "+60min": {
+      "pop": 14,
+      "visitorLineagePop": 0,
+      "nativeProxyPop": 14,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "hybridsCumulative": 4
+     }
+    },
+    "finalSample_at60min": {
+     "stepN": 252000,
+     "simT": 4200,
+     "pop": 14,
+     "withParts": 0,
+     "branched": 0,
+     "eyed": 0,
+     "paddlers": 0,
+     "maxParts": 0,
+     "visitorLineagePop": 0,
+     "hybridsCumulative": 4
+    },
+    "allPostPourSamples": [
+     {
+      "stepN": 46800,
+      "simT": 780,
+      "pop": 27,
+      "withParts": 11,
+      "branched": 9,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 4,
+      "visitorLineagePop": 7,
+      "hybridsCumulative": 0
+     },
+     {
+      "stepN": 57600,
+      "simT": 960,
+      "pop": 31,
+      "withParts": 12,
+      "branched": 7,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 4,
+      "hybridsCumulative": 1
+     },
+     {
+      "stepN": 68400,
+      "simT": 1140,
+      "pop": 38,
+      "withParts": 22,
+      "branched": 9,
+      "eyed": 2,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 4,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 79200,
+      "simT": 1320,
+      "pop": 48,
+      "withParts": 30,
+      "branched": 19,
+      "eyed": 6,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 6,
+      "hybridsCumulative": 2
+     },
+     {
+      "stepN": 90000,
+      "simT": 1500,
+      "pop": 37,
+      "withParts": 35,
+      "branched": 24,
+      "eyed": 7,
+      "paddlers": 0,
+      "maxParts": 4,
+      "visitorLineagePop": 6,
+      "hybridsCumulative": 3
+     },
+     {
+      "stepN": 100800,
+      "simT": 1680,
+      "pop": 35,
+      "withParts": 31,
+      "branched": 16,
+      "eyed": 11,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 111600,
+      "simT": 1860,
+      "pop": 39,
+      "withParts": 24,
+      "branched": 11,
+      "eyed": 10,
+      "paddlers": 1,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 122400,
+      "simT": 2040,
+      "pop": 23,
+      "withParts": 18,
+      "branched": 8,
+      "eyed": 3,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 133200,
+      "simT": 2220,
+      "pop": 21,
+      "withParts": 18,
+      "branched": 15,
+      "eyed": 6,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 144000,
+      "simT": 2400,
+      "pop": 20,
+      "withParts": 20,
+      "branched": 10,
+      "eyed": 1,
+      "paddlers": 1,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 154800,
+      "simT": 2580,
+      "pop": 26,
+      "withParts": 26,
+      "branched": 13,
+      "eyed": 0,
+      "paddlers": 3,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 165600,
+      "simT": 2760,
+      "pop": 29,
+      "withParts": 29,
+      "branched": 5,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 176400,
+      "simT": 2940,
+      "pop": 25,
+      "withParts": 25,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 187200,
+      "simT": 3120,
+      "pop": 19,
+      "withParts": 19,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 198000,
+      "simT": 3300,
+      "pop": 14,
+      "withParts": 13,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 208800,
+      "simT": 3480,
+      "pop": 16,
+      "withParts": 16,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 219600,
+      "simT": 3660,
+      "pop": 14,
+      "withParts": 13,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 1,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 230400,
+      "simT": 3840,
+      "pop": 15,
+      "withParts": 9,
+      "branched": 3,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 2,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 241200,
+      "simT": 4020,
+      "pop": 16,
+      "withParts": 2,
+      "branched": 2,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 3,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     },
+     {
+      "stepN": 252000,
+      "simT": 4200,
+      "pop": 14,
+      "withParts": 0,
+      "branched": 0,
+      "eyed": 0,
+      "paddlers": 0,
+      "maxParts": 0,
+      "visitorLineagePop": 0,
+      "hybridsCumulative": 4
+     }
+    ],
+    "donorMeanHue": 259.41,
+    "hueGap": 76.53,
+    "classification": "INVASIVE"
+   }
+  ]
+ },
+ "summary": {
+  "visitorLineageSurvivedTo60min": "0/12 (strict arrival-lineage-id definition; every replicate's original visitor label went extinct before +60min, range +3min to +51min)",
+  "trueEyeSurvivedTo60min_populationWide": "0/12 (NOT ONE of the 12 recipient worlds had a real eye, eye>0.4, present at the exact +60min checkpoint, despite transient peaks up to 11 eyed creatures mid-run in several replicates)",
+  "anyBranchedStructureAt60min_populationWide": "9/12",
+  "anyBodyPartsAt60min_populationWide": "11/12",
+  "hybridBirths_finalCumulative_perReplicate_allArms": [
+   19,
+   134,
+   12,
+   2,
+   78,
+   15,
+   29,
+   189,
+   183,
+   79,
+   14,
+   4
+  ],
+  "arm3_hybridizing_finalHybrids": [
+   183,
+   79,
+   14
+  ],
+  "arm3_invasive_finalHybrids": [
+   4
+  ],
+  "arm2_avgBranchedAt60min": 7.25,
+  "arm1_avgBranchedAt60min": 2.0,
+  "arm3_avgBranchedAt60min": 1.5
+ },
+ "verdict": "Island lineage identity never survives the crossing: in all 12 recipient worlds, across all three arms, the strict visitor-arrival lineage label went extinct before the 60-minute mark (fastest: 3 minutes; slowest: 51 minutes; 0/12 survived to +60min). True eyes fared no better structurally: eye>0.4 creatures appeared transiently in 7 of the 12 replicates (peaking as high as 11 individuals in the one INVASIVE hue-control replicate at +18min), but in every single replicate that structure had collapsed back to zero eyed creatures by +60min -- island eyes are a peak, not an acquisition, exactly like the unaided classic-world runs in crown-and-replication.json. Coarser body structure (branched, the game's own forked-segment definition) fared better: 9 of 12 worlds still had some branched creatures at +60min, but because the strict visitor label is always extinct by then and hybrid births (2 to 189 per replicate, present in 11 of 12) mixed transplant genes into natively-labeled lineages before that extinction, this persistence cannot be cleanly credited to the transplant versus the recipient world's own independent tendency to sprout structure -- both views are reported rather than collapsed into one number. The reverse pour did not dilute the archipelago nursery: despite receiving a dozen genuinely featureless mainland bodies (0/12 parts in every one of the 4 prep crops) and heavy hybridization (15-189 cross-lineage births), Arm 2's archipelago recipients ended the hour with MORE population-wide branched structure on average (7.25 per replicate) than either classic-recipient arm (2.0 in Arm 1, 1.5 in Arm 3), and populations stayed within the archipelago's normal low-population range (9-15) rather than collapsing -- the refugia mechanism looks robust to a one-time demographic and genetic shock, though n=4 is directional, not conclusive. Hue distance strongly and cleanly gates GENE FLOW exactly as the mate-compatibility code predicts: the three HYBRIDIZING replicates (mean hue gap 34-37 degrees) produced 14 to 183 cross-lineage births each, while the one INVASIVE replicate (gap 76.5 degrees) produced only 4 -- a residual trickle explainable by individual hue variance around the population means rather than bulk interbreeding, since mate eligibility itself is gated at hueDist<40. Whether hue distance also changes STRUCTURAL survival specifically is not resolved here: with only one invasive replicate against three hybridizing ones, the single data point (which happened to show the largest transient eyed peak of the whole study, then the most total collapse -- zero parts, zero branches, zero eyes, lowest population -- by +60min) is suggestive but not a controlled comparison; it is flagged as a candidate for a dedicated, better-replicated follow-up rather than reported as a finding.",
+ "forThePaper": "Pour a refugia-incubated lineage into an open dish and the label dies fast -- every one of twelve archipelago-to-mainland transplants lost its founding lineage identity within an hour, most within twenty minutes, and every transient burst of real eyes (up to eleven individuals at once, in one run) melted back to zero by the sixty-minute mark, echoing the same collapse this project already logged in unaided classic worlds. What crosses over is not the island population but its genes: cross-lineage hybrid births numbered in the dozens to low hundreds whenever donor and native hues sat within the engine's own forty-degree mate-compatibility window, and collapsed to a residual trickle of four when they didn't, confirming that the hue gate is doing real ecological work and not just cosmetic species-painting. And the nursery itself proved sturdy in reverse: pouring a dozen genuinely bodyless mainland natives into the archipelago -- and watching them interbreed by the hundreds -- left the refugia worlds with more branched structure at the hour mark than either classic-world arm managed on its own, suggesting the geography that lets local extinction fuel invention (per refugia-sweep.json) survives a one-time demographic flood better than any single lineage survives leaving home."
+}
