@@ -1,4 +1,4 @@
-const CACHE='soup-v54';
+const CACHE='soup-v55';
 const ASSETS=['./','./index.html','./roadmap.html','./ROADMAP.md','./icon.svg','./manifest.webmanifest'];
 self.addEventListener('install',e=>{
   e.waitUntil(caches.open(CACHE).then(c=>c.addAll(ASSETS)).then(()=>self.skipWaiting()));

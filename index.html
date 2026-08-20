@@ -2482,7 +2482,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.39.0';
+const APP_V='1.39.1';
 const SAVE_KEY='primordialSoup.save';
 const MAX_SHELF=4;
 let shelfSlot=0, shelfPending=null;
@@ -3431,7 +3431,6 @@ function shelfSwitch(i){
   say('🗂 switched to '+dishId);
 }
 function shelfDelete(i){
-  if(!confirm('permanently delete that dish and its whole history?'))return;
   store.del(i===0?SAVE_KEY:SAVE_KEY+'.s'+i);
   const m=shelfMeta().filter(x=>x.i!==i);shelfMetaSave(m);
   if(i===shelfSlot){$('shelfPanel').classList.remove('show');$('scenModal').classList.add('show');return;}
@@ -3449,8 +3448,20 @@ function renderShelf(){
       const mins=Math.max(0,Math.round((Date.now()-e.savedAt)/60000));
       row.innerHTML='<span class="sn"><b>'+e.tag+'</b> · '+e.scn+' · year '+e.year+' · pop '+e.pop+' · gen '+e.gen+'<br><span style="opacity:0.55">resting '+(mins>90?Math.round(mins/60)+'h':mins+'m')+'</span></span>';
       const bs=document.createElement('button');bs.textContent='visit';bs.onclick=()=>shelfSwitch(i);
-      const bp=document.createElement('button');bp.textContent='🌊 pour in';bp.onclick=()=>{if(confirm('pour up to 12 creatures from '+e.tag+' into this dish?'))shelfPour(i);};
-      const bd=document.createElement('button');bd.textContent='✕';bd.onclick=()=>shelfDelete(i);
+      const bp=document.createElement('button');bp.textContent='🌊 pour into current';
+      bp.onclick=()=>{
+        if(bp.dataset.arm){shelfPour(i);return;}
+        bp.dataset.arm='1';bp.textContent='🌊 send 12 here?';
+        say('tap again: 12 creatures from '+e.tag+' will arrive in the dish you are watching now');
+        setTimeout(()=>{bp.dataset.arm='';bp.textContent='🌊 pour into current';},3500);
+      };
+      const bd=document.createElement('button');bd.textContent='✕';
+      bd.onclick=()=>{
+        if(bd.dataset.arm){shelfDelete(i);return;}
+        bd.dataset.arm='1';bd.textContent='delete?';
+        say('tap again to permanently delete '+e.tag);
+        setTimeout(()=>{bd.dataset.arm='';bd.textContent='✕';},3500);
+      };
       row.appendChild(bs);row.appendChild(bp);row.appendChild(bd);
     }else{
       row.innerHTML='<span class="sn" style="opacity:0.45">empty slot</span>';
@@ -3734,7 +3745,7 @@ function collideArrive(p){
   }
   if(arrived){
     logChron('🌊 Worlds collide: '+arrived+' strangers arrived from '+(p.tag||'another dish'));
-    say('🌊 worlds collide: '+arrived+' strangers from '+(p.tag||'another dish'));
+    say('🌊 worlds collide: '+arrived+' strangers from '+(p.tag||'another dish')+' arrive at the rim, look to the dish edge');
     if(!records.collide){records.collide=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
   }
 }
@@ -3749,6 +3760,7 @@ function shelfPour(i){
   logIv('collide',payload);
   collideArrive(payload);
   renderShelf();
+  $('shelfPanel').classList.remove('show');
 }
 function applyIv(iv){
   if(iv.t==='collide')return collideArrive(iv.p);
