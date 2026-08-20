@@ -2321,7 +2321,7 @@ function rockAt(x,y){
       return;
     }
   }
-  if(rocks.length>=14){say('🪨 the dish can bear no more stone');return;}
+  if(rocks.filter(k=>!k.bio).length>=18){say('🪨 the dish can bear no more stone');return;}
   const r=rand(24,40);
   if((x-CX)**2+(y-CY)**2>(R-r-30)**2){say('🪨 too close to the rim');return;}
   const spk=[];
@@ -2482,7 +2482,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.39.1';
+const APP_V='1.39.2';
 const SAVE_KEY='primordialSoup.save';
 const MAX_SHELF=4;
 let shelfSlot=0, shelfPending=null;
