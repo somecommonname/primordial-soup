@@ -198,6 +198,8 @@ Deeper evolution: and proto-culture: behavior spreading without genes once memor
 
 ## Greenhouse seedlings (planted 2026-08-15, fresh ideas awaiting approval)
 
+**The Shelf (David, 2026-08-19).** Multiple living dishes side by side: a shelf panel where each world is a card with its callsign, year, population, and generation, a switcher to move between them, and separate save slots so each dish keeps living independently. The endgame is the collision: pour one dish into another and watch two evolved ecologies meet, hybridize, or go to war. Buildable solo; medium size.
+
 The greenhouse stands empty: the Hall of Legends shipped as v1.37, and new seeds welcome at the idea box.
 
 ## Frontier (the "how far can this go" answer)
