@@ -129,6 +129,13 @@
   #legendsPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,94vw);display:none;z-index:37;
                 max-height:84vh;overflow-y:auto}
   #legendsPanel.show{display:block}
+  #shelfPanel{left:50%;top:50%;transform:translate(-50%,-50%);width:min(430px,94vw);display:none;z-index:37;
+              max-height:84vh;overflow-y:auto}
+  #shelfPanel.show{display:block}
+  .shrow{display:flex;align-items:center;gap:7px;font-size:10.5px;padding:7px 4px;border-bottom:1px solid var(--line)}
+  .shrow .sn{flex:1;line-height:1.5}
+  .shrow button{font-size:9.5px;padding:3px 7px}
+  .shrow.active{background:rgba(99,226,255,0.06);border-left:2px solid var(--cyan)}
   .lgrow{display:flex;align-items:center;gap:8px;font-size:10.5px;padding:5px 2px;border-bottom:1px solid var(--line)}
   .lgrow .lt{width:92px;color:var(--dim);letter-spacing:0.04em}
   .lgrow .sw{width:9px;height:9px;border-radius:50%;flex:none}
@@ -261,6 +268,7 @@
     <button id="btnClass">🎓 learn</button>
     <button id="btnBoards">🌐 boards</button>
     <button id="btnLegends">👑 legends</button>
+    <button id="btnShelf">🗂 shelf</button>
   </div>
   <a id="mapLink" href="roadmap.html">🗺 roadmap</a>
 </div>
@@ -324,6 +332,13 @@
   <div id="boardsRows" style="font-size:10px;min-height:80px"></div>
   <button id="boardsPub" style="width:100%;margin-top:8px">🌐 publish this dish</button>
   <div style="font-size:9px;opacity:0.55;margin-top:6px">Publishing sends only your dish callsign, seed, and statistics. No accounts, no names.</div>
+</div>
+
+<div class="panel" id="shelfPanel">
+  <button class="close" id="shelfClose">✕</button>
+  <div class="ptitle">THE SHELF</div>
+  <div style="font-size:10px;opacity:0.75;margin-bottom:8px">Your living worlds. Each dish keeps its own save; switch in and it catches up the time it missed. Pour one into the current dish and worlds collide.</div>
+  <div id="shelfRows"></div>
 </div>
 
 <div class="panel" id="legendsPanel">
@@ -394,6 +409,7 @@
     <div class="gl">🏊 Paddles are real: fins beat in a wave, side fins add thrust and torque, and lopsided bodies swim in curves</div>
     <div class="gl">👁 Organs live on the body plan: eyes see farther where they face, extra mouths graze where they sit, and new parts tend to arrive with their own neuron</div>
     <div class="gl">👑 The Hall of Legends remembers each dish's heroes by name, and which bloodline reigns</div>
+    <div class="gl">🗂 The Shelf holds up to four living worlds: switch between dishes, and pour one into another to make worlds collide</div>
     <div class="gl">🪸 Masons lay living reef: it shelters, gathers gardens of algae, and erodes without upkeep</div>
     <div class="gl">🐣 Newborns start small and grow into their inherited form; only adults can breed</div>
     <div class="gl">⚗️ Digestion is chemistry: plant and meat gut enzymes evolve separately from appetite, and a wide gut costs extra to run</div>
@@ -412,7 +428,7 @@
     <div class="gh">IT REMEMBERS</div>
     <div class="gl">💾 Auto-saves; evolution continues while you're away, then fast-forwards</div>
     <div class="gl">🌳 Tree of life shows species branching live; 📜 the Chronicle writes history</div>
-    <div class="gl">🏆 Records and 50 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
+    <div class="gl">🏆 Records and 51 badges survive every world; see them with the 🏅 badges button; 🆔 every dish has a callsign</div>
     <div class="gl">🔭 The Observatory: species tables, record holders, tree tooltips, full data export</div>
     <div class="gh">SHARING</div>
     <div class="gl">⇪ Export your world as a seed; ⇩ import anyone else's</div>
@@ -2401,16 +2417,18 @@ function parseSeed(t){
 document.querySelectorAll('[data-scen]').forEach(b=>b.addEventListener('click',()=>{
   if(replay)endReplay();
   $('scenModal').classList.remove('show');
+  shelfConsumePending();
   museumArchive();
-  store.del(SAVE_KEY);catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
+  store.del(SK());catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
   initWorld(b.dataset.scen,parseSeed($('seedInput').value));
   $('seedInput').value='';
 }));
 $('scenDaily').addEventListener('click',()=>{
   if(replay)endReplay();
   $('scenModal').classList.remove('show');
+  shelfConsumePending();
   museumArchive();
-  store.del(SAVE_KEY);catchupLeft=0;
+  store.del(SK());catchupLeft=0;
   const d=new Date().toISOString().slice(0,10);versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
   const ev=annualEvent(d);
   initWorld(ev?ev.scn:'daily',parseSeed('soup-'+d));
@@ -2426,8 +2444,9 @@ $('scenVersus').addEventListener('click',()=>{
   if(ta==null)return;
   const tb=prompt('seed for the EAST people (number or phrase)','east');
   if(tb==null)return;
+  shelfConsumePending();
   museumArchive();
-  store.del(SAVE_KEY);catchupLeft=0;heirSeeds=null;dynasty=1;parentDish='';
+  store.del(SK());catchupLeft=0;heirSeeds=null;dynasty=1;parentDish='';
   const sa=parseSeed(ta)??((Math.random()*4294967296)>>>0);
   const sb=parseSeed(tb)??((Math.random()*4294967296)>>>0);
   versusSeeds={a:sa,b:sb};
@@ -2441,8 +2460,9 @@ $('scenHeir').addEventListener('click',()=>{
   if(!h){say('👑 an heirloom needs at least 2 living cells: this world has nothing left to give');return;}
   $('scenModal').classList.remove('show');
   const pd=dishId, dy=dynasty;
+  shelfConsumePending();
   museumArchive();
-  store.del(SAVE_KEY);catchupLeft=0;versusSeeds=null;
+  store.del(SK());catchupLeft=0;versusSeeds=null;
   heirSeeds=h; dynasty=dy+1; parentDish=pd;
   initWorld('classic',parseSeed($('seedInput').value));
   $('seedInput').value='';
@@ -2462,15 +2482,35 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.38.0';
+const APP_V='1.39.0';
 const SAVE_KEY='primordialSoup.save';
+const MAX_SHELF=4;
+let shelfSlot=0, shelfPending=null;
+function SK(){return shelfSlot===0?SAVE_KEY:SAVE_KEY+'.s'+shelfSlot;}
+function shelfMeta(){try{return JSON.parse(store.get('ps.shelf'))||[];}catch(e){return [];}}
+function shelfMetaSave(m){try{store.set('ps.shelf',JSON.stringify(m));}catch(e){}}
+function shelfNote(){
+  const m=shelfMeta();
+  const e={i:shelfSlot,tag:dishId,scn:scenario,year:Math.floor(simT/SEASON_PERIOD),pop:creatures.length,gen:maxGen,savedAt:Date.now()};
+  const ix=m.findIndex(x=>x.i===shelfSlot);
+  if(ix>=0)m[ix]=e;else m.push(e);
+  shelfMetaSave(m);
+}
+function shelfConsumePending(){
+  if(shelfPending==null)return;
+  saveWorld();
+  shelfSlot=shelfPending;shelfPending=null;
+  try{store.set('ps.shelfSlot',''+shelfSlot);}catch(e){}
+}
 const store=(()=>{ try{ const t='__ps_t';localStorage.setItem(t,'1');localStorage.removeItem(t);
   return {get:k=>localStorage.getItem(k),set:(k,v)=>localStorage.setItem(k,v),del:k=>localStorage.removeItem(k)};
  }catch(e){ const m={}; return {get:k=>(k in m?m[k]:null),set:(k,v)=>{m[k]=String(v);},del:k=>{delete m[k];}}; }})();
 let catchupLeft=0,cuB0=0,cuD0=0,cuG0=1,lastSaveT=0,hintCU=false;
+try{shelfSlot=Math.max(0,Math.min(MAX_SHELF-1,+(store.get('ps.shelfSlot')||0)||0));}catch(e){shelfSlot=0;}
 
 function saveWorld(){
   if(replay)return;
+  shelfNote();
   try{
     const cs=creatures.map(c=>({id:c.id,x:Math.round(c.x*10)/10,y:Math.round(c.y*10)/10,
       dir:Math.round(c.dir*100)/100,energy:Math.round(c.energy),cap:c.cap,age:Math.round(c.age*10)/10,
@@ -2480,7 +2520,7 @@ function saveWorld(){
       sg:(c.sg||[]).map((o,i)=>[Math.round(o.fin*100)/100,Math.round(o.spike*100)/100,Math.round(o.shell*100)/100,(typeof o.par==='number')?o.par:i-1,Math.round((o.ang||0)*100)/100,Math.round((o.eye||0)*100)/100,Math.round((o.mouth||0)*100)/100]),bh:c.bh||0,g:c.g}));
     const al=new Array(algae.length*2);
     for(let i=0;i<algae.length;i++){al[i*2]=Math.round(algae[i].x);al[i*2+1]=Math.round(algae[i].y);}
-    store.set(SAVE_KEY,JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
+    store.set(SK(),JSON.stringify({v:GAME_V,savedAt:Date.now(),dish:{CX,CY,R},
       simT,nextId,births,deaths,sexBirths,cloneBirths,maxGen,iceUntil,lastSpeciesN,
       foodRate,mutRate,tempAng,rocks,jets,cs,al,hist,
       lins:[...lineages.entries()],linNext,treeT,treeDt,
@@ -2492,7 +2532,7 @@ function saveWorld(){
 }
 function loadWorld(){
   let s=null;
-  try{s=JSON.parse(store.get(SAVE_KEY));}catch(e){return false;}
+  try{s=JSON.parse(store.get(SK()));}catch(e){return false;}
   if(!s)return false;
   if(s.v!==GAME_V){
     try{say('the old world could not survive the new physics. a fresh dish begins');}catch(e){}
@@ -2745,6 +2785,8 @@ $('musClose').addEventListener('click',()=>$('musPanel').classList.remove('show'
 $('btnClass').addEventListener('click',()=>{renderClassroom();$('classPanel').classList.add('show');});
 $('btnLegends').addEventListener('click',()=>{renderLegends();$('legendsPanel').classList.add('show');});
 $('legendsClose').addEventListener('click',()=>$('legendsPanel').classList.remove('show'));
+$('btnShelf').addEventListener('click',()=>{renderShelf();$('shelfPanel').classList.add('show');});
+$('shelfClose').addEventListener('click',()=>{shelfPending=null;$('shelfPanel').classList.remove('show');});
 $('classClose').addEventListener('click',()=>$('classPanel').classList.remove('show'));
 if(!BOARDS_URL)$('btnBoards').style.display='none';
 $('btnBoards').addEventListener('click',()=>{$('boardsPanel').classList.add('show');renderBoards();});
@@ -2884,6 +2926,7 @@ const BADGES=[
  {id:'paddler',n:'The Paddler',d:'A strong side fin evolves and its rower reaches adulthood.',t:()=>!!records.paddle},
  {id:'eyesaft',n:'Eyes Aft',d:'An eye opens on a body part and its bearer reaches adulthood.',t:()=>!!records.eye},
  {id:'secondmouth',n:'Second Mouth',d:'A mouth evolves on a body part and its bearer reaches adulthood.',t:()=>!!records.mouth},
+ {id:'collide',n:'Worlds Collide',d:'Pour one dish into another and watch two evolutions meet.',t:()=>!!records.collide},
  {id:'clutch',n:'Clutch',d:'Five eggs incubating at once.',t:()=>eggs.length>=5},
  {id:'mycelium',n:'Mycelium',d:'Sixty fungi feeding on the fallen.',t:()=>fungi.length>=60},
  {id:'communion',n:'Communion',d:'Fifteen creatures carrying symbionts.',t:()=>symbioN>=15},
@@ -3121,7 +3164,7 @@ function b64url(u8){let t='';for(let i=0;i<u8.length;i+=0x8000)t+=String.fromCha
 function unb64url(t){t=t.replace(/-/g,'+').replace(/_/g,'/');while(t.length%4)t+='=';const bin=atob(t);const u=new Uint8Array(bin.length);for(let i=0;i<bin.length;i++)u[i]=bin.charCodeAt(i);return u;}
 async function packSeed(){
   saveWorld();
-  const raw=store.get(SAVE_KEY)||'';
+  const raw=store.get(SK())||'';
   let clean=raw;
   try{const o=JSON.parse(raw);delete o.dishToken;clean=JSON.stringify(o);}catch(e){}
   try{
@@ -3152,7 +3195,7 @@ $('btnShare').addEventListener('click',async()=>{
   const seed=await packSeed();
   $('seedText').value=seed;
   toolUsed('share');
-  let msg=Math.round(seed.length/1024)+'KB · paste into import on any copy of the game';
+  let msg=Math.round(seed.length/1024)+'KB · this is your whole universe: every genome, brain, and year of history, compressed · paste into import on any copy of the game';
   try{await navigator.clipboard.writeText(seed);msg+=' · copied';}catch(e){}
   $('seedMsg').textContent=msg;
 });
@@ -3175,7 +3218,7 @@ $('seedLoad').addEventListener('click',async()=>{
     const sv=JSON.parse(raw);
     if(!sv||sv.v!==GAME_V||!sv.cs||!sv.cs.length)throw new Error('bad');
     sv.savedAt=Date.now();
-    store.set(SAVE_KEY,JSON.stringify(sv));
+    store.set(SK(),JSON.stringify(sv));
     if(!loadWorld())throw new Error('bad');
     catchupLeft=0;
     $('seedModal').classList.remove('show');
@@ -3375,6 +3418,50 @@ async function publishDish(){
   renderBoards();
 }
 
+// ---------- the shelf ----------
+function shelfSwitch(i){
+  if(replay)endReplay();
+  if(i===shelfSlot)return;
+  saveWorld();
+  shelfSlot=i;
+  try{store.set('ps.shelfSlot',''+i);}catch(e){}
+  catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
+  if(!loadWorld()){shelfPending=null;$('shelfPanel').classList.remove('show');$('scenModal').classList.add('show');return;}
+  $('shelfPanel').classList.remove('show');
+  say('🗂 switched to '+dishId);
+}
+function shelfDelete(i){
+  if(!confirm('permanently delete that dish and its whole history?'))return;
+  store.del(i===0?SAVE_KEY:SAVE_KEY+'.s'+i);
+  const m=shelfMeta().filter(x=>x.i!==i);shelfMetaSave(m);
+  if(i===shelfSlot){$('shelfPanel').classList.remove('show');$('scenModal').classList.add('show');return;}
+  renderShelf();
+}
+function renderShelf(){
+  const host=$('shelfRows');host.innerHTML='';
+  const m=shelfMeta();
+  for(let i=0;i<MAX_SHELF;i++){
+    const e=m.find(x=>x.i===i);
+    const row=document.createElement('div');row.className='shrow'+(i===shelfSlot?' active':'');
+    if(i===shelfSlot){
+      row.innerHTML='<span class="sn"><b>'+dishId+'</b> · '+scenario+' · year '+Math.floor(simT/SEASON_PERIOD)+' · pop '+creatures.length+' · gen '+maxGen+'<br><span style="opacity:0.55">the dish before you</span></span>';
+    }else if(e){
+      const mins=Math.max(0,Math.round((Date.now()-e.savedAt)/60000));
+      row.innerHTML='<span class="sn"><b>'+e.tag+'</b> · '+e.scn+' · year '+e.year+' · pop '+e.pop+' · gen '+e.gen+'<br><span style="opacity:0.55">resting '+(mins>90?Math.round(mins/60)+'h':mins+'m')+'</span></span>';
+      const bs=document.createElement('button');bs.textContent='visit';bs.onclick=()=>shelfSwitch(i);
+      const bp=document.createElement('button');bp.textContent='🌊 pour in';bp.onclick=()=>{if(confirm('pour up to 12 creatures from '+e.tag+' into this dish?'))shelfPour(i);};
+      const bd=document.createElement('button');bd.textContent='✕';bd.onclick=()=>shelfDelete(i);
+      row.appendChild(bs);row.appendChild(bp);row.appendChild(bd);
+    }else{
+      row.innerHTML='<span class="sn" style="opacity:0.45">empty slot</span>';
+      const bn=document.createElement('button');bn.textContent='+ new dish';
+      bn.onclick=()=>{shelfPending=i;$('shelfPanel').classList.remove('show');$('scenModal').classList.add('show');say('choose a world for the new shelf slot');};
+      row.appendChild(bn);
+    }
+    host.appendChild(row);
+  }
+}
+
 // ---------- the hall of legends ----------
 const LEGEND_ROWS=[['eldest','THE ELDEST'],['thinker','DEEPEST MIND'],['grown','GREATEST BODY'],['hunter','THE HUNTER'],['parent','MOST DEVOTED']];
 function renderLegends(){
@@ -3444,7 +3531,7 @@ function renderClassroom(){
     btn.addEventListener('click',()=>{
       if(replay)endReplay();
       museumArchive();
-      store.del(SAVE_KEY);catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
+      store.del(SK());catchupLeft=0;versusSeeds=null;heirSeeds=null;dynasty=1;parentDish='';
       initWorld(ex.scn,parseSeed(ex.seed));
       ex.setup();
       classDone[ex.id]=1;
@@ -3466,7 +3553,7 @@ function museumArchive(){
   const m=museumList();
   if(m.length&&m[0].id===dishId&&m[0].stepN===stepN)return;
   saveWorld();
-  const raw=store.get(SAVE_KEY)||'';
+  const raw=store.get(SK())||'';
   const e={id:dishId,tag:dishTag,scn:scenario,seed:dishSeed,dyn:dynasty,pd:parentDish,
     year:Math.floor(simT/SEASON_PERIOD),pop:creatures.filter(c=>!c.dead).length,gen:maxGen,
     born:births,died:deaths,when:new Date().toISOString().slice(0,10),stepN,
@@ -3513,7 +3600,7 @@ async function museumRevive(i){
       const o=JSON.parse(raw);
       o.savedAt=Date.now();
       museumArchive();
-      store.set(SAVE_KEY,JSON.stringify(o));
+      store.set(SK(),JSON.stringify(o));
       catchupLeft=0;
       if(loadWorld()){
         catchupLeft=0;
@@ -3526,8 +3613,9 @@ async function museumRevive(i){
     say('🏛 the snapshot would not open; replaying history instead');
   }
   if(!e.revivable||!e.ivLog){say('🏛 this world left no complete record; it can be admired but not revived');return;}
+  shelfConsumePending();
   museumArchive();
-  store.del(SAVE_KEY); catchupLeft=0;
+  store.del(SK()); catchupLeft=0;
   versusSeeds=e.vs||null; heirSeeds=e.hs||null; dynasty=e.dyn||1; parentDish=e.pd||'';
   replay={log:e.ivLog.slice(),target:e.stepN,idx:0,speed:16,paused:false,revive:true};
   initWorld(e.scn==='daily'?'daily':e.scn,e.seed);
@@ -3630,7 +3718,40 @@ function releaseDesign(x,y,g){
 }
 
 // ---------- the time machine ----------
+function collideArrive(p){
+  const a0=rnd()*TAU, n=(p.cs||[]).length;
+  let arrived=0;
+  for(const rec of p.cs||[]){
+    if(creatures.length>320)break;
+    const a=a0+gauss()*0.25, d=R*(0.78+rnd()*0.1);
+    const nc=makeCreature(rec.g,CX+Math.cos(a)*d,CY+Math.sin(a)*d);
+    nc.age=12;
+    applySegs(nc,(rec.sg||[]).map((o,i)=>Array.isArray(o)?{fin:o[0]||0,spike:o[1]||0,shell:o[2]||0,par:(typeof o[3]==='number')?o[3]:i-1,ang:o[4]||0,eye:o[5]||0,mouth:o[6]||0}:o));
+    if(rec.br){nc.br=Float32Array.from(rec.br);nc.bh=rec.bh||0;}
+    nc.energy=nc.cap*0.6;
+    nc.lin=newLineage(0,nc.g.hue);
+    creatures.push(nc);arrived++;
+  }
+  if(arrived){
+    logChron('🌊 Worlds collide: '+arrived+' strangers arrived from '+(p.tag||'another dish'));
+    say('🌊 worlds collide: '+arrived+' strangers from '+(p.tag||'another dish'));
+    if(!records.collide){records.collide=1;try{store.set('primordialSoup.records',JSON.stringify(records));}catch(e){}}
+  }
+}
+function shelfPour(i){
+  if(replay){say('the time machine cannot pour worlds');return;}
+  let sv=null;
+  try{sv=JSON.parse(store.get(i===0?SAVE_KEY:SAVE_KEY+'.s'+i));}catch(e){}
+  if(!sv||!sv.cs||!sv.cs.length){say('that dish has nothing to pour');return;}
+  const picks=sv.cs.filter(c=>c&&c.g).slice(0,12).map(c=>({g:c.g,sg:c.sg||[],br:c.br||null,bh:c.bh||0}));
+  if(!picks.length){say('that dish has nothing to pour');return;}
+  const payload={tag:sv.dishId||('dish '+(i+1)),cs:picks};
+  logIv('collide',payload);
+  collideArrive(payload);
+  renderShelf();
+}
 function applyIv(iv){
+  if(iv.t==='collide')return collideArrive(iv.p);
   if(iv.t==='meteor')meteor(iv.p.x,iv.p.y);
   else if(iv.t==='bloom')bloomAt(iv.p.x,iv.p.y);
   else if(iv.t==='elixir')elixirAt(iv.p.x,iv.p.y);
@@ -3740,7 +3861,7 @@ function dlBlob(blob,name){
 }
 
 // ---------- panels close on outside tap or Escape ----------
-const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel','boardsPanel','legendsPanel'];
+const MODALS=['guidePanel','badgePanel','chronPanel','seedModal','scenModal','obsPanel','wkPanel','musPanel','classPanel','boardsPanel','legendsPanel','shelfPanel'];
 let modalJustClosed=false;
 document.addEventListener('pointerdown',e=>{
   let closed=false;
