@@ -1,0 +1,4106 @@
+{
+  "target": "/Users/davidgray/Documents/primordial-soup/index.html",
+  "version": "v1.38",
+  "commit": "e2eaaf3",
+  "runDate": "2026-08-19",
+  "hypothesis": "Complex bodies (parts, eyes, paddles) emerge but always collapse in small single-niche worlds (per NOTES.md and crown-and-replication.json). Two candidate incubators tested: OCEAN (large single population, tests whether genetic drift in small populations is the killer) and ARCHIPELAGO (three lagoons joined by narrow straits, tests whether island refugia let complexity survive local collapse and reseed).",
+  "protocol": {
+    "bootstrap": "viewport forced to 1280x720 (R===334 verified after each load/reload); paused=true; versusSeeds/heirSeeds/dynasty/parentDish reset before every initWorld; sterile (no hand-created creatures in measured runs); page reloaded periodically between runs.",
+    "sampleIntervalSteps": 21600,
+    "sampleIntervalMinutes": 6,
+    "targetMinutesPerSeed": 120,
+    "targetStepsPerSeed": 432000,
+    "fallbackTo60MinUsed": false,
+    "executionNote": "The javascript_tool has a hard ~30s per-call timeout (not the up to 600000ms assumed going in). Ocean seeds happened to finish full 120-minute runs (432000 steps) in single calls (20.3-25.9s each). Archipelago runs consistently exceeded 30s, so from seed 9002 onward each run was executed as a sequence of smaller chunked step() calls against persistent in-page state (window.__rt), with world state never touched between chunks -- purely an execution-mechanics change, not a protocol or determinism change. All 8 seeds reached the full 432000-step / 120-minute target; no seed needed the 60-minute fallback.",
+    "fieldDefinitions": {
+      "withParts": "creatures with sg.length>0 (>=1 body segment beyond the head)",
+      "branched": "withParts creatures where some segment o has o.par!==index-1 or o.ang!==0 (a body fork), matching the game's own 'first branch' detection logic",
+      "paddlers": "withParts creatures with a segment where o.ang!==0 and o.fin>0.5",
+      "eyed": "withParts creatures with a segment where o.eye>0.4 (checked independently of branched/paddler status -- confirmed against the archived crown run, e.g. min126: eyed 26 >> branched 7)",
+      "mouthed": "withParts creatures with a segment where o.mouth>0.4",
+      "maxParts": "max sg.length among living creatures",
+      "hidden": "count of living creatures with bh>0 (at least one evolved hidden brain neuron)",
+      "gen": "global maxGen at sample time",
+      "completeAnimalBar": "maxParts>=2 AND eyed/pop>=25% AND paddlers>0, evaluated at a single sample, per the report brief"
+    }
+  },
+  "trial1_ocean": {
+    "description": "initWorld('ocean', SEED); 120 min / 432000 steps target, sampled every 21600 steps (20 samples/seed). 120 founders, 4200 initial algae (vs 50-70 founders / 1800 algae for classic).",
+    "seeds": [
+      8001,
+      8002,
+      8003,
+      8004
+    ],
+    "runs": [
+      {
+        "seed": 8001,
+        "dishId": "SOUP-VY8F-A4",
+        "elapsedMs": 20937,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 42,
+            "births": 395,
+            "withParts": 5,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 12,
+            "gen": 13
+          },
+          {
+            "min": 12,
+            "pop": 27,
+            "births": 620,
+            "withParts": 5,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 15,
+            "gen": 20
+          },
+          {
+            "min": 18,
+            "pop": 19,
+            "births": 802,
+            "withParts": 8,
+            "branched": 5,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 19,
+            "gen": 28
+          },
+          {
+            "min": 24,
+            "pop": 17,
+            "births": 943,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 17,
+            "gen": 37
+          },
+          {
+            "min": 30,
+            "pop": 9,
+            "births": 1040,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 9,
+            "gen": 45
+          },
+          {
+            "min": 36,
+            "pop": 14,
+            "births": 1129,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 14,
+            "gen": 52
+          },
+          {
+            "min": 42,
+            "pop": 21,
+            "births": 1239,
+            "withParts": 4,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 21,
+            "gen": 57
+          },
+          {
+            "min": 48,
+            "pop": 16,
+            "births": 1338,
+            "withParts": 2,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 2,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 16,
+            "gen": 62
+          },
+          {
+            "min": 54,
+            "pop": 18,
+            "births": 1433,
+            "withParts": 13,
+            "branched": 10,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 17,
+            "gen": 67
+          },
+          {
+            "min": 60,
+            "pop": 16,
+            "births": 1522,
+            "withParts": 14,
+            "branched": 7,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 16,
+            "gen": 71
+          },
+          {
+            "min": 66,
+            "pop": 22,
+            "births": 1615,
+            "withParts": 22,
+            "branched": 18,
+            "paddlers": 0,
+            "eyed": 1,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 21,
+            "gen": 77
+          },
+          {
+            "min": 72,
+            "pop": 16,
+            "births": 1688,
+            "withParts": 16,
+            "branched": 9,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 1,
+            "maxParts": 2,
+            "hidden": 16,
+            "gen": 81
+          },
+          {
+            "min": 78,
+            "pop": 20,
+            "births": 1780,
+            "withParts": 20,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 20,
+            "gen": 89
+          },
+          {
+            "min": 84,
+            "pop": 15,
+            "births": 1864,
+            "withParts": 15,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 4,
+            "maxParts": 3,
+            "hidden": 15,
+            "gen": 96
+          },
+          {
+            "min": 90,
+            "pop": 16,
+            "births": 1956,
+            "withParts": 14,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 16,
+            "gen": 103
+          },
+          {
+            "min": 96,
+            "pop": 16,
+            "births": 2041,
+            "withParts": 16,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 16,
+            "gen": 108
+          },
+          {
+            "min": 102,
+            "pop": 22,
+            "births": 2138,
+            "withParts": 22,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 17,
+            "maxParts": 2,
+            "hidden": 22,
+            "gen": 115
+          },
+          {
+            "min": 108,
+            "pop": 14,
+            "births": 2231,
+            "withParts": 14,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 3,
+            "maxParts": 2,
+            "hidden": 14,
+            "gen": 119
+          },
+          {
+            "min": 114,
+            "pop": 22,
+            "births": 2334,
+            "withParts": 18,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 5,
+            "maxParts": 2,
+            "hidden": 22,
+            "gen": 124
+          },
+          {
+            "min": 120,
+            "pop": 13,
+            "births": 2406,
+            "withParts": 5,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 1,
+            "mouthed": 4,
+            "maxParts": 1,
+            "hidden": 13,
+            "gen": 131
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 13,
+          "births": 2406,
+          "withParts": 5,
+          "branched": 0,
+          "paddlers": 0,
+          "eyed": 1,
+          "mouthed": 4,
+          "maxParts": 1,
+          "hidden": 13,
+          "gen": 131
+        },
+        "runPeaks": {
+          "maxEyedPct": 12.5,
+          "maxPaddlers": 0,
+          "maxParts": 3,
+          "maxPop": 42
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true
+      },
+      {
+        "seed": 8002,
+        "dishId": "SOUP-5HPP-QW",
+        "elapsedMs": 20288,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 49,
+            "births": 438,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 7,
+            "gen": 11
+          },
+          {
+            "min": 12,
+            "pop": 30,
+            "births": 708,
+            "withParts": 6,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 10,
+            "gen": 18
+          },
+          {
+            "min": 18,
+            "pop": 27,
+            "births": 925,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 9,
+            "gen": 26
+          },
+          {
+            "min": 24,
+            "pop": 20,
+            "births": 1084,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 2,
+            "gen": 34
+          },
+          {
+            "min": 30,
+            "pop": 27,
+            "births": 1276,
+            "withParts": 4,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 6,
+            "gen": 45
+          },
+          {
+            "min": 36,
+            "pop": 24,
+            "births": 1454,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 9,
+            "gen": 52
+          },
+          {
+            "min": 42,
+            "pop": 15,
+            "births": 1599,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 0,
+            "gen": 60
+          },
+          {
+            "min": 48,
+            "pop": 15,
+            "births": 1707,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 2,
+            "gen": 65
+          },
+          {
+            "min": 54,
+            "pop": 20,
+            "births": 1818,
+            "withParts": 20,
+            "branched": 5,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 1,
+            "maxParts": 2,
+            "hidden": 10,
+            "gen": 71
+          },
+          {
+            "min": 60,
+            "pop": 13,
+            "births": 1904,
+            "withParts": 13,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 3,
+            "maxParts": 2,
+            "hidden": 0,
+            "gen": 75
+          },
+          {
+            "min": 66,
+            "pop": 11,
+            "births": 1998,
+            "withParts": 11,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 6,
+            "maxParts": 3,
+            "hidden": 0,
+            "gen": 82
+          },
+          {
+            "min": 72,
+            "pop": 9,
+            "births": 2065,
+            "withParts": 9,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 3,
+            "maxParts": 3,
+            "hidden": 1,
+            "gen": 86
+          },
+          {
+            "min": 78,
+            "pop": 13,
+            "births": 2134,
+            "withParts": 13,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 3,
+            "maxParts": 2,
+            "hidden": 0,
+            "gen": 93
+          },
+          {
+            "min": 84,
+            "pop": 11,
+            "births": 2192,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 7,
+            "gen": 101
+          },
+          {
+            "min": 90,
+            "pop": 12,
+            "births": 2260,
+            "withParts": 3,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 11,
+            "gen": 110
+          },
+          {
+            "min": 96,
+            "pop": 12,
+            "births": 2319,
+            "withParts": 6,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 12,
+            "gen": 121
+          },
+          {
+            "min": 102,
+            "pop": 10,
+            "births": 2390,
+            "withParts": 5,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 10,
+            "gen": 128
+          },
+          {
+            "min": 108,
+            "pop": 10,
+            "births": 2444,
+            "withParts": 10,
+            "branched": 10,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 10,
+            "gen": 133
+          },
+          {
+            "min": 114,
+            "pop": 16,
+            "births": 2508,
+            "withParts": 8,
+            "branched": 7,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 16,
+            "gen": 140
+          },
+          {
+            "min": 120,
+            "pop": 13,
+            "births": 2567,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 13,
+            "gen": 148
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 13,
+          "births": 2567,
+          "withParts": 0,
+          "branched": 0,
+          "paddlers": 0,
+          "eyed": 0,
+          "mouthed": 0,
+          "maxParts": 0,
+          "hidden": 13,
+          "gen": 148
+        },
+        "runPeaks": {
+          "maxEyedPct": 0.0,
+          "maxPaddlers": 0,
+          "maxParts": 3,
+          "maxPop": 49
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": false
+      },
+      {
+        "seed": 8003,
+        "dishId": "SOUP-ACRB-CS",
+        "elapsedMs": 25907,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 48,
+            "births": 423,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 24,
+            "gen": 12
+          },
+          {
+            "min": 12,
+            "pop": 42,
+            "births": 743,
+            "withParts": 6,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 13,
+            "gen": 23
+          },
+          {
+            "min": 18,
+            "pop": 27,
+            "births": 1025,
+            "withParts": 19,
+            "branched": 14,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 0,
+            "gen": 32
+          },
+          {
+            "min": 24,
+            "pop": 28,
+            "births": 1269,
+            "withParts": 21,
+            "branched": 20,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 9,
+            "gen": 42
+          },
+          {
+            "min": 30,
+            "pop": 37,
+            "births": 1555,
+            "withParts": 18,
+            "branched": 18,
+            "paddlers": 1,
+            "eyed": 0,
+            "mouthed": 6,
+            "maxParts": 2,
+            "hidden": 13,
+            "gen": 50
+          },
+          {
+            "min": 36,
+            "pop": 37,
+            "births": 1848,
+            "withParts": 18,
+            "branched": 15,
+            "paddlers": 1,
+            "eyed": 0,
+            "mouthed": 3,
+            "maxParts": 2,
+            "hidden": 8,
+            "gen": 60
+          },
+          {
+            "min": 42,
+            "pop": 39,
+            "births": 2179,
+            "withParts": 13,
+            "branched": 10,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 23,
+            "gen": 71
+          },
+          {
+            "min": 48,
+            "pop": 39,
+            "births": 2530,
+            "withParts": 16,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 29,
+            "gen": 79
+          },
+          {
+            "min": 54,
+            "pop": 27,
+            "births": 2798,
+            "withParts": 10,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 27,
+            "gen": 88
+          },
+          {
+            "min": 60,
+            "pop": 26,
+            "births": 2997,
+            "withParts": 17,
+            "branched": 12,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 25,
+            "gen": 96
+          },
+          {
+            "min": 66,
+            "pop": 25,
+            "births": 3211,
+            "withParts": 12,
+            "branched": 11,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 25,
+            "gen": 107
+          },
+          {
+            "min": 72,
+            "pop": 21,
+            "births": 3366,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 21,
+            "gen": 113
+          },
+          {
+            "min": 78,
+            "pop": 34,
+            "births": 3602,
+            "withParts": 9,
+            "branched": 8,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 34,
+            "gen": 123
+          },
+          {
+            "min": 84,
+            "pop": 31,
+            "births": 3823,
+            "withParts": 6,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 29,
+            "gen": 129
+          },
+          {
+            "min": 90,
+            "pop": 32,
+            "births": 4127,
+            "withParts": 7,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 22,
+            "gen": 137
+          },
+          {
+            "min": 96,
+            "pop": 29,
+            "births": 4366,
+            "withParts": 3,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 3,
+            "gen": 145
+          },
+          {
+            "min": 102,
+            "pop": 19,
+            "births": 4570,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 10,
+            "gen": 152
+          },
+          {
+            "min": 108,
+            "pop": 37,
+            "births": 4766,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 20,
+            "gen": 161
+          },
+          {
+            "min": 114,
+            "pop": 31,
+            "births": 4979,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 13,
+            "gen": 173
+          },
+          {
+            "min": 120,
+            "pop": 29,
+            "births": 5178,
+            "withParts": 18,
+            "branched": 11,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 16,
+            "gen": 178
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 29,
+          "births": 5178,
+          "withParts": 18,
+          "branched": 11,
+          "paddlers": 0,
+          "eyed": 0,
+          "mouthed": 0,
+          "maxParts": 2,
+          "hidden": 16,
+          "gen": 178
+        },
+        "runPeaks": {
+          "maxEyedPct": 0.0,
+          "maxPaddlers": 1,
+          "maxParts": 2,
+          "maxPop": 48
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true
+      },
+      {
+        "seed": 8004,
+        "dishId": "SOUP-TECT-ZD",
+        "elapsedMs": 22299,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 35,
+            "births": 418,
+            "withParts": 5,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 3,
+            "gen": 10
+          },
+          {
+            "min": 12,
+            "pop": 28,
+            "births": 630,
+            "withParts": 4,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 10,
+            "gen": 18
+          },
+          {
+            "min": 18,
+            "pop": 28,
+            "births": 839,
+            "withParts": 10,
+            "branched": 10,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 18,
+            "gen": 30
+          },
+          {
+            "min": 24,
+            "pop": 24,
+            "births": 1015,
+            "withParts": 7,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 24,
+            "gen": 38
+          },
+          {
+            "min": 30,
+            "pop": 39,
+            "births": 1279,
+            "withParts": 22,
+            "branched": 21,
+            "paddlers": 3,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 3,
+            "hidden": 35,
+            "gen": 47
+          },
+          {
+            "min": 36,
+            "pop": 36,
+            "births": 1579,
+            "withParts": 14,
+            "branched": 14,
+            "paddlers": 1,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 33,
+            "gen": 56
+          },
+          {
+            "min": 42,
+            "pop": 34,
+            "births": 1866,
+            "withParts": 21,
+            "branched": 21,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 3,
+            "hidden": 31,
+            "gen": 67
+          },
+          {
+            "min": 48,
+            "pop": 27,
+            "births": 2087,
+            "withParts": 9,
+            "branched": 9,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 17,
+            "gen": 76
+          },
+          {
+            "min": 54,
+            "pop": 20,
+            "births": 2274,
+            "withParts": 7,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 1,
+            "maxParts": 2,
+            "hidden": 14,
+            "gen": 85
+          },
+          {
+            "min": 60,
+            "pop": 18,
+            "births": 2412,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 18,
+            "gen": 95
+          },
+          {
+            "min": 66,
+            "pop": 16,
+            "births": 2569,
+            "withParts": 8,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 16,
+            "gen": 104
+          },
+          {
+            "min": 72,
+            "pop": 16,
+            "births": 2674,
+            "withParts": 3,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 16,
+            "gen": 110
+          },
+          {
+            "min": 78,
+            "pop": 17,
+            "births": 2794,
+            "withParts": 4,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 17,
+            "gen": 118
+          },
+          {
+            "min": 84,
+            "pop": 18,
+            "births": 2898,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 18,
+            "gen": 123
+          },
+          {
+            "min": 90,
+            "pop": 18,
+            "births": 3001,
+            "withParts": 4,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 18,
+            "gen": 128
+          },
+          {
+            "min": 96,
+            "pop": 13,
+            "births": 3088,
+            "withParts": 2,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 13,
+            "gen": 134
+          },
+          {
+            "min": 102,
+            "pop": 12,
+            "births": 3148,
+            "withParts": 5,
+            "branched": 5,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 12,
+            "gen": 140
+          },
+          {
+            "min": 108,
+            "pop": 14,
+            "births": 3225,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 14,
+            "gen": 145
+          },
+          {
+            "min": 114,
+            "pop": 12,
+            "births": 3312,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 12,
+            "gen": 149
+          },
+          {
+            "min": 120,
+            "pop": 14,
+            "births": 3392,
+            "withParts": 5,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 14,
+            "gen": 155
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 14,
+          "births": 3392,
+          "withParts": 5,
+          "branched": 3,
+          "paddlers": 0,
+          "eyed": 0,
+          "mouthed": 0,
+          "maxParts": 1,
+          "hidden": 14,
+          "gen": 155
+        },
+        "runPeaks": {
+          "maxEyedPct": 0.0,
+          "maxPaddlers": 3,
+          "maxParts": 3,
+          "maxPop": 39
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true
+      }
+    ],
+    "summary": {
+      "structurePersistsToFinal": "3/4",
+      "finalSampleCompleteAnimal": "0/4",
+      "anySampleCompleteAnimal": "0/4",
+      "overallAvgPopAcross80Samples": 22.6,
+      "maxPopAnySampleAnySeed": 49,
+      "noteOnPopulationHypothesis": "The 'populations 300+' premise did not materialize at any of the 80 sampled points (min6-120 across 4 seeds); max single sample was 49. A large founder/algae boom does happen in the first simulated minute (observed informally at ~150-166 by 2 sim-seconds in a calibration run) but busts hard before the first 6-minute sample, converging to a population range statistically indistinguishable from (slightly below) the classic baseline (22.6 vs 24.4 avg)."
+    }
+  },
+  "trial2_archipelago": {
+    "description": "initWorld('arch', SEED); 120 min / 432000 steps target, sampled every 21600 steps (20 samples/seed). 3 lagoons x 24 founders = 72 founders, 1800 initial algae. Per-lagoon {pop,withParts,eyed} recorded each sample via lagoonOf(c.x,c.y) on living creatures. archMigration() runs every 60 steps in-engine, allowing individuals to cross straits between lagoons.",
+    "seeds": [
+      9001,
+      9002,
+      9003,
+      9004
+    ],
+    "runs": [
+      {
+        "seed": 9001,
+        "dishId": "SOUP-6PSP-CN",
+        "elapsedMs": 22622,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 32,
+            "births": 288,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 1,
+            "gen": 12,
+            "lagoons": [
+              {
+                "pop": 10,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 11,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 11,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 12,
+            "pop": 25,
+            "births": 489,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 1,
+            "gen": 19,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 11,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 18,
+            "pop": 20,
+            "births": 635,
+            "withParts": 3,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 1,
+            "gen": 24,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 2,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 24,
+            "pop": 13,
+            "births": 745,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 4,
+            "gen": 32,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 30,
+            "pop": 16,
+            "births": 842,
+            "withParts": 2,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 14,
+            "gen": 40,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 36,
+            "pop": 11,
+            "births": 920,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 0,
+            "gen": 52,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 0,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 42,
+            "pop": 11,
+            "births": 1032,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 10,
+            "gen": 63,
+            "lagoons": [
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 1,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 48,
+            "pop": 11,
+            "births": 1115,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 11,
+            "gen": 74,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 54,
+            "pop": 12,
+            "births": 1215,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 12,
+            "gen": 83,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 1,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 60,
+            "pop": 12,
+            "births": 1300,
+            "withParts": 2,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 12,
+            "gen": 90,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 66,
+            "pop": 12,
+            "births": 1392,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 12,
+            "gen": 98,
+            "lagoons": [
+              {
+                "pop": 1,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 72,
+            "pop": 13,
+            "births": 1497,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 13,
+            "gen": 104,
+            "lagoons": [
+              {
+                "pop": 0,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 78,
+            "pop": 23,
+            "births": 1645,
+            "withParts": 5,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 18,
+            "gen": 115,
+            "lagoons": [
+              {
+                "pop": 8,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 84,
+            "pop": 19,
+            "births": 1808,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 5,
+            "gen": 123,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 90,
+            "pop": 26,
+            "births": 1966,
+            "withParts": 3,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 0,
+            "gen": 131,
+            "lagoons": [
+              {
+                "pop": 11,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 96,
+            "pop": 18,
+            "births": 2103,
+            "withParts": 12,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 1,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 0,
+            "gen": 140,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 6,
+                "eyed": 1
+              }
+            ]
+          },
+          {
+            "min": 102,
+            "pop": 13,
+            "births": 2213,
+            "withParts": 9,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 0,
+            "gen": 149,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 108,
+            "pop": 16,
+            "births": 2309,
+            "withParts": 6,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 0,
+            "gen": 155,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 114,
+            "pop": 12,
+            "births": 2384,
+            "withParts": 12,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 4,
+            "hidden": 2,
+            "gen": 159,
+            "lagoons": [
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 120,
+            "pop": 12,
+            "births": 2443,
+            "withParts": 12,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 7,
+            "gen": 166,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 7,
+                "eyed": 0
+              }
+            ]
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 12,
+          "births": 2443,
+          "withParts": 12,
+          "branched": 0,
+          "paddlers": 0,
+          "eyed": 0,
+          "mouthed": 0,
+          "maxParts": 2,
+          "hidden": 7,
+          "gen": 166,
+          "lagoons": [
+            {
+              "pop": 3,
+              "withParts": 3,
+              "eyed": 0
+            },
+            {
+              "pop": 2,
+              "withParts": 2,
+              "eyed": 0
+            },
+            {
+              "pop": 7,
+              "withParts": 7,
+              "eyed": 0
+            }
+          ]
+        },
+        "runPeaks": {
+          "maxEyedPct": 5.6,
+          "maxPaddlers": 0,
+          "maxParts": 4,
+          "maxPop": 32
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true,
+        "reseedingEvents_literalWithPartsDefinition": [
+          {
+            "lagoon": 0,
+            "extinctAtMin": 24,
+            "reappearedAtMin": 36
+          },
+          {
+            "lagoon": 0,
+            "extinctAtMin": 60,
+            "reappearedAtMin": 90
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 12,
+            "reappearedAtMin": 24
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 36,
+            "reappearedAtMin": 60
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 90,
+            "reappearedAtMin": 96
+          },
+          {
+            "lagoon": 2,
+            "extinctAtMin": 24,
+            "reappearedAtMin": 78
+          },
+          {
+            "lagoon": 2,
+            "extinctAtMin": 90,
+            "reappearedAtMin": 96
+          }
+        ],
+        "reseedingEvents_populationWipeoutDefinition": [
+          {
+            "lagoon": 0,
+            "wipedOutAtMin": 72,
+            "recolonizedAtMin": 78,
+            "structureImmediatelyPresent": false,
+            "structureWithin3SamplesAfter": true
+          },
+          {
+            "lagoon": 1,
+            "wipedOutAtMin": 36,
+            "recolonizedAtMin": 42,
+            "structureImmediatelyPresent": false,
+            "structureWithin3SamplesAfter": false
+          }
+        ]
+      },
+      {
+        "seed": 9002,
+        "dishId": "SOUP-Z72V-9N",
+        "elapsedMs": 77680,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 43,
+            "births": 353,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 1,
+            "gen": 12,
+            "lagoons": [
+              {
+                "pop": 14,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 15,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 14,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 12,
+            "pop": 36,
+            "births": 598,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 0,
+            "gen": 19,
+            "lagoons": [
+              {
+                "pop": 10,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 13,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 13,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 18,
+            "pop": 23,
+            "births": 819,
+            "withParts": 7,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 2,
+            "gen": 27,
+            "lagoons": [
+              {
+                "pop": 8,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 24,
+            "pop": 13,
+            "births": 960,
+            "withParts": 11,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 2,
+            "gen": 37,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 7,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 2,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 30,
+            "pop": 14,
+            "births": 1066,
+            "withParts": 14,
+            "branched": 10,
+            "paddlers": 0,
+            "eyed": 1,
+            "mouthed": 0,
+            "maxParts": 3,
+            "hidden": 10,
+            "gen": 45,
+            "lagoons": [
+              {
+                "pop": 7,
+                "withParts": 7,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 1
+              }
+            ]
+          },
+          {
+            "min": 36,
+            "pop": 6,
+            "births": 1134,
+            "withParts": 6,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 1,
+            "mouthed": 1,
+            "maxParts": 2,
+            "hidden": 6,
+            "gen": 51,
+            "lagoons": [
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 42,
+            "pop": 8,
+            "births": 1201,
+            "withParts": 7,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 7,
+            "gen": 59,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 48,
+            "pop": 8,
+            "births": 1260,
+            "withParts": 8,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 8,
+            "gen": 67,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 54,
+            "pop": 12,
+            "births": 1309,
+            "withParts": 11,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 8,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 12,
+            "gen": 72,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 3
+              },
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 3
+              },
+              {
+                "pop": 4,
+                "withParts": 3,
+                "eyed": 2
+              }
+            ]
+          },
+          {
+            "min": 60,
+            "pop": 8,
+            "births": 1351,
+            "withParts": 8,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 8,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 8,
+            "gen": 76,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 3
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 2
+              },
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 3
+              }
+            ]
+          },
+          {
+            "min": 66,
+            "pop": 19,
+            "births": 1397,
+            "withParts": 19,
+            "branched": 7,
+            "paddlers": 0,
+            "eyed": 19,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 19,
+            "gen": 83,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 5
+              },
+              {
+                "pop": 10,
+                "withParts": 10,
+                "eyed": 10
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 4
+              }
+            ]
+          },
+          {
+            "min": 72,
+            "pop": 4,
+            "births": 1444,
+            "withParts": 4,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 4,
+            "mouthed": 2,
+            "maxParts": 1,
+            "hidden": 4,
+            "gen": 90,
+            "lagoons": [
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 3
+              },
+              {
+                "pop": 0,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 78,
+            "pop": 9,
+            "births": 1516,
+            "withParts": 8,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 8,
+            "mouthed": 7,
+            "maxParts": 2,
+            "hidden": 9,
+            "gen": 99,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 2
+              },
+              {
+                "pop": 5,
+                "withParts": 4,
+                "eyed": 4
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 2
+              }
+            ]
+          },
+          {
+            "min": 84,
+            "pop": 12,
+            "births": 1571,
+            "withParts": 12,
+            "branched": 9,
+            "paddlers": 0,
+            "eyed": 12,
+            "mouthed": 12,
+            "maxParts": 2,
+            "hidden": 12,
+            "gen": 104,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 5
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 6
+              }
+            ]
+          },
+          {
+            "min": 90,
+            "pop": 8,
+            "births": 1637,
+            "withParts": 8,
+            "branched": 6,
+            "paddlers": 5,
+            "eyed": 8,
+            "mouthed": 8,
+            "maxParts": 2,
+            "hidden": 8,
+            "gen": 112,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 6
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              }
+            ]
+          },
+          {
+            "min": 96,
+            "pop": 7,
+            "births": 1683,
+            "withParts": 7,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 7,
+            "mouthed": 7,
+            "maxParts": 3,
+            "hidden": 7,
+            "gen": 119,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 2
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 4
+              }
+            ]
+          },
+          {
+            "min": 102,
+            "pop": 11,
+            "births": 1746,
+            "withParts": 11,
+            "branched": 5,
+            "paddlers": 1,
+            "eyed": 11,
+            "mouthed": 11,
+            "maxParts": 4,
+            "hidden": 11,
+            "gen": 125,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 5
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 2
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 4
+              }
+            ]
+          },
+          {
+            "min": 108,
+            "pop": 8,
+            "births": 1787,
+            "withParts": 8,
+            "branched": 1,
+            "paddlers": 1,
+            "eyed": 8,
+            "mouthed": 8,
+            "maxParts": 3,
+            "hidden": 8,
+            "gen": 132,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 3
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 4
+              }
+            ]
+          },
+          {
+            "min": 114,
+            "pop": 6,
+            "births": 1832,
+            "withParts": 6,
+            "branched": 3,
+            "paddlers": 3,
+            "eyed": 6,
+            "mouthed": 6,
+            "maxParts": 4,
+            "hidden": 6,
+            "gen": 138,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 4
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              }
+            ]
+          },
+          {
+            "min": 120,
+            "pop": 6,
+            "births": 1868,
+            "withParts": 6,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 6,
+            "mouthed": 6,
+            "maxParts": 2,
+            "hidden": 6,
+            "gen": 141,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 4
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 1
+              }
+            ]
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 6,
+          "births": 1868,
+          "withParts": 6,
+          "branched": 0,
+          "paddlers": 0,
+          "eyed": 6,
+          "mouthed": 6,
+          "maxParts": 2,
+          "hidden": 6,
+          "gen": 141,
+          "lagoons": [
+            {
+              "pop": 4,
+              "withParts": 4,
+              "eyed": 4
+            },
+            {
+              "pop": 1,
+              "withParts": 1,
+              "eyed": 1
+            },
+            {
+              "pop": 1,
+              "withParts": 1,
+              "eyed": 1
+            }
+          ]
+        },
+        "runPeaks": {
+          "maxEyedPct": 100.0,
+          "maxPaddlers": 5,
+          "maxParts": 4,
+          "maxPop": 43
+        },
+        "anySampleCompleteAnimal": true,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true,
+        "reseedingEvents_literalWithPartsDefinition": [
+          {
+            "lagoon": 2,
+            "extinctAtMin": 12,
+            "reappearedAtMin": 18
+          },
+          {
+            "lagoon": 2,
+            "extinctAtMin": 72,
+            "reappearedAtMin": 78
+          }
+        ],
+        "reseedingEvents_populationWipeoutDefinition": [
+          {
+            "lagoon": 2,
+            "wipedOutAtMin": 72,
+            "recolonizedAtMin": 78,
+            "structureImmediatelyPresent": true,
+            "structureWithin3SamplesAfter": true
+          }
+        ]
+      },
+      {
+        "seed": 9003,
+        "dishId": "SOUP-6E2P-FS",
+        "elapsedMs": 65547,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 39,
+            "births": 345,
+            "withParts": 8,
+            "branched": 5,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 7,
+            "gen": 12,
+            "lagoons": [
+              {
+                "pop": 10,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 14,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 15,
+                "withParts": 6,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 12,
+            "pop": 25,
+            "births": 519,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 2,
+            "gen": 22,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 18,
+            "pop": 14,
+            "births": 668,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 0,
+            "gen": 32,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 24,
+            "pop": 35,
+            "births": 877,
+            "withParts": 20,
+            "branched": 5,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 1,
+            "maxParts": 3,
+            "hidden": 6,
+            "gen": 43,
+            "lagoons": [
+              {
+                "pop": 13,
+                "withParts": 7,
+                "eyed": 0
+              },
+              {
+                "pop": 10,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 12,
+                "withParts": 9,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 30,
+            "pop": 29,
+            "births": 1103,
+            "withParts": 5,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 13,
+            "gen": 53,
+            "lagoons": [
+              {
+                "pop": 8,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 13,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 36,
+            "pop": 21,
+            "births": 1270,
+            "withParts": 8,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 2,
+            "maxParts": 2,
+            "hidden": 7,
+            "gen": 64,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 10,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 42,
+            "pop": 19,
+            "births": 1430,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 10,
+            "gen": 70,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 10,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 48,
+            "pop": 18,
+            "births": 1545,
+            "withParts": 4,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 4,
+            "gen": 80,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 54,
+            "pop": 15,
+            "births": 1652,
+            "withParts": 13,
+            "branched": 13,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 9,
+            "gen": 87,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 6,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 60,
+            "pop": 12,
+            "births": 1741,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 0,
+            "gen": 98,
+            "lagoons": [
+              {
+                "pop": 1,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 66,
+            "pop": 13,
+            "births": 1842,
+            "withParts": 5,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 2,
+            "gen": 110,
+            "lagoons": [
+              {
+                "pop": 8,
+                "withParts": 5,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 1,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 72,
+            "pop": 22,
+            "births": 1948,
+            "withParts": 10,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 0,
+            "gen": 114,
+            "lagoons": [
+              {
+                "pop": 7,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 10,
+                "withParts": 5,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 78,
+            "pop": 12,
+            "births": 2045,
+            "withParts": 2,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 0,
+            "gen": 120,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 2,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 84,
+            "pop": 16,
+            "births": 2147,
+            "withParts": 3,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 9,
+            "gen": 129,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 11,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 90,
+            "pop": 19,
+            "births": 2260,
+            "withParts": 5,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 6,
+            "gen": 137,
+            "lagoons": [
+              {
+                "pop": 10,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 96,
+            "pop": 16,
+            "births": 2355,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 7,
+            "gen": 144,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 102,
+            "pop": 14,
+            "births": 2446,
+            "withParts": 3,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 14,
+            "gen": 149,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 108,
+            "pop": 10,
+            "births": 2522,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 10,
+            "gen": 157,
+            "lagoons": [
+              {
+                "pop": 0,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 114,
+            "pop": 15,
+            "births": 2618,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 1,
+            "maxParts": 1,
+            "hidden": 15,
+            "gen": 163,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 0,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 120,
+            "pop": 7,
+            "births": 2680,
+            "withParts": 2,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 7,
+            "gen": 171,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 7,
+          "births": 2680,
+          "withParts": 2,
+          "branched": 1,
+          "paddlers": 0,
+          "eyed": 0,
+          "mouthed": 0,
+          "maxParts": 1,
+          "hidden": 7,
+          "gen": 171,
+          "lagoons": [
+            {
+              "pop": 4,
+              "withParts": 1,
+              "eyed": 0
+            },
+            {
+              "pop": 1,
+              "withParts": 1,
+              "eyed": 0
+            },
+            {
+              "pop": 2,
+              "withParts": 0,
+              "eyed": 0
+            }
+          ]
+        },
+        "runPeaks": {
+          "maxEyedPct": 0.0,
+          "maxPaddlers": 0,
+          "maxParts": 3,
+          "maxPop": 39
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true,
+        "reseedingEvents_literalWithPartsDefinition": [
+          {
+            "lagoon": 0,
+            "extinctAtMin": 12,
+            "reappearedAtMin": 24
+          },
+          {
+            "lagoon": 0,
+            "extinctAtMin": 42,
+            "reappearedAtMin": 48
+          },
+          {
+            "lagoon": 0,
+            "extinctAtMin": 60,
+            "reappearedAtMin": 66
+          },
+          {
+            "lagoon": 0,
+            "extinctAtMin": 78,
+            "reappearedAtMin": 90
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 12,
+            "reappearedAtMin": 24
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 60,
+            "reappearedAtMin": 72
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 78,
+            "reappearedAtMin": 84
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 102,
+            "reappearedAtMin": 114
+          },
+          {
+            "lagoon": 2,
+            "extinctAtMin": 42,
+            "reappearedAtMin": 54
+          },
+          {
+            "lagoon": 2,
+            "extinctAtMin": 66,
+            "reappearedAtMin": 72
+          }
+        ],
+        "reseedingEvents_populationWipeoutDefinition": [
+          {
+            "lagoon": 0,
+            "wipedOutAtMin": 108,
+            "recolonizedAtMin": 114,
+            "structureImmediatelyPresent": true,
+            "structureWithin3SamplesAfter": true
+          },
+          {
+            "lagoon": 2,
+            "wipedOutAtMin": 114,
+            "recolonizedAtMin": 120,
+            "structureImmediatelyPresent": false,
+            "structureWithin3SamplesAfter": false
+          }
+        ]
+      },
+      {
+        "seed": 9004,
+        "dishId": "SOUP-PZ5H-6W",
+        "elapsedMs": 46673,
+        "samples": [
+          {
+            "min": 6,
+            "pop": 37,
+            "births": 316,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 9,
+            "gen": 11,
+            "lagoons": [
+              {
+                "pop": 15,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 13,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 12,
+            "pop": 25,
+            "births": 513,
+            "withParts": 5,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 13,
+            "gen": 16,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 10,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 18,
+            "pop": 32,
+            "births": 706,
+            "withParts": 14,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 20,
+            "gen": 23,
+            "lagoons": [
+              {
+                "pop": 11,
+                "withParts": 7,
+                "eyed": 0
+              },
+              {
+                "pop": 17,
+                "withParts": 6,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 24,
+            "pop": 21,
+            "births": 849,
+            "withParts": 8,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 17,
+            "gen": 29,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 5,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 1,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 30,
+            "pop": 9,
+            "births": 963,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 9,
+            "gen": 36,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 1,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 36,
+            "pop": 18,
+            "births": 1062,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 18,
+            "gen": 44,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 11,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 42,
+            "pop": 29,
+            "births": 1194,
+            "withParts": 20,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 28,
+            "gen": 55,
+            "lagoons": [
+              {
+                "pop": 17,
+                "withParts": 10,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 7,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 48,
+            "pop": 17,
+            "births": 1298,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 17,
+            "gen": 62,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 54,
+            "pop": 11,
+            "births": 1386,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 11,
+            "gen": 70,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 60,
+            "pop": 17,
+            "births": 1459,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 17,
+            "gen": 77,
+            "lagoons": [
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 7,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 66,
+            "pop": 17,
+            "births": 1540,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 17,
+            "gen": 83,
+            "lagoons": [
+              {
+                "pop": 2,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 72,
+            "pop": 14,
+            "births": 1610,
+            "withParts": 1,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 14,
+            "gen": 88,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 0,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 0,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 78,
+            "pop": 14,
+            "births": 1684,
+            "withParts": 6,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 14,
+            "gen": 95,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 84,
+            "pop": 12,
+            "births": 1748,
+            "withParts": 11,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 12,
+            "gen": 99,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 2,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 90,
+            "pop": 14,
+            "births": 1824,
+            "withParts": 10,
+            "branched": 1,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 14,
+            "gen": 105,
+            "lagoons": [
+              {
+                "pop": 4,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 5,
+                "eyed": 0
+              },
+              {
+                "pop": 2,
+                "withParts": 2,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 96,
+            "pop": 14,
+            "births": 1913,
+            "withParts": 14,
+            "branched": 2,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 4,
+            "hidden": 14,
+            "gen": 111,
+            "lagoons": [
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 0
+              },
+              {
+                "pop": 8,
+                "withParts": 8,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 102,
+            "pop": 18,
+            "births": 2003,
+            "withParts": 17,
+            "branched": 7,
+            "paddlers": 0,
+            "eyed": 1,
+            "mouthed": 4,
+            "maxParts": 3,
+            "hidden": 18,
+            "gen": 118,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 3,
+                "eyed": 1
+              },
+              {
+                "pop": 9,
+                "withParts": 8,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 108,
+            "pop": 15,
+            "births": 2068,
+            "withParts": 15,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 3,
+            "hidden": 15,
+            "gen": 124,
+            "lagoons": [
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 0
+              },
+              {
+                "pop": 4,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 5,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 114,
+            "pop": 18,
+            "births": 2144,
+            "withParts": 16,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 18,
+            "gen": 131,
+            "lagoons": [
+              {
+                "pop": 9,
+                "withParts": 9,
+                "eyed": 0
+              },
+              {
+                "pop": 3,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 6,
+                "withParts": 6,
+                "eyed": 0
+              }
+            ]
+          },
+          {
+            "min": 120,
+            "pop": 15,
+            "births": 2216,
+            "withParts": 14,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 15,
+            "gen": 137,
+            "lagoons": [
+              {
+                "pop": 1,
+                "withParts": 1,
+                "eyed": 0
+              },
+              {
+                "pop": 5,
+                "withParts": 4,
+                "eyed": 0
+              },
+              {
+                "pop": 9,
+                "withParts": 9,
+                "eyed": 0
+              }
+            ]
+          }
+        ],
+        "finalSample": {
+          "min": 120,
+          "pop": 15,
+          "births": 2216,
+          "withParts": 14,
+          "branched": 6,
+          "paddlers": 0,
+          "eyed": 0,
+          "mouthed": 0,
+          "maxParts": 1,
+          "hidden": 15,
+          "gen": 137,
+          "lagoons": [
+            {
+              "pop": 1,
+              "withParts": 1,
+              "eyed": 0
+            },
+            {
+              "pop": 5,
+              "withParts": 4,
+              "eyed": 0
+            },
+            {
+              "pop": 9,
+              "withParts": 9,
+              "eyed": 0
+            }
+          ]
+        },
+        "runPeaks": {
+          "maxEyedPct": 5.6,
+          "maxPaddlers": 0,
+          "maxParts": 4,
+          "maxPop": 37
+        },
+        "anySampleCompleteAnimal": false,
+        "finalSampleCompleteAnimal": false,
+        "structurePersistsToFinal": true,
+        "reseedingEvents_literalWithPartsDefinition": [
+          {
+            "lagoon": 0,
+            "extinctAtMin": 36,
+            "reappearedAtMin": 42
+          },
+          {
+            "lagoon": 0,
+            "extinctAtMin": 48,
+            "reappearedAtMin": 72
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 36,
+            "reappearedAtMin": 42
+          },
+          {
+            "lagoon": 1,
+            "extinctAtMin": 72,
+            "reappearedAtMin": 78
+          },
+          {
+            "lagoon": 2,
+            "extinctAtMin": 48,
+            "reappearedAtMin": 78
+          }
+        ],
+        "reseedingEvents_populationWipeoutDefinition": []
+      }
+    ],
+    "summary": {
+      "structurePersistsToFinal": "4/4",
+      "finalSampleCompleteAnimal": "0/4",
+      "anySampleCompleteAnimal": "1/4",
+      "overallAvgPopAcross80Samples": 16.6,
+      "maxPopAnySampleAnySeed": 43,
+      "totalReseedingEvents_literalWithPartsDefinition": 24,
+      "totalReseedingEvents_populationWipeoutDefinition": 5,
+      "noteOnReseedingDefinitions": "Definition A (literal, per protocol wording: withParts_i 0->reappears while another lagoon has structure) fires very frequently because per-lagoon populations are tiny (1-17 individuals), so it is dominated by single-individual sampling noise. Definition B (stricter: pop_i itself hits true 0, an unambiguous local wipeout only reversible by cross-strait migration since dead lagoons cannot reproduce locally) is the scientifically load-bearing signal and is reported as primary; A is kept for completeness since the brief specified it literally.",
+      "noteOnSmallPopulations": "Arch's overall avg pop (16.6) is lower than both classic (24.4) and ocean (22.6) as expected from splitting founders across 3 lagoons -- any refugia benefit has to show up as persistence/survival, not raw counts, exactly as anticipated."
+    }
+  },
+  "comparisonToBaseline": {
+    "classic90MinReplication_studyC": {
+      "runs": [
+        {
+          "seed": 7001,
+          "finalSample": {
+            "min": 90,
+            "pop": 11,
+            "births": 3805,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 11,
+            "gen": 128
+          },
+          "runPeakEyedPct": 22.2,
+          "structurePersistsToFinal": false,
+          "finalSampleCompleteAnimal": false
+        },
+        {
+          "seed": 7002,
+          "finalSample": {
+            "min": 90,
+            "pop": 11,
+            "births": 1744,
+            "withParts": 3,
+            "branched": 3,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 7,
+            "gen": 119
+          },
+          "runPeakEyedPct": 12.9,
+          "structurePersistsToFinal": true,
+          "finalSampleCompleteAnimal": false
+        },
+        {
+          "seed": 7003,
+          "finalSample": {
+            "min": 90,
+            "pop": 16,
+            "births": 3998,
+            "withParts": 1,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 7,
+            "gen": 123
+          },
+          "runPeakEyedPct": 10.7,
+          "structurePersistsToFinal": true,
+          "finalSampleCompleteAnimal": false
+        },
+        {
+          "seed": 7004,
+          "finalSample": {
+            "min": 90,
+            "pop": 10,
+            "births": 1721,
+            "withParts": 0,
+            "branched": 0,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 0,
+            "hidden": 8,
+            "gen": 124
+          },
+          "runPeakEyedPct": 0.0,
+          "structurePersistsToFinal": false,
+          "finalSampleCompleteAnimal": false
+        },
+        {
+          "seed": 7005,
+          "finalSample": {
+            "min": 90,
+            "pop": 14,
+            "births": 3501,
+            "withParts": 11,
+            "branched": 6,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 2,
+            "hidden": 14,
+            "gen": 131
+          },
+          "runPeakEyedPct": 21.1,
+          "structurePersistsToFinal": true,
+          "finalSampleCompleteAnimal": false
+        },
+        {
+          "seed": 7006,
+          "finalSample": {
+            "min": 90,
+            "pop": 16,
+            "births": 3205,
+            "withParts": 5,
+            "branched": 4,
+            "paddlers": 0,
+            "eyed": 0,
+            "mouthed": 0,
+            "maxParts": 1,
+            "hidden": 16,
+            "gen": 124
+          },
+          "runPeakEyedPct": 65.4,
+          "structurePersistsToFinal": true,
+          "finalSampleCompleteAnimal": false
+        }
+      ],
+      "structurePersistsToFinalMin90": "4/6",
+      "finalSampleCompleteAnimal": "0/6",
+      "overallAvgPopAcross120Samples": 24.4
+    },
+    "crownRun_60606_180Min": {
+      "avgPop": 33.5,
+      "goldenAgeWindow": "eyed% stayed >=85% from min54 to min144 (a ~90 minute run, peaking 100% at several samples), then collapsed to 0% eyed by min162 and stayed collapsed through min180 despite population and generation count continuing to climb."
+    }
+  },
+  "verdict": "Refugia (archipelago) shows real, if modest, benefit for persistence; population size alone (ocean) does not help and the 'large population' premise itself was not achieved in practice. See chat report for full paragraph."
+}
