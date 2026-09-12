@@ -687,6 +687,22 @@ function applyGrowth(c){
   c.segShl=(c.sgShlB||0)*f;
   if(c.energy>c.cap)c.energy=c.cap;
 }
+
+window.__FIT = null;
+function fitReset(){ window.__FIT = {bins:{}, kills:0, births:0, deaths:0}; }
+function fitRecord(c){
+  const F=window.__FIT; if(!F) return;
+  if((c.gen|0)<=1) return;                      // founders excluded: they never had a birth genome
+  const sg=c.sg||[]; const n=sg.length;
+  let eyeMax=0; for(const o of sg) if(o.eye>eyeMax) eyeMax=o.eye;
+  const body = n===0?'0':(n>=3?'3+':String(n));
+  const eye  = n===0?'-':(eyeMax>0.4?'eye':'noeye');
+  const k = body+'/'+eye;
+  const b = F.bins[k] || (F.bins[k]={n:0,kids:0,age:0,ateA:0,ateM:0,eyeSum:0,parts:0});
+  b.n++; b.kids+=(c.kids|0); b.age+=c.age; b.ateA+=(c.ateA||0); b.ateM+=(c.ateM||0);
+  b.eyeSum+=eyeMax; b.parts+=n;
+  F.deaths++; if(c.killed) F.kills++;
+}
 function applySegs(c,sg){
   sg=sg||[];
   for(let i=0;i<sg.length;i++){
@@ -895,6 +911,7 @@ function makeCreature(g,x,y,energy,gen){
           guardId:0, guardEgg:0, guardUntil:-1,
           br:freshBrain(0.05), wsum:0, thrustMod:1, m0:0, m1:0, lastCall:0,
           sg:[], trail:[], segBurn:1, segThr:1, segTurn:1, segMass:1, segSpk:0, segShl:0,
+    ateA:0, ateM:0,
           sgBurnB:1, sgThrB:1, sgTurnB:1, sgMassB:1, sgSpkB:0, sgShlB:0, gk:1, bh:0, kills:0};
   applyGrowth(c);
   return c;
@@ -1496,7 +1513,7 @@ function step(dt){
         if(a.eaten)continue;
         if((a.x-noseX)**2+(a.y-noseY)**2<rr){
           a.eaten=true;
-          c.energy+=ALGAE_E*Math.pow(g.enzA,1.3)*0.98*((c.par&&c.par.vir<0.12)?1.06:1);
+          {const _g=ALGAE_E*Math.pow(g.enzA,1.3)*0.98*((c.par&&c.par.vir<0.12)?1.06:1); c.energy+=_g; c.ateA+=_g;}
           if(c.energy>=c.cap){c.energy=c.cap;break;}
         }
       }
@@ -1512,7 +1529,7 @@ function step(dt){
           if(a.eaten)continue;
           if((a.x-mx)**2+(a.y-my)**2<mr){
             a.eaten=true;
-            c.energy+=ALGAE_E*Math.pow(g.enzA,1.3)*0.98*eff*((c.par&&c.par.vir<0.12)?1.06:1);
+            {const _g=ALGAE_E*Math.pow(g.enzA,1.3)*0.98*eff*((c.par&&c.par.vir<0.12)?1.06:1); c.energy+=_g; c.ateA+=_g;}
             if(c.energy>=c.cap){c.energy=c.cap;break;}
           }
         }
@@ -1560,7 +1577,7 @@ function step(dt){
         if(g.size*(c.gk||1)*(1+0.35*g.jaw)>1.2*meal.g.size*(meal.gk||1)*(1+0.55*meal.g.shell)*(1+0.35*(meal.segShl||0))){
           meal.dead=true; meal.killed=true; deaths++; dKill++; c.kills=(c.kills||0)+1; c.lock=null; c.lockT=0;
           const flesh=(meal.energy*0.8+meal.cap*0.7)*(0.1+0.9*Math.pow(g.enzB,1.6))*((c.par&&c.par.vir<0.12)?1.06:1);
-          c.energy=Math.min(c.cap,c.energy+flesh);
+          {const _b=c.energy; c.energy=Math.min(c.cap,c.energy+flesh); c.ateM+=(c.energy-_b);}
           const mspk=meal.g.spike+0.6*(meal.segSpk||0);
           if(mspk>0.05)c.energy-=mspk*meal.g.size*(meal.gk||1)*14;
           if(meal.par&&!c.par&&rnd()<0.75*(1-g.immune*0.7))c.par={vir:clamp(meal.par.vir+gauss()*0.08,0.05,1)};
@@ -1656,7 +1673,7 @@ function step(dt){
   }
   if(newborns.length)creatures.push(...newborns);
   let w=0;
-  for(const c of creatures)if(!c.dead)creatures[w++]=c;
+  for(const c of creatures){ if(c.dead) fitRecord(c); else creatures[w++]=c; }
   creatures.length=w;
   w=0;
   for(const a of algae)if(!a.eaten)algae[w++]=a;
@@ -2498,7 +2515,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.41.1';
+const APP_V='1.42';
 const SAVE_KEY='primordialSoup.save';
 const MAX_SHELF=4;
 let shelfSlot=0, shelfPending=null;

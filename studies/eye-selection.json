@@ -1,0 +1,704 @@
+{
+ "study": "THE SELECTION COEFFICIENT OF THE EYE",
+ "runDate": "2026-09-12",
+ "gameVersion": "v1.42",
+ "question": "Does vision confer any fitness advantage at all, and does the food landscape carry enough spatial structure for vision to exploit?",
+ "method": {
+  "world": "WORLD=3, R=1002, equilibrium population 160 to 190",
+  "seeds": [
+   60606,
+   1001,
+   1002,
+   1003,
+   1004,
+   1005
+  ],
+  "stop": "maxGen>=400; every run stopped on generations, about 308 simulated minutes each",
+  "ledger": "every creature born in the run is recorded once, at death, with its lifetime offspring, lifespan, and energy eaten split into algae and flesh. Founders are excluded. Body classification is fixed at birth because sg never changes during life.",
+  "fitness": "lifetime reproductive success, offspring per individual BORN, so creatures that die young with no offspring are counted. Confidence intervals are Poisson on the offspring count.",
+  "individualsRecorded": 396109,
+  "geometryGuard": "tick refused to run unless R===1002"
+ },
+ "bins": {
+  "0/-": {
+   "n": 335719,
+   "lifetimeOffspring": 1.476,
+   "ci95": 0.0041,
+   "meanLifespan": 54.9,
+   "meanAlgaeEaten": 2220,
+   "meanMeatEaten": 5.1
+  },
+  "1/noeye": {
+   "n": 54309,
+   "lifetimeOffspring": 0.8808,
+   "ci95": 0.0079,
+   "meanLifespan": 52.2,
+   "meanAlgaeEaten": 1718,
+   "meanMeatEaten": 3.6
+  },
+  "1/eye": {
+   "n": 1080,
+   "lifetimeOffspring": 0.8593,
+   "ci95": 0.0553,
+   "meanLifespan": 51.5,
+   "meanAlgaeEaten": 1682,
+   "meanMeatEaten": 2.8
+  },
+  "2/noeye": {
+   "n": 4540,
+   "lifetimeOffspring": 0.5361,
+   "ci95": 0.0213,
+   "meanLifespan": 48.7,
+   "meanAlgaeEaten": 1438,
+   "meanMeatEaten": 1.9
+  },
+  "2/eye": {
+   "n": 144,
+   "lifetimeOffspring": 0.5208,
+   "ci95": 0.1179,
+   "meanLifespan": 45.0,
+   "meanAlgaeEaten": 1174,
+   "meanMeatEaten": 0.1
+  },
+  "3+/noeye": {
+   "n": 303,
+   "lifetimeOffspring": 0.4983,
+   "ci95": 0.0795,
+   "meanLifespan": 44.7,
+   "meanAlgaeEaten": 1193,
+   "meanMeatEaten": 3.5
+  },
+  "3+/eye": {
+   "n": 14,
+   "lifetimeOffspring": 0.2857,
+   "ci95": 0.28,
+   "meanLifespan": 38.2,
+   "meanAlgaeEaten": 754,
+   "meanMeatEaten": 0.0
+  }
+ },
+ "selectionCoefficients": {
+  "eyeAtOnePart": {
+   "s_pct": -2.4,
+   "ci95_pct": 6.3,
+   "verdict": "indistinguishable from zero"
+  },
+  "eyeAtTwoParts": {
+   "s_pct": -2.9,
+   "ci95_pct": 22.3,
+   "verdict": "indistinguishable from zero"
+  },
+  "onePartVsBodiless": {
+   "s_pct": -40.3,
+   "ci95_pct": 0.6,
+   "verdict": "overwhelming, about 130 standard errors"
+  },
+  "twoPartsVsBodiless": {
+   "s_pct": -63.7,
+   "ci95_pct": 1.4,
+   "verdict": "overwhelming"
+  },
+  "threePlusVsBodiless": {
+   "s_pct": -66.2,
+   "ci95_pct": 5.4,
+   "verdict": "overwhelming"
+  }
+ },
+ "answerToTheQuestionAsked": {
+  "doesVisionPay": "No. At one body part, where the eyed sample is largest at 1,080 individuals, an eye changes lifetime reproductive success by -2.4 percent with a 95 percent interval of plus or minus 6.3. At two parts it is -2.9 percent plus or minus 22.3. The eye is neutral, with a hint of a cost and no hint of a benefit.",
+  "doesTheLandscapeCarryStructure": "Yes, and this refutes the hypothesis the study was built on. Algae counts on a 100 pixel grid have a variance to mean ratio of 3.89, ranging 1.6 to 8.6 across seeds, against 1.0 for a uniform random field. The food is genuinely patchy. The world is not short of information.",
+  "soWhyIsTheEyeWorthless": "Because it is not wired to food. At index.html line 1251 algae are detected with plain sense and no eye term at all. At line 1274 the eye extends PREY detection by 1.5x linear, gated by a cone test, and line 1267 widens the creature grid query the same way. The eye's entire benefit flows through the prey channel, and the prey channel supplies 0.23 percent of lifetime energy. Predation is not rare in these worlds, 8.5 percent of all deaths are kills and the appetite gene sits at 0.76 carnivore, but flesh is a rounding error in the energy budget. Vision is an organ for reading a channel that carries almost no calories."
+ },
+ "theLargerFinding": {
+  "headline": "A single body part costs 40.3 percent of lifetime reproductive success, plus or minus 0.6.",
+  "detail": "Bodiless creatures average 1.476 offspring, one part 0.881, two parts 0.536, three or more 0.498. With 335,719 bodiless and 54,309 one part individuals this is about 130 standard errors, the least ambiguous measurement this project has ever made.",
+  "mechanism": "The designed cost is 10 percent metabolism per part, set in sgBurnB. The realised cost is four times that because parts do not only burn more, they eat less: bodied creatures take in 1,718 energy over a lifetime against 2,220 bodiless, 23 percent less, and they live shorter, 52.2 against 54.9. Parts reduce turning and raise mass, so a bodied creature forages worse. The rent was only ever priced against the metabolic half of its own cost.",
+  "whyThisWasNeverSeen": "v1.33 lowered segment rent from 26 to 10 percent using measurements taken at a population near thirty, where the drift barrier is about 4 percent and a 40 percent coefficient was still invisible under the noise. Three studies in a row now point at the same root cause: this project tuned its economy in a regime where it could not see its own selection."
+ },
+ "predictionForTheNextExperiment": {
+  "change": "Give the algae channel the same eye term the prey channel already has, so an eye extends food detection by 1.5x linear as it extends prey detection.",
+  "why": "Mean sense range is 113 pixels and mean algae spacing is 140, so a creature typically cannot see even one alga. Extending to about 170 pixels covers 2.25x the area, taking expected algae in range from roughly 0.65 to 1.46.",
+  "preregisteredCriterion": "Against a 4 percent metabolic cost that should be strongly positive. The prediction, recorded before the run: s for the eye at one part rises above +10 percent with a 95 percent interval excluding zero, and eyed share rises above 50 percent and holds 100 generations in a majority of six seeds at WORLD 3.",
+  "falsifier": "If s stays at zero after wiring the eye to food, the problem is not the wiring and the whole vision line should be abandoned in favour of the body cost."
+ },
+ "honestLimitations": [
+  "Six seeds, one machine, and cross machine determinism is known broken since v1.40.",
+  "The eyed samples are small where the bodies are large: 1,080 at one part, 144 at two, 14 at three or more. Only the one part comparison carries real weight.",
+  "Eyed and eyeless creatures are not randomised, they are whatever mutation produced, so the eye comparison is observational and could carry genetic background with it. The body comparison is large enough that this hardly matters; the eye comparison would be cleaner with a seeded release of matched genomes.",
+  "Lifetime reproductive success ignores offspring quality and any grandchild effects."
+ ],
+ "raw": {
+  "pooled": {
+   "0/-": {
+    "n": 335719,
+    "kids": 495514,
+    "age": 18419424,
+    "ateA": 745405908.2,
+    "ateM": 1727820.8
+   },
+   "1/noeye": {
+    "n": 54309,
+    "kids": 47837,
+    "age": 2832861.1,
+    "ateA": 93306487.8,
+    "ateM": 197472.2
+   },
+   "2/noeye": {
+    "n": 4540,
+    "kids": 2434,
+    "age": 221023,
+    "ateA": 6527013.4,
+    "ateM": 8516.5
+   },
+   "1/eye": {
+    "n": 1080,
+    "kids": 928,
+    "age": 55667.7,
+    "ateA": 1817009.5,
+    "ateM": 2996
+   },
+   "3+/noeye": {
+    "n": 303,
+    "kids": 151,
+    "age": 13555.3,
+    "ateA": 361337,
+    "ateM": 1063
+   },
+   "2/eye": {
+    "n": 144,
+    "kids": 75,
+    "age": 6478,
+    "ateA": 168988.5,
+    "ateM": 16.1
+   },
+   "3+/eye": {
+    "n": 14,
+    "kids": 4,
+    "age": 535.3,
+    "ateA": 10556.3,
+    "ateM": 0
+   }
+  },
+  "perSeed": [
+   {
+    "seed": 60606,
+    "gen": 400,
+    "min": 312,
+    "pop": 166,
+    "dKill": 5586,
+    "dStarveYoung": 14110,
+    "dStarveAdult": 32728,
+    "dAge": 15614,
+    "recorded": 67490,
+    "food": {
+     "cells": 316,
+     "algae": 226,
+     "meanPerCell": 0.709,
+     "varianceToMean": 3.336
+    },
+    "sense": {
+     "meanSense": 122,
+     "minSense": 68,
+     "maxSense": 210
+    },
+    "diet": {
+     "meanDiet": 0.71,
+     "carnivoreShare": 0.813
+    },
+    "bins": {
+     "0/-": {
+      "n": 57661,
+      "kids": 83430,
+      "age": 3209120.9666667073,
+      "ateA": 124265011.98749802,
+      "ateM": 272763.5195299197,
+      "eyeSum": 0,
+      "parts": 0
+     },
+     "1/noeye": {
+      "n": 8889,
+      "kids": 7243,
+      "age": 471228.5500000009,
+      "ateA": 15228977.576510841,
+      "ateM": 31166.394029125266,
+      "eyeSum": 263.5820280771408,
+      "parts": 8889
+     },
+     "2/noeye": {
+      "n": 685,
+      "kids": 335,
+      "age": 35121.95000000038,
+      "ateA": 1040209.1800207219,
+      "ateM": 1734.7728896173976,
+      "eyeSum": 30.143591982410843,
+      "parts": 1370
+     },
+     "1/eye": {
+      "n": 192,
+      "kids": 160,
+      "age": 11314.483333333426,
+      "ateA": 409195.23373462155,
+      "ateM": 1090.4080989721147,
+      "eyeSum": 106.39200757297597,
+      "parts": 192
+     },
+     "3+/noeye": {
+      "n": 44,
+      "kids": 14,
+      "age": 2348.6166666666754,
+      "ateA": 69693.07780471146,
+      "ateM": 0,
+      "eyeSum": 3.0417542405056124,
+      "parts": 132
+     },
+     "2/eye": {
+      "n": 19,
+      "kids": 6,
+      "age": 732.9166666667141,
+      "ateA": 24543.46771548682,
+      "ateM": 13.129598465265587,
+      "eyeSum": 10.495840893845113,
+      "parts": 38
+     }
+    }
+   },
+   {
+    "seed": 1001,
+    "gen": 401,
+    "min": 306,
+    "pop": 164,
+    "dKill": 5410,
+    "dStarveYoung": 13080,
+    "dStarveAdult": 31494,
+    "dAge": 14858,
+    "recorded": 64264,
+    "food": {
+     "cells": 316,
+     "algae": 236,
+     "meanPerCell": 0.725,
+     "varianceToMean": 8.59
+    },
+    "sense": {
+     "meanSense": 106,
+     "minSense": 57,
+     "maxSense": 198
+    },
+    "diet": {
+     "meanDiet": 0.708,
+     "carnivoreShare": 0.811
+    },
+    "bins": {
+     "0/-": {
+      "n": 54673,
+      "kids": 78345,
+      "age": 3062678.500000036,
+      "ateA": 123830001.57151473,
+      "ateM": 309338.76062106574,
+      "eyeSum": 0,
+      "parts": 0
+     },
+     "2/noeye": {
+      "n": 681,
+      "kids": 320,
+      "age": 33235.583333333234,
+      "ateA": 1000814.6633584534,
+      "ateM": 1049.0632775269512,
+      "eyeSum": 30.947015733431247,
+      "parts": 1362
+     },
+     "1/noeye": {
+      "n": 8693,
+      "kids": 7171,
+      "age": 469673.6500000033,
+      "ateA": 16101275.50159159,
+      "ateM": 29083.67245858388,
+      "eyeSum": 255.3486536865281,
+      "parts": 8693
+     },
+     "1/eye": {
+      "n": 180,
+      "kids": 157,
+      "age": 9747.983333333264,
+      "ateA": 340329.1681918278,
+      "ateM": 221.52689805168274,
+      "eyeSum": 100.57699003871159,
+      "parts": 180
+     },
+     "3+/noeye": {
+      "n": 22,
+      "kids": 1,
+      "age": 1002.7000000000005,
+      "ateA": 21664.059547015757,
+      "ateM": 0,
+      "eyeSum": 1.1492074857063852,
+      "parts": 68
+     },
+     "2/eye": {
+      "n": 15,
+      "kids": 5,
+      "age": 687.9166666667023,
+      "ateA": 15261.09704626977,
+      "ateM": 0,
+      "eyeSum": 8.559541415939027,
+      "parts": 30
+     }
+    }
+   },
+   {
+    "seed": 1002,
+    "gen": 400,
+    "min": 307,
+    "pop": 162,
+    "dKill": 5846,
+    "dStarveYoung": 14573,
+    "dStarveAdult": 32363,
+    "dAge": 15264,
+    "recorded": 67485,
+    "food": {
+     "cells": 316,
+     "algae": 118,
+     "meanPerCell": 0.37,
+     "varianceToMean": 1.638
+    },
+    "sense": {
+     "meanSense": 110,
+     "minSense": 60,
+     "maxSense": 174
+    },
+    "diet": {
+     "meanDiet": 0.698,
+     "carnivoreShare": 0.747
+    },
+    "bins": {
+     "0/-": {
+      "n": 56941,
+      "kids": 86522,
+      "age": 3159004.133333381,
+      "ateA": 123041393.82153256,
+      "ateM": 286675.26916288835,
+      "eyeSum": 0,
+      "parts": 0
+     },
+     "1/noeye": {
+      "n": 9450,
+      "kids": 8947,
+      "age": 496014.51666666573,
+      "ateA": 15818497.170257945,
+      "ateM": 33408.54759915798,
+      "eyeSum": 295.2952111083813,
+      "parts": 9450
+     },
+     "2/noeye": {
+      "n": 802,
+      "kids": 416,
+      "age": 39556.116666666814,
+      "ateA": 1062102.3194218588,
+      "ateM": 1766.6775579398416,
+      "eyeSum": 37.97405484388993,
+      "parts": 1604
+     },
+     "1/eye": {
+      "n": 204,
+      "kids": 211,
+      "age": 10678.8,
+      "ateA": 296716.397109388,
+      "ateM": 194.18472408703863,
+      "eyeSum": 116.55297488826119,
+      "parts": 204
+     },
+     "2/eye": {
+      "n": 33,
+      "kids": 11,
+      "age": 1221.6833333333254,
+      "ateA": 29696.67783834119,
+      "ateM": 0,
+      "eyeSum": 19.92316098153643,
+      "parts": 66
+     },
+     "3+/noeye": {
+      "n": 52,
+      "kids": 34,
+      "age": 2527.7666666666382,
+      "ateA": 59388.54180561279,
+      "ateM": 55.299181417886984,
+      "eyeSum": 3.0581348006885634,
+      "parts": 162
+     },
+     "3+/eye": {
+      "n": 3,
+      "kids": 0,
+      "age": 135.98333333332855,
+      "ateA": 3191.1497407787183,
+      "ateM": 0,
+      "eyeSum": 1.4118759254130169,
+      "parts": 9
+     }
+    }
+   },
+   {
+    "seed": 1003,
+    "gen": 400,
+    "min": 313,
+    "pop": 173,
+    "dKill": 5840,
+    "dStarveYoung": 13935,
+    "dStarveAdult": 31834,
+    "dAge": 14159,
+    "recorded": 65222,
+    "food": {
+     "cells": 316,
+     "algae": 121,
+     "meanPerCell": 0.38,
+     "varianceToMean": 2.854
+    },
+    "sense": {
+     "meanSense": 120,
+     "minSense": 43,
+     "maxSense": 184
+    },
+    "diet": {
+     "meanDiet": 0.706,
+     "carnivoreShare": 0.798
+    },
+    "bins": {
+     "0/-": {
+      "n": 56069,
+      "kids": 83274,
+      "age": 3067554.750000055,
+      "ateA": 125833865.69837703,
+      "ateM": 289040.277591527,
+      "eyeSum": 0,
+      "parts": 0
+     },
+     "1/noeye": {
+      "n": 8388,
+      "kids": 6808,
+      "age": 431707.7166666674,
+      "ateA": 14237854.94892529,
+      "ateM": 31404.623279029965,
+      "eyeSum": 222.52204465920315,
+      "parts": 8388
+     },
+     "2/noeye": {
+      "n": 600,
+      "kids": 256,
+      "age": 28554.333333333307,
+      "ateA": 792139.5981044566,
+      "ateM": 2039.7145319692631,
+      "eyeSum": 24.124488844997323,
+      "parts": 1200
+     },
+     "1/eye": {
+      "n": 133,
+      "kids": 76,
+      "age": 5991.933333333336,
+      "ateA": 192351.75122794294,
+      "ateM": 0,
+      "eyeSum": 74.87506654642947,
+      "parts": 133
+     },
+     "3+/noeye": {
+      "n": 21,
+      "kids": 6,
+      "age": 730.98333333333,
+      "ateA": 20909.622762262654,
+      "ateM": 0,
+      "eyeSum": 1.369192746999741,
+      "parts": 63
+     },
+     "2/eye": {
+      "n": 11,
+      "kids": 0,
+      "age": 375.8666666666919,
+      "ateA": 7111.008669328945,
+      "ateM": 2.9309638377279086,
+      "eyeSum": 6.059621655935737,
+      "parts": 22
+     }
+    }
+   },
+   {
+    "seed": 1004,
+    "gen": 401,
+    "min": 304,
+    "pop": 181,
+    "dKill": 6247,
+    "dStarveYoung": 17385,
+    "dStarveAdult": 34298,
+    "dAge": 15194,
+    "recorded": 72556,
+    "food": {
+     "cells": 316,
+     "algae": 147,
+     "meanPerCell": 0.459,
+     "varianceToMean": 4.679
+    },
+    "sense": {
+     "meanSense": 114,
+     "minSense": 45,
+     "maxSense": 179
+    },
+    "diet": {
+     "meanDiet": 0.681,
+     "carnivoreShare": 0.729
+    },
+    "bins": {
+     "0/-": {
+      "n": 61511,
+      "kids": 91414,
+      "age": 3249702.4666666924,
+      "ateA": 116390732.17851754,
+      "ateM": 269634.0312479014,
+      "eyeSum": 0,
+      "parts": 0
+     },
+     "1/noeye": {
+      "n": 9926,
+      "kids": 8850,
+      "age": 502951.6666666672,
+      "ateA": 14211276.557226658,
+      "ateM": 42062.24964306064,
+      "eyeSum": 285.7154155316299,
+      "parts": 9926
+     },
+     "2/noeye": {
+      "n": 815,
+      "kids": 411,
+      "age": 39723.51666666684,
+      "ateA": 1036370.2412119395,
+      "ateM": 1387.2722471495385,
+      "eyeSum": 35.780960159983266,
+      "parts": 1630
+     },
+     "3+/noeye": {
+      "n": 57,
+      "kids": 19,
+      "age": 2284.950000000019,
+      "ateA": 65305.93479956859,
+      "ateM": 765.0945783838022,
+      "eyeSum": 3.699743768970453,
+      "parts": 174
+     },
+     "1/eye": {
+      "n": 200,
+      "kids": 177,
+      "age": 8837.683333333174,
+      "ateA": 231470.55048959158,
+      "ateM": 81.54107938239883,
+      "eyeSum": 114.18418956030868,
+      "parts": 200
+     },
+     "2/eye": {
+      "n": 44,
+      "kids": 37,
+      "age": 2330.099999999998,
+      "ateA": 66320.71676938691,
+      "ateM": 0,
+      "eyeSum": 28.410743300401325,
+      "parts": 88
+     },
+     "3+/eye": {
+      "n": 3,
+      "kids": 0,
+      "age": 35.06666666666699,
+      "ateA": 199.3961742911266,
+      "ateM": 0,
+      "eyeSum": 1.8139364018637207,
+      "parts": 9
+     }
+    }
+   },
+   {
+    "seed": 1005,
+    "gen": 400,
+    "min": 306,
+    "pop": 191,
+    "dKill": 4855,
+    "dStarveYoung": 13528,
+    "dStarveAdult": 28276,
+    "dAge": 12994,
+    "recorded": 59092,
+    "food": {
+     "cells": 316,
+     "algae": 121,
+     "meanPerCell": 0.37,
+     "varianceToMean": 2.237
+    },
+    "sense": {
+     "meanSense": 106,
+     "minSense": 38,
+     "maxSense": 205
+    },
+    "diet": {
+     "meanDiet": 0.647,
+     "carnivoreShare": 0.644
+    },
+    "bins": {
+     "0/-": {
+      "n": 48864,
+      "kids": 72529,
+      "age": 2671363.1500000223,
+      "ateA": 132044902.91905065,
+      "ateM": 300368.9355813178,
+      "eyeSum": 0,
+      "parts": 0
+     },
+     "1/noeye": {
+      "n": 8963,
+      "kids": 8818,
+      "age": 461284.9999999984,
+      "ateA": 17708606.063231543,
+      "ateM": 30346.715902345473,
+      "eyeSum": 324.3179788147571,
+      "parts": 8963
+     },
+     "2/noeye": {
+      "n": 957,
+      "kids": 696,
+      "age": 44831.533333333384,
+      "ateA": 1595377.3591816444,
+      "ateM": 539.0136103449655,
+      "eyeSum": 69.38790228343085,
+      "parts": 1914
+     },
+     "3+/noeye": {
+      "n": 107,
+      "kids": 77,
+      "age": 4660.333333333307,
+      "ateA": 124375.78595310386,
+      "ateM": 242.6536323631471,
+      "eyeSum": 17.58901483930225,
+      "parts": 324
+     },
+     "1/eye": {
+      "n": 171,
+      "kids": 147,
+      "age": 9096.799999999927,
+      "ateA": 346946.4205677965,
+      "ateM": 1408.3573959850455,
+      "eyeSum": 93.40562227479748,
+      "parts": 171
+     },
+     "2/eye": {
+      "n": 22,
+      "kids": 16,
+      "age": 1129.5333333332983,
+      "ateA": 26055.550846411796,
+      "ateM": 0,
+      "eyeSum": 11.482741989006168,
+      "parts": 44
+     },
+     "3+/eye": {
+      "n": 8,
+      "kids": 4,
+      "age": 364.2333333333203,
+      "ateA": 7165.72186933388,
+      "ateM": 0,
+      "eyeSum": 6.008481708375536,
+      "parts": 24
+     }
+    }
+   }
+  ]
+ }
+}
