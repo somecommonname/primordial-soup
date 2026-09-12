@@ -64,6 +64,44 @@
     <li><b>One file.</b> The whole universe stays readable in one sitting.</li>
   </ol>
 
+  <h2>THE ROUTE AHEAD <span style="font-weight:400;letter-spacing:0.1em">· three horizons</span></h2>
+  <p>Rewritten 2026-09-11. The old NEXT and LATER lists were retired because seven of their ten items had already shipped: WebGL in v1.24, the boards and callsigns in v1.25, Amber alongside them, brains in v1.31, morphology across v1.11 to v1.36. What follows is what is actually left.</p>
+
+  <h3>Horizon one · the persistence frontier</h3>
+  <p><b>A world can make a complex animal but cannot keep one.</b> Every world grows multi part bodies, and every world gives them back. The argument and the three candidate levers are in design/DESIGN-PERSISTENCE.md.</p>
+  <ul>
+    <li><span class="tier">NOW</span><b>Necessity, as the Garden</b>: give the algae genomes, so the food supply coevolves and the world stops being solvable. Promoted to the front of the queue by the v1.40 result: the eye, not the branch, is what worlds cannot hold.</li>
+    <li><span class="tier">NOW</span><b>A heritable longevity gene</b>: the breeder's line proved lifespan was never in the genome, so passaging could not select for it. Longevity against fertility or metabolism, measured like everything else.</li>
+    <li><span class="tier later">NEXT</span><b>The peacock ratchet</b>: heritable mate preference weighing display against rent. Third as ranked, because its success mode is instability and these populations are small.</li>
+    <li><span class="tier later">NEXT</span><b>Entanglement, recalibrated</b>: shipped dormant in v1.40 after failing its prewritten test at a half life of twenty generations. A sweep would tell us whether that was the wrong mechanism or the wrong dial.</li>
+    <li><span class="tier later">NEXT</span><b>The Paper, fourth edition</b>: six studies since the third are written up nowhere but in studies/.</li>
+  </ul>
+
+  <h3>Horizon two · the ladder of individuality</h3>
+  <p>Persistence is a floor; these are the rungs the Body Mountain did not reach, and each is a transition in what counts as an individual.</p>
+  <ul>
+    <li><span class="tier later">NEXT</span><b>Symbiosis, made structural</b>: section 3.6 already shows parasites walking down into mutualists. Let one creature live inside another and the largest event in the history of life becomes available in a petri dish.</li>
+    <li><span class="tier later">LATER</span><b>Multicellularity</b>: offspring that do not detach, colonies, division of labour. The Body Mountain climbed individuality within one body; this climbs it above one.</li>
+    <li><span class="tier later">LATER</span><b>Culture that amplifies</b>: calls, scent, and memory all exist and meaning stays a faint hum. Learning within a lifetime would give the dish a second inheritance channel, faster than genes.</li>
+  </ul>
+
+  <h3>Horizon three · what it becomes</h3>
+  <ul>
+    <li><span class="tier later">LATER</span><b>The boards, live</b>: built, security reviewed, and dark. BOARDS_URL is empty and the 🌐 button hides itself. Until it deploys, the project's loudest open question, what players find that test dishes did not, cannot be asked at all.</li>
+    <li><span class="tier later">LATER</span><b>The menu-bar pet</b>: a native always-on dish (Tauri) in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.</li>
+    <li><span class="tier later">LATER</span><b>The Classroom, taken seriously</b>: six seeded experiments already ship, and every student gets a bit identical dish, which turns a class into real replicates.</li>
+    <li><span class="tier later">LATER</span><b>The Paper, submitted</b>: fifteen findings, prewritten criteria, falsifiers, honest limits. ALIFE or ECAL, or published on the web beside the dish.</li>
+  </ul>
+
+  <h3>Foundations · debts that block the horizons</h3>
+  <ul>
+    <li><span class="tier later">DEBT</span><b>Cross machine determinism is untested, and v1.40 found the first crack</b>: seed 60606 builds an identical world on another machine (same callsign, same founders) but diverges in play. The boards' anti cheat story rests on re running an entry from its seed.</li>
+    <li><span class="tier later">DEBT</span><b>The board verifier</b>: storage for seeds and logs is in place; the verifier is unwritten.</li>
+    <li><span class="tier later">DEBT</span><b>Two open security findings</b> from the 2026-08-17 review, in leaderboard/SECURITY.md. Neither should be open when a public endpoint goes up.</li>
+    <li><span class="tier later">DEBT</span><b>Exact resume</b>: saves quantize positions, so every reload nudges a live world off the path its own replay reconstructs. True since v0.5.</li>
+    <li><span class="tier later">DEBT</span><b>The long runs nobody has done</b>: whether reefs outlast freeloaders, and whether ordinary dishes walk parasites down into symbionts as a rule. The Shelf makes both practical.</li>
+  </ul>
+
   <h2>SHIPPED</h2>
 
   <h3><span class="v">v0.1</span> · The dish</h3>
@@ -153,17 +191,6 @@
   <p>The social tier arrives. 📅 Today's dish: one tap seeds the world from the date itself, so everyone who starts today starts the same world. ⚔ Versus: two seeds found two peoples on opposite shores of one arena, true separate species who cannot interbreed, and the dish referees: when one founding line's last descendant falls, the Chronicle records the victor. Day Player and Warbringer badges bring the gallery to 31.</p>
   <p class="note"><b>Field notes:</b> the versus referee was tested by exterminating the west twice, and twice the verdict correctly refused to come: the west survived once through eggs laid before the fall, and once because dying grazers ate their way back to life in their final frame. Only true extinction brought the verdict. A referee that cannot be rushed, and a lifecycle that defeats genocide by lunch and by egg, both working exactly as built.</p>
 
-  <h2>NEXT <span style="font-weight:400;letter-spacing:0.1em">· each ≈ a session</span></h2>
-  <ul>
-    <li><span class="tier">NEXT</span><b>Performance floor (WebGL)</b>: renderer rewrite, 1k to 10k creatures; a dedicated session.</li>
-    <li><span class="tier">NEXT</span><b>Leaderboard + callsign design session</b>: dish identities and scores, designed with David before any backend exists.</li>
-  </ul>
-
-  <h2>LATER</h2>
-  <ul>
-    <li><span class="tier later">LATER</span><b>The menu-bar pet</b>: a native always-on dish (Tauri) in the corner of the screen; true 24/7 evolution, glanceable like a fish tank.</li>
-  </ul>
-
   <h3><span class="v">v1.16</span> · The Time Machine</h3>
   <p>Every dish now logs each intervention, every meteor, bloom, elixir, rock, stranger, plague, ice age, and dial change, stamped with its exact simulation step. Because worlds are seeded and deterministic, the log plus the seed IS the dish's complete history: press ⏪ replay and watch your world begin again, at 4x or 16x, pause it, or exit back to the present. Guards keep history read only: saves, tools, and dials are locked while the machine runs. Old dishes predate their own records and say so honestly; every dish born from v1.16 onward carries its whole past. Field note: the first replays diverged from history because the sunlight dial applied its present value to the past; the fix logs the dials the dish was born with as step zero entries. A second bug: versus dishes forgot which two founding seeds built them; the pair is now part of the save. Verified bit identical replays across classic, versus, and non default dial dishes: same random stream, same positions, same energies. Historian badge (32).</p>
 
@@ -233,6 +260,16 @@
   <h3><span class="v">v1.39</span> · The Shelf</h3>
   <p>David's seedling, harvested the day after planting: multiple living worlds. The Shelf holds up to four dishes, each with its own save slot; the original dish keeps its original key so nothing migrates. Switch to a resting dish and the catch up system simulates the time it missed, capped as always, so shelved worlds genuinely keep living. The endgame arrived with it: the collision. Pour a dish into the current one and up to twelve creatures cross over, genomes, bodies, and brains intact, founding new lineages on arrival. The visitors ride inside the intervention log itself, so even a collision replays deterministically in the time machine. Worlds Collide badge (51). The share dialog now explains what the long code is: your whole universe, every genome, brain, and year of history, compressed; short links are planned for when the world boards go live. One engine truth surfaced during testing and is recorded honestly: saves quantize positions, so any reload nudges the live world off the pure from birth path that replay reconstructs; this has been true for every browser refresh since persistent worlds shipped in v0.5, replay remains fully self consistent, and an exact resume mode is noted as future work.</p>
 
+
+  <h3><span class="v">v1.39.1</span> · The pour fix</h3>
+  <p>Two tap arming replaces the browser confirm dialogs that Chrome can silently block, so a pour can no longer fail invisibly. Pour direction reads clearly, and the panel closes on success so the arrivals are seen.</p>
+
+  <h3><span class="v">v1.39.2</span> · The rock tool fix</h3>
+  <p>Mason built stone no longer counts against the player's own rock allowance, which had silently locked the rock tool into remove only in mason rich and archipelago worlds. The plain stone cap rises to eighteen.</p>
+
+  <h3><span class="v">v1.40</span> · The Entanglement</h3>
+  <p>Old structure should be hard to shed. Every body part now carries two clocks: how many generations its slot has been inherited, and how long since its organs were last jolted. The shed rate decays with the first, organ drift is damped by the second, and Wimsatt's generative entrenchment gets a test. <b>It failed its own prewritten criterion and ships dormant.</b> Paired across eight seeds, lever off against lever on, complete animals stood at minute ninety in one seed of eight either way, where the bar was four. What the lever did do is real: parts were held twice as long, depth of at least two parts survived in seven seeds of eight against four, bodied share across the run rose from 32 to 45 percent, and populations came out slightly healthier rather than sicker, so this is not a museum. But any eyed creature at all survived in exactly two seeds of eight in <i>both</i> arms. The binding constraint was never structural retention; it is that nothing pays a lineage to keep an eye. One seed answered the question the study was named for: an entrenched world reached minute 84 with 31 of 51 creatures bodied and its oldest part 75 generations deep, then arrived at minute 90 with five bodied and its oldest part two. Long held structure does not erode, it gives way all at once. Entrenchment slows that ratchet without fitting it a pawl. The instrumentation stays because it produced the finding; the lever sits at ENTRENCH=0, which is bit for bit v1.39.2. Full data in studies/entanglement.json. A second finding arrived unbidden: this machine could not reproduce the archived crown run for seed 60606, building an identical world that then played differently, which is the first evidence that determinism does not travel between machines.</p>
+
   <h2>GREENHOUSE <span style="font-weight:400;letter-spacing:0.1em">· ideas under consideration</span></h2>
   <p><b>Fun and attachment:</b> Amber: a cosmetic prestige idea from David, rewards for dish longevity without blockchain or money; to be designed in the leaderboard phase.</p>
   <p><b>Deeper evolution:</b> and proto-culture: behavior spreading without genes.</p>
@@ -242,12 +279,11 @@
   <p>The greenhouse stands empty: the Hall of Legends shipped as v1.37, and new seeds welcome at the idea box.</p>
 
   <h2>FRONTIER <span style="font-weight:400;letter-spacing:0.1em">· the "how far can this go" answer</span></h2>
+  <p>Two of the three items that stood here for most of the project's life have been built. <b>Neural brains</b> shipped across v1.2 and v1.31, where a structural mutation can add a hidden neuron that must pay for itself. <b>Morphology</b> shipped across v1.11, v1.26, and the Body Mountain of v1.34 to v1.36, where speed, armour, and sight became consequences of shape.</p>
   <ul>
-    <li><span class="tier frontier">FRONTIER</span><b>Neural brains.</b> Replace the fixed seek/flee/wander program with a tiny evolvable network. Behavior itself then evolves: ambush, migration, hoarding, deception could appear unprogrammed. The jump from tuning an animal to growing one.</li>
-    <li><span class="tier frontier">FRONTIER</span><b>Morphology.</b> Multi-segment bodies where speed, size, and armor stop being abstract numbers and become consequences of shape.</li>
-    <li><span class="tier frontier">FRONTIER</span><b>Open-endedness.</b> The honest research frontier (Tierra, Avida, and friends): can the dish keep inventing? Nobody has fully solved this. We get to try from one HTML file.</li>
+    <li><span class="tier later">OPEN</span><b>Open-endedness</b>: the one that remains, and the honest research frontier (Tierra, Avida, and friends). Can the dish keep inventing? Nobody has fully solved this. We get to try in one HTML file.</li>
   </ul>
-  <p class="note"><b>Ceilings, stated honestly:</b> gene ranges bound every trait (a pinned gene is a spent direction); one canvas thread holds ~1k creatures (WebGL raises it ~10×); and without new genes or brains, evolution here optimizes but never invents. This roadmap is, precisely, the plan for removing those ceilings one at a time.</p>
+  <p><b>Ceilings, stated honestly:</b> gene ranges bound every trait, a canvas thread holds about a thousand creatures and the WebGL path of v1.24 raised that to a measured 2,900 at 0.34ms, and without new genes or brains evolution here optimizes but never invents. That last is the real ceiling: the dish has never been shown to invent a knob outside the space the code anticipated. Every rung on the route ahead is an attempt to hand it one more.</p>
 
   <h2>EXPERIMENTS WORTH RUNNING</h2>
   <ol>

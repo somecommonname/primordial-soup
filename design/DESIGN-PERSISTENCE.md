@@ -68,3 +68,19 @@ Pressure created: a won structure stops being a coin flip away from loss, so sel
 - **Phase 3, The Mirror.** The peacock ratchet, last, because it is the most volatile and the most interesting; by then the floor and the reason will tell us whether ornament has anything to stand on.
 
 Each phase ships alone, tested to the standing invariants, with the success criterion above decided before the study runs. If all three fail, the Paper says so, and the frontier stays open, which is also a result.
+
+---
+
+## Decision log
+
+### 2026-09-11 · Lever 3, Entanglement: TESTED, FAILED, SHIPPED DORMANT
+
+Built as specified: `la` counts the generations a structural slot has been inherited, `oa` the generations since that part's organs were last jolted. The shed rate decays with the mean `la` of the sheddable leaves; eye and mouth drift is damped symmetrically by `oa`, deliberately symmetric so the lever canalises rather than ratcheting organs upward, which would have been a script by the back door. `plast(age)=1/(1+ENTRENCH*age/ENTRENCH_HALF)`, shipped at `ENTRENCH=0`.
+
+Against the eight requirements: **1 selection pressure not script** — met, it changes a rate, never an outcome. **2 determinism** — met, no new draws; `ENTRENCH=0` reproduces v1.39.2's fingerprint for seed 60606 bit for bit. **3 migration** — met, both clocks default to zero and old seven element part arrays load unchanged. **4 budget** — met, two integer increments per part per birth. **5 one file** — met. **6 prewritten criterion** — met and **failed**. **7 reversible** — met, one constant. **8 nothing free** — met, no structure is protected by fiat, only made cheaper to keep.
+
+The result, paired over eight seeds: complete animals at minute ninety, one of eight with the lever against one of eight without, where the bar was four. The mechanism is not inert — parts held about twice as long, depth survived in seven seeds of eight against four, bodied share rose from 31.6 to 44.6 percent, and populations were slightly healthier, not sicker. It simply does not reach the thing being measured, because **the thing being measured is gated on eyes, and eyes survived in two seeds of eight in both arms**.
+
+**What this changes in the design.** The document opened by assuming retention was the missing piece. It is not. Structure is retained fine once it exists; what no world manages is to keep an *organ*, because nothing in the economy pays for one reliably. Necessity, Lever 1, was written as the answer to exactly that and is hereby promoted to the front of the queue, in its Garden form: a coevolving food supply, so the payoff for an eye never goes flat. Entanglement stays in the build, dormant, with an uncalibrated half life; a sweep is the cheap way to learn whether twenty generations was simply the wrong number.
+
+**The falsifier held.** The document said: *if entrenched lineages persist but populations sicken, we have built a museum.* They persisted and the populations did not sicken, so it is not a museum. It is a well built floor under the wrong room.
