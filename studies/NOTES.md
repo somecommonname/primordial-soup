@@ -46,3 +46,13 @@ The study also answered the question it was named for. Seed 1006 with the lever 
 Caveat kept with the result: `ENTRENCH_HALF=20` was judgement, never calibrated, and a sweep would separate a wrong mechanism from a wrong dial.
 
 **And an unbidden finding, recorded because it is load bearing.** This machine could not reproduce the archived v1.38 crown run for seed 60606. The world builds identically, same callsign SOUP-C57V-HM and the same seventy founders, but then plays differently: at 18000 steps this machine reads pop 33, births 312, maxGen 9 where crown-and-replication.json records 44, 332, and 10. Local repeats here are bit identical, so the divergence is between machines rather than between runs. PAPER.md section 4 flagged cross machine determinism as never tested; this is the first evidence it does not hold, and the boards' anti cheat design assumes the opposite.
+
+## 2026-09-12 the crowd (crowd.json)
+
+Two findings, one structural and one uncomfortable.
+
+**The dish was the browser window.** `R=min(W,H)/2-26` and nothing else, so there was never an arena parameter, and the ocean scenario was never a bigger world. `WORLD` now scales radius, with every density scaling as its square. And scaling the world alone was not enough: the standing algae crop sits near ten in a classic dish, grazed to bare rock, so proportional regrowth is negligible and food is dominated by the spore drizzle, which was an absolute six per second for the whole dish rather than a density. Fixed, equilibrium population runs 32, 110, 258, 583 at WORLD 1 through 4, close to linear in area, at 1.386ms per step at WORLD 4.
+
+**The drift hypothesis was refuted in the opposite direction.** Raising the population fifteenfold did not rescue the eye, it suppressed it: peak eyed share fell from 5.9 and 44.4 percent in the small worlds to 1.0 and 2.2 percent in the large ones. Bodied share wandered with a standard deviation of 33.0 and 18.1 points in the small worlds against 2.8 and 7.6 in the large. Small populations swing between 7 and 98 percent bodied, large ones sit steadily near 15. **Drift was never what prevented eyes; drift is what produced them.** A costly trait at 44 percent of a population of eighteen and 2 percent of a population of five hundred is floating, not fixing, and every celebrated golden age in this project happened at a population near thirty. The fourth edition of the paper will have to say so.
+
+Two seeds, reported as a pilot. Honest confound: WORLD=4 widens the arena as well as the population, so travel and mixing change too, and generations should be matched rather than minutes in any confirmatory run. The cheap confirmation is six seeds at WORLD 1 against WORLD 3, lever off, roughly 25 minutes.

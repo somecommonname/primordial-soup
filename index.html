@@ -521,6 +521,10 @@ const hueDist=(a,b)=>{const d=Math.abs(a-b)%360;return d>180?360-d:d;};
 
 // ---------- canvas ----------
 const cv=document.getElementById('dish'), ctx=cv.getContext('2d');
+const ALGAE_E=80, ALGAE_CAP0=3000, POP_CAP0=850;
+let WORLD=1, ALGAE_CAP=ALGAE_CAP0, POP_CAP=POP_CAP0;
+function worldArea(){ return WORLD*WORLD; }
+function applyWorldScale(){ ALGAE_CAP=Math.round(ALGAE_CAP0*worldArea()); POP_CAP=Math.round(POP_CAP0*worldArea()); }
 let W=0,H=0,CX=0,CY=0,R=0,DPR=1;
 let gl=null, glOK=false, glProg=null, glBuf=null, glLoc=null, glArr=new Float32Array(0);
 let glCreat=false, glAlg=false;
@@ -529,11 +533,12 @@ function resize(){
   W=window.innerWidth; H=window.innerHeight;
   cv.width=W*DPR; cv.height=H*DPR;
   cv.style.width=W+'px'; cv.style.height=H+'px';
-  ctx.setTransform(DPR,0,0,DPR,0,0);
+  ctx.setTransform(DPR/WORLD,0,0,DPR/WORLD,0,0);
   const gcv=document.getElementById('glcv');
   if(gcv){gcv.width=W*DPR;gcv.height=H*DPR;gcv.style.width=W+'px';gcv.style.height=H+'px';
     if(gl)gl.viewport(0,0,gcv.width,gcv.height);}
-  CX=W/2; CY=H/2; R=Math.min(W,H)/2-26;
+  CX=W/2*WORLD; CY=H/2*WORLD; R=(Math.min(W,H)/2-26)*WORLD;
+  applyWorldScale();
 }
 let worldReady=false;
 function rescue(){
@@ -790,7 +795,7 @@ let calls=[], callsPrev=[], callCount=0, callRate=0, lastCallRateT=0;
 let eggs=[], eggNext=1;
 let fungi=[], symbioN=0;
 let scent=null, scentW=0, scentH=0;
-function initScent(){scentW=Math.max(1,Math.ceil(W/24));scentH=Math.max(1,Math.ceil(H/24));scent=new Float32Array(scentW*scentH);}
+function initScent(){scentW=Math.max(1,Math.ceil(W*WORLD/24));scentH=Math.max(1,Math.ceil(H*WORLD/24));scent=new Float32Array(scentW*scentH);}
 function scentAt(x,y){
   if(!scent)return 0;
   const cx=(x/24)|0, cy=(y/24)|0;
@@ -800,7 +805,6 @@ function scentAt(x,y){
 let paused=false, speedMult=1, tool='inspect', selected=null;
 let iceUntil=-1, shake=0, extinctAt=-1, lastSpeciesN=1, lastSpeciesMsgT=0;
 let foodRate=11;
-const ALGAE_E=80, ALGAE_CAP=3000, POP_CAP=850;
 const events=[]; // visual rings {x,y,t0,dur,r0,r1,color,width}
 const reduceMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
 
@@ -1016,7 +1020,7 @@ function initWorld(scn,seed){
   genTerrain(); initSnow();
   if(scenario==='arch')archTerrain();
   lastMigSayT=-99; chron2=false; chronB=false; chronP=false; chronE=false; chronM=false;
-  const fN=scenario==='ocean'?120:70;
+  const fN=Math.round((scenario==='ocean'?120:70)*worldArea());
   for(let i=0;i<fN;i++){const [x,y]=randInDish(0.9); const fc=makeCreature(founderGenome(baseHue),x,y); fc.age=12; applyGrowth(fc); creatures.push(fc);}
   if(scenario==='versus'&&versusSeeds){
     creatures.length=0;
@@ -1077,7 +1081,7 @@ function initWorld(scn,seed){
     const rootLin=newLineage(0,baseHue);
     for(const c of creatures){c.lin=rootLin;c.wsum=brainSum(c.br);}
   }
-  const algN=scenario==='ocean'?4200:scenario==='eden'?2600:scenario==='ice'?1200:1800;
+  const algN=Math.round((scenario==='ocean'?4200:scenario==='eden'?2600:scenario==='ice'?1200:1800)*worldArea());
   for(let i=0;i<algN;i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   if(scenario==='eden'){foodRate=1.5;foodEl.value=1.5;syncDials();}
   if(!replay){ivLog=[{s:0,t:'food',p:{v:foodRate}},{s:0,t:'rad',p:{v:mutRate}}]; ivComplete=true;}
@@ -1161,7 +1165,7 @@ function step(dt){
   const ice=simT<iceUntil;
   // food spawn
   // spore rain: a thin drizzle, stronger over bare ground so deserts can recover
-  const rain=(3.0+3.0*clamp(1-algae.length/500,0,1))*(ice?0.3:1)*(0.75+0.25*(season+1));
+  const rain=(3.0+3.0*clamp(1-algae.length/(500*worldArea()),0,1))*worldArea()*(ice?0.3:1)*(0.75+0.25*(season+1));
   let n=rain*dt; if(rnd()<n%1)n++;
   for(let i=0;i<(n|0);i++){const [x,y]=randInDish(); spawnAlgae(x,y);}
   // algae drift with the currents, deflecting around rocks
@@ -1827,7 +1831,7 @@ function glFrame(drawC,drawA){
   gl.vertexAttribPointer(glLoc.aUV,2,gl.FLOAT,false,32,8);
   gl.enableVertexAttribArray(glLoc.aC);
   gl.vertexAttribPointer(glLoc.aC,4,gl.FLOAT,false,32,16);
-  gl.uniform2f(glLoc.uRes,W,H);
+  gl.uniform2f(glLoc.uRes,W*WORLD,H*WORLD);
   gl.drawArrays(gl.TRIANGLES,0,o/8);
 }
 
@@ -2381,7 +2385,7 @@ cv.addEventListener('pointermove',e=>{mX=e.clientX;mY=e.clientY;});
 cv.addEventListener('pointerleave',()=>{mX=-1;mY=-1;});
 cv.addEventListener('click',e=>{
   if(modalJustClosed){modalJustClosed=false;return;}
-  const x=e.clientX,y=e.clientY;
+  const x=e.clientX*WORLD,y=e.clientY*WORLD;
   if((x-CX)**2+(y-CY)**2>R*R)return;
   if(replay&&tool!=='inspect'){say('⏪ hands off history: watch, or exit the time machine');return;}
   if(tool==='wk'){logIv('wk',{x,y,g:{...wkG}});return releaseDesign(x,y,wkG);}
@@ -2494,7 +2498,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.40';
+const APP_V='1.41';
 const SAVE_KEY='primordialSoup.save';
 const MAX_SHELF=4;
 let shelfSlot=0, shelfPending=null;

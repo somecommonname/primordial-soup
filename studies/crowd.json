@@ -1,0 +1,917 @@
+{
+ "study": "THE CROWD (v1.41)",
+ "question": "Is this dish's persistence failure economics or arithmetic? If an eye costs 4 percent metabolic burn and the drift barrier at a population of 25 is about 4 percent, selection may simply never have been able to see an eye. Raise the population fifteenfold and find out.",
+ "gameVersion": "v1.41",
+ "runDate": "2026-09-12",
+ "phase1": {
+  "diagnosis": "Carrying capacity did not scale with arena area for two compounding reasons, and the first is that THERE WAS NO ARENA PARAMETER AT ALL. R was derived purely from the browser viewport (R=min(W,H)/2-26), so the ocean scenario was never a bigger world: it seeded 120 founders instead of 70 and dumped 4200 algae into a cap of 3000, in an arena identical to classic. The incubator trial's conclusion that sheer numbers do not buy complexity was therefore testing a bigger opening dump, not a bigger world.",
+  "secondCause": "Even with a world size parameter added, quadrupling the area raised equilibrium population only from 32 to 43. The reason is that the standing algae crop sits at about 10 in a classic dish, grazed to bare rock, so the proportional regrowth term (att = algae.length * G * dt) contributes almost nothing and the food supply is dominated by the spore drizzle. That drizzle was an absolute rate for the whole dish, roughly six spores a second scattered by randInDish(), not a density. A world four times the area received exactly the same food.",
+  "fix": "WORLD is a radius multiplier; area and every density scale with WORLD^2. R, CX, CY, the scent grid, the canvas transform, the WebGL uRes uniform, pointer hit testing, the algae and population caps, founder count, initial algae, and the spore drizzle all scale with it. WORLD=1 is identity: seed 60606 reproduces fingerprint 2830395165 at 18000 steps, bit for bit v1.40.",
+  "scaling": [
+   {
+    "WORLD": 1,
+    "R": 334,
+    "area": 1,
+    "eqPop": 32,
+    "msPerStep": 0.077
+   },
+   {
+    "WORLD": 2,
+    "R": 668,
+    "area": 4,
+    "eqPop": 110,
+    "msPerStep": 0.279
+   },
+   {
+    "WORLD": 3,
+    "R": 1002,
+    "area": 9,
+    "eqPop": 258,
+    "msPerStep": 0.823
+   },
+   {
+    "WORLD": 4,
+    "R": 1336,
+    "area": 16,
+    "eqPop": 583,
+    "msPerStep": 1.386
+   }
+  ],
+  "targetMet": "WORLD=4 holds equilibrium population 583, never below 544 across the back half of a run, against the goal of 400. Population is now close to linear in area. At 1.386ms per step it sits just inside the 1.5ms budget, so it is playable, barely."
+ },
+ "phase2": {
+  "design": "Two seeds from the v1.40 declared set, both of which ended v1.40's low population runs with zero eyed creatures. Lever off throughout (ENTRENCH=0). Low Ne is WORLD=1, high Ne is WORLD=4, a roughly fifteenfold difference in census population. Ninety minutes, sampled every six.",
+  "prewrittenCriterion": "The persistence problem is drift rather than economics if the high Ne baseline produces complete animals where the low Ne baseline does not.",
+  "runs": [
+   {
+    "seed": 60606,
+    "world": 1,
+    "popAtMin90": 41,
+    "bodiedShareAtMin90Pct": 97.6,
+    "eyedAtMin90": 0,
+    "peakEyedSharePct": 5.9,
+    "bodiedShareStdDev": 33.0,
+    "eqAlgaePerCreature": 0.27
+   },
+   {
+    "seed": 1001,
+    "world": 1,
+    "popAtMin90": 15,
+    "bodiedShareAtMin90Pct": 6.7,
+    "eyedAtMin90": 0,
+    "peakEyedSharePct": 44.4,
+    "bodiedShareStdDev": 18.1,
+    "eqAlgaePerCreature": 0.99
+   },
+   {
+    "seed": 60606,
+    "world": 4,
+    "popAtMin90": 322,
+    "bodiedShareAtMin90Pct": 14.9,
+    "eyedAtMin90": 1,
+    "peakEyedSharePct": 1.0,
+    "bodiedShareStdDev": 2.8,
+    "eqAlgaePerCreature": 0.5
+   },
+   {
+    "seed": 1001,
+    "world": 4,
+    "popAtMin90": 483,
+    "bodiedShareAtMin90Pct": 15.5,
+    "eyedAtMin90": 1,
+    "peakEyedSharePct": 2.2,
+    "bodiedShareStdDev": 7.6,
+    "eqAlgaePerCreature": 0.42
+   }
+  ],
+  "result": "REFUTED, and in the opposite direction from the hypothesis.",
+  "verdict": "Raising the population fifteenfold did not rescue the eye. It suppressed it. Peak eyed share fell from 5.9 and 44.4 percent in the two small worlds to 1.0 and 2.2 percent in the two large ones, and no run in either arm produced a complete animal at minute ninety."
+ },
+ "findings": [
+  "The drift hypothesis is refuted in its original form, and the refutation is more interesting than a confirmation would have been. Drift was never what prevented eyes. Drift was what PRODUCED them.",
+  "The variance signature settles it. Bodied share wandered with a standard deviation of 33.0 and 18.1 percentage points across the two small worlds, and 2.8 and 7.6 across the two large ones. Small populations swing wildly between 7 percent bodied and 98 percent bodied; large ones sit steadily near 15 percent. That is exactly what drift against selection predicts: at small Ne outcomes are dominated by chance and range widely, at large Ne selection dominates and outcomes converge.",
+  "Eyes in this dish look like a drift phenomenon rather than an adaptation. A costly trait that reaches 44 percent of a population of eighteen, and 2 percent of a population of five hundred, is not being selected for. It is floating. Seed 1001 at WORLD=1 reached 44 percent eyed with a population of eighteen, which is eight individuals.",
+  "This casts the golden ages in a harsher light. The crown run's fifty minute eyed reign happened at a population near thirty. On this evidence such reigns may be drift excursions in very small populations rather than selection finding a complete animal, which would explain why replication has always been so poor: one in six or rarer is what a chance excursion looks like.",
+  "The food economy was not made harsher by scaling. Standing algae per creature held at 0.31 in small worlds against 0.28 in large ones, so the large worlds were not quietly starved into pruning structure."
+ ],
+ "honestLimitations": [
+  "Two seeds. This is a pilot and it is reported as one. The effect is large and consistent across both, but two is two.",
+  "WORLD=4 changes more than Ne. The arena is four times wider, so travel distances, spatial structure, and local mixing all change alongside population size, and founder count scaled from 70 to 1120. Densities were held constant by construction, but a bigger world is not a pure population manipulation and a slower, more structured world could disfavour bodies independently.",
+  "Ninety minutes. Large populations turn over in generations more slowly relative to the clock, so the large worlds may simply be earlier in their trajectory than the small ones at the same wall time. Generation counts should be matched rather than minutes in any confirmatory run."
+ ],
+ "costReport": {
+  "lowNeRun": "about 25 seconds of compute, one or two tool calls",
+  "highNeRun": "about 7 to 8 minutes of compute, roughly 20 tool calls",
+  "fullProtocolAsScoped": "8 seeds x 2 Ne levels x 2 lever arms = 32 runs, of which 16 are high Ne. Roughly 2.2 hours of compute and on the order of 350 tool calls.",
+  "recommendation": "Do not run the full 32 run protocol. The pilot answers the question it was built to answer, decisively and in the opposite direction, so spending two hours confirming a refutation of an abandoned hypothesis is poor value. The cheap confirmatory run is six seeds at WORLD=1 against WORLD=3, lever off only, twelve runs at roughly 25 minutes, matched on generations rather than minutes. That tests the drift reading of the golden ages, which is now the more interesting claim."
+ },
+ "forTheRoadmap": "The Garden's case is stronger, not weaker. If eyes have never been selected for, then the economy has never contained a reason to keep one, which is precisely what a coevolving food supply would supply. But the fourth edition of the paper now needs to say something uncomfortable and true: several of this project's celebrated complexity results came from populations small enough that chance, not selection, is the likeliest explanation.",
+ "raw": {
+  "fields": [
+   "min",
+   "pop",
+   "withParts",
+   "eyed",
+   "paddlers",
+   "maxDepth",
+   "parts",
+   "algae",
+   "laMean",
+   "laMax"
+  ],
+  "runs": [
+   {
+    "seed": 60606,
+    "world": 1,
+    "s": [
+     [
+      0,
+      70,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1591,
+      0,
+      0
+     ],
+     [
+      6,
+      41,
+      3,
+      0,
+      0,
+      2,
+      4,
+      11,
+      0.8,
+      2
+     ],
+     [
+      12,
+      27,
+      8,
+      0,
+      0,
+      1,
+      8,
+      19,
+      1.3,
+      2
+     ],
+     [
+      18,
+      36,
+      15,
+      0,
+      0,
+      2,
+      16,
+      10,
+      3.7,
+      7
+     ],
+     [
+      24,
+      24,
+      14,
+      0,
+      0,
+      2,
+      17,
+      14,
+      1.5,
+      4
+     ],
+     [
+      30,
+      33,
+      12,
+      0,
+      0,
+      2,
+      13,
+      9,
+      2.3,
+      5
+     ],
+     [
+      36,
+      13,
+      13,
+      0,
+      0,
+      2,
+      14,
+      26,
+      8.9,
+      15
+     ],
+     [
+      42,
+      24,
+      12,
+      0,
+      0,
+      2,
+      13,
+      25,
+      12.4,
+      15
+     ],
+     [
+      48,
+      21,
+      2,
+      0,
+      0,
+      1,
+      2,
+      14,
+      19.5,
+      20
+     ],
+     [
+      54,
+      26,
+      1,
+      0,
+      0,
+      1,
+      1,
+      7,
+      0,
+      0
+     ],
+     [
+      60,
+      33,
+      5,
+      0,
+      0,
+      1,
+      5,
+      5,
+      0.8,
+      2
+     ],
+     [
+      66,
+      34,
+      3,
+      2,
+      0,
+      1,
+      3,
+      8,
+      3,
+      4
+     ],
+     [
+      72,
+      37,
+      32,
+      0,
+      0,
+      2,
+      39,
+      9,
+      5.1,
+      8
+     ],
+     [
+      78,
+      37,
+      29,
+      0,
+      1,
+      3,
+      44,
+      4,
+      8,
+      16
+     ],
+     [
+      84,
+      36,
+      25,
+      0,
+      0,
+      2,
+      28,
+      13,
+      13.8,
+      19
+     ],
+     [
+      90,
+      41,
+      40,
+      0,
+      3,
+      2,
+      44,
+      6,
+      18,
+      26
+     ]
+    ]
+   },
+   {
+    "seed": 1001,
+    "world": 1,
+    "s": [
+     [
+      0,
+      70,
+      0,
+      0,
+      0,
+      0,
+      0,
+      1568,
+      0,
+      0
+     ],
+     [
+      6,
+      50,
+      2,
+      0,
+      0,
+      1,
+      2,
+      9,
+      2,
+      2
+     ],
+     [
+      12,
+      38,
+      24,
+      0,
+      0,
+      1,
+      25,
+      11,
+      5,
+      9
+     ],
+     [
+      18,
+      34,
+      17,
+      0,
+      0,
+      2,
+      18,
+      16,
+      8.5,
+      15
+     ],
+     [
+      24,
+      26,
+      1,
+      0,
+      0,
+      1,
+      1,
+      12,
+      17,
+      17
+     ],
+     [
+      30,
+      26,
+      7,
+      0,
+      0,
+      1,
+      7,
+      7,
+      1.9,
+      4
+     ],
+     [
+      36,
+      23,
+      10,
+      1,
+      0,
+      1,
+      12,
+      10,
+      1,
+      2
+     ],
+     [
+      42,
+      25,
+      12,
+      7,
+      0,
+      1,
+      12,
+      6,
+      4.2,
+      7
+     ],
+     [
+      48,
+      18,
+      8,
+      8,
+      0,
+      1,
+      8,
+      50,
+      11.5,
+      13
+     ],
+     [
+      54,
+      21,
+      4,
+      0,
+      0,
+      1,
+      4,
+      11,
+      0.5,
+      1
+     ],
+     [
+      60,
+      24,
+      2,
+      0,
+      0,
+      1,
+      2,
+      7,
+      0.5,
+      1
+     ],
+     [
+      66,
+      23,
+      4,
+      0,
+      0,
+      1,
+      4,
+      23,
+      0.8,
+      2
+     ],
+     [
+      72,
+      25,
+      5,
+      0,
+      0,
+      1,
+      5,
+      11,
+      0.4,
+      1
+     ],
+     [
+      78,
+      27,
+      8,
+      0,
+      0,
+      2,
+      9,
+      8,
+      4.1,
+      7
+     ],
+     [
+      84,
+      18,
+      6,
+      0,
+      0,
+      1,
+      6,
+      14,
+      7.2,
+      11
+     ],
+     [
+      90,
+      15,
+      1,
+      0,
+      0,
+      1,
+      1,
+      27,
+      1,
+      1
+     ]
+    ]
+   },
+   {
+    "seed": 60606,
+    "world": 4,
+    "s": [
+     [
+      0,
+      1120,
+      0,
+      0,
+      0,
+      0,
+      0,
+      28591,
+      0,
+      0
+     ],
+     [
+      6,
+      640,
+      102,
+      0,
+      0,
+      3,
+      114,
+      132,
+      1.2,
+      5
+     ],
+     [
+      12,
+      426,
+      80,
+      1,
+      0,
+      2,
+      91,
+      287,
+      2.3,
+      9
+     ],
+     [
+      18,
+      461,
+      78,
+      0,
+      0,
+      2,
+      83,
+      150,
+      1.7,
+      8
+     ],
+     [
+      24,
+      425,
+      67,
+      0,
+      0,
+      2,
+      72,
+      211,
+      1.2,
+      6
+     ],
+     [
+      30,
+      441,
+      102,
+      2,
+      0,
+      2,
+      110,
+      149,
+      2.7,
+      9
+     ],
+     [
+      36,
+      413,
+      73,
+      1,
+      0,
+      2,
+      87,
+      288,
+      3,
+      13
+     ],
+     [
+      42,
+      471,
+      94,
+      1,
+      0,
+      3,
+      102,
+      113,
+      1.8,
+      13
+     ],
+     [
+      48,
+      414,
+      79,
+      0,
+      0,
+      2,
+      97,
+      201,
+      2.1,
+      8
+     ],
+     [
+      54,
+      449,
+      87,
+      0,
+      0,
+      2,
+      96,
+      159,
+      2.1,
+      11
+     ],
+     [
+      60,
+      399,
+      71,
+      4,
+      0,
+      2,
+      74,
+      248,
+      1.9,
+      15
+     ],
+     [
+      66,
+      413,
+      77,
+      4,
+      0,
+      2,
+      84,
+      192,
+      1.6,
+      7
+     ],
+     [
+      72,
+      365,
+      48,
+      1,
+      0,
+      2,
+      51,
+      228,
+      1.6,
+      7
+     ],
+     [
+      78,
+      379,
+      44,
+      2,
+      0,
+      2,
+      47,
+      162,
+      1,
+      5
+     ],
+     [
+      84,
+      339,
+      50,
+      3,
+      0,
+      2,
+      53,
+      212,
+      0.9,
+      4
+     ],
+     [
+      90,
+      322,
+      48,
+      1,
+      0,
+      2,
+      55,
+      139,
+      0.9,
+      6
+     ]
+    ]
+   },
+   {
+    "seed": 1001,
+    "world": 4,
+    "s": [
+     [
+      0,
+      1120,
+      0,
+      0,
+      0,
+      0,
+      0,
+      28502,
+      0,
+      0
+     ],
+     [
+      6,
+      712,
+      111,
+      0,
+      0,
+      2,
+      122,
+      199,
+      1.1,
+      5
+     ],
+     [
+      12,
+      550,
+      114,
+      0,
+      0,
+      2,
+      128,
+      136,
+      1.4,
+      7
+     ],
+     [
+      18,
+      587,
+      191,
+      10,
+      0,
+      2,
+      227,
+      161,
+      3.7,
+      11
+     ],
+     [
+      24,
+      483,
+      161,
+      10,
+      0,
+      3,
+      199,
+      199,
+      4.1,
+      13
+     ],
+     [
+      30,
+      549,
+      193,
+      0,
+      0,
+      2,
+      225,
+      151,
+      3.3,
+      13
+     ],
+     [
+      36,
+      505,
+      129,
+      11,
+      0,
+      3,
+      144,
+      193,
+      3.5,
+      14
+     ],
+     [
+      42,
+      495,
+      96,
+      0,
+      1,
+      2,
+      110,
+      183,
+      2.8,
+      9
+     ],
+     [
+      48,
+      435,
+      80,
+      4,
+      0,
+      2,
+      86,
+      208,
+      1.5,
+      10
+     ],
+     [
+      54,
+      478,
+      74,
+      0,
+      0,
+      2,
+      89,
+      169,
+      1.4,
+      9
+     ],
+     [
+      60,
+      461,
+      67,
+      0,
+      0,
+      2,
+      72,
+      358,
+      1.2,
+      4
+     ],
+     [
+      66,
+      499,
+      95,
+      1,
+      0,
+      2,
+      108,
+      150,
+      1.3,
+      11
+     ],
+     [
+      72,
+      429,
+      66,
+      3,
+      0,
+      2,
+      67,
+      197,
+      1.5,
+      8
+     ],
+     [
+      78,
+      515,
+      66,
+      1,
+      0,
+      1,
+      69,
+      133,
+      1,
+      4
+     ],
+     [
+      84,
+      419,
+      43,
+      0,
+      0,
+      2,
+      52,
+      167,
+      1.2,
+      5
+     ],
+     [
+      90,
+      483,
+      75,
+      1,
+      0,
+      2,
+      78,
+      171,
+      2.1,
+      8
+     ]
+    ]
+   }
+  ]
+ }
+}
