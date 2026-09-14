@@ -1,0 +1,11615 @@
+{
+ "study": "THE THRESHOLD (v1.43)",
+ "runDate": "2026-09-14",
+ "gameVersion": "v1.43",
+ "preregistration": "studies/threshold-prereg.md, committed in 699a366 before any run",
+ "design": {
+  "arms": "THRESH_BASE x EYE_FOOD",
+  "seeds": [
+   60606,
+   1001,
+   1002,
+   1003,
+   1004,
+   1005
+  ],
+  "world": "WORLD 3, R=1002",
+  "stop": "maxGen >= 400, checked every 60 steps",
+  "ledger": "on; founders excluded",
+  "sampling": "every 6 simulated minutes: minute, maxGen, population, bodied, eyed bodied",
+  "execution": "four browser tabs in parallel, one arm each; terrain guard, fixed geometry, preflight resize and fingerprint tests passed in every tab before any run"
+ },
+ "primary": {
+  "test": "s(eye | 1 part) in th0_eye1 above +10 percent with 95 percent interval above zero",
+  "result": {
+   "s_pct": -11.74,
+   "ci95_pct": 6.4,
+   "lo_pct": -18.14,
+   "hi_pct": -5.34,
+   "nA": 959,
+   "nB": 54593
+  },
+  "met": false,
+  "verdict": "FAILED, and the interval lies entirely below zero: wired to food, the eye is selected against.",
+  "falsifierTriggered": "If s(eye | 1 part) is not above zero in the (0,1) arm, the wiring was not the problem, and under the v1.42 falsifier the vision line is set aside in favour of the body cost."
+ },
+ "reportedNotSubstituted": {
+  "th1_eye1_eye_given_1part": {
+   "s_pct": 4.63,
+   "ci95_pct": 3.3,
+   "lo_pct": 1.33,
+   "hi_pct": 7.93,
+   "nA": 3442,
+   "nB": 82429
+  },
+  "note": "With bodies cheaper to breed the food wired eye turns mildly positive, +4.6 percent with an interval of +1.3 to +7.9. Short of the +10 percent bar, and not a substitute for the primary test."
+ },
+ "controls": {
+  "th0_eye0": {
+   "s_pct": -2.29,
+   "ci95_pct": 6.35,
+   "lo_pct": -8.64,
+   "hi_pct": 4.05,
+   "nA": 1078,
+   "nB": 54243
+  },
+  "th1_eye0": {
+   "s_pct": -1.64,
+   "ci95_pct": 3.76,
+   "lo_pct": -5.4,
+   "hi_pct": 2.12,
+   "nA": 2503,
+   "nB": 79569
+  },
+  "note": "Eye not wired to food: indistinguishable from zero in both, reproducing v1.42's -2.4 percent."
+ },
+ "secondary": {
+  "test": "eyed share among bodied creatures above 50 percent for 100 generations, bodied >= 10, in >= 4 of 6 seeds",
+  "th0_eye1": {
+   "seedsMet": 0,
+   "eyedAmongBodiedMeanPct": 1.55
+  },
+  "th1_eye1": {
+   "seedsMet": 0,
+   "eyedAmongBodiedMeanPct": 4.54
+  },
+  "met": false
+ },
+ "threshold": {
+  "bodyCost_1part_vs_bodiless": {
+   "th0_eye0": {
+    "s_pct": -40.31,
+    "ci95_pct": 0.56,
+    "lo_pct": -40.87,
+    "hi_pct": -39.75,
+    "nA": 54243,
+    "nB": 335365
+   },
+   "th1_eye0": {
+    "s_pct": -26.11,
+    "ci95_pct": 0.53,
+    "lo_pct": -26.64,
+    "hi_pct": -25.57,
+    "nA": 79569,
+    "nB": 320392
+   },
+   "th0_eye1": {
+    "s_pct": -40.43,
+    "ci95_pct": 0.56,
+    "lo_pct": -40.99,
+    "hi_pct": -39.87,
+    "nA": 54593,
+    "nB": 337511
+   },
+   "th1_eye1": {
+    "s_pct": -24.8,
+    "ci95_pct": 0.53,
+    "lo_pct": -25.33,
+    "hi_pct": -24.27,
+    "nA": 82429,
+    "nB": 318361
+   }
+  },
+  "fractionRemoved": {
+   "eye not wired": {
+    "bodyCost_off_pct": -40.31,
+    "bodyCost_on_pct": -26.11,
+    "fractionRemoved": 0.352
+   },
+   "eye wired to food": {
+    "bodyCost_off_pct": -40.43,
+    "bodyCost_on_pct": -24.8,
+    "fractionRemoved": 0.387
+   }
+  },
+  "bodiedShareMeanPct": {
+   "th0_eye0": 14.64,
+   "th1_eye0": 21.08,
+   "th0_eye1": 14.82,
+   "th1_eye1": 21.87
+  },
+  "pilot": "The two seed pilot put the fraction removed at 43 percent; six seeds put it at 35 (eye not wired) and 39 (eye wired)."
+ },
+ "exploratory_notPreregistered": {
+  "eye_given_2parts": {
+   "th0_eye0": {
+    "s_pct": -2.92,
+    "ci95_pct": 22.31,
+    "lo_pct": -25.22,
+    "hi_pct": 19.39,
+    "nA": 144,
+    "nB": 4537
+   },
+   "th1_eye0": {
+    "s_pct": -6.24,
+    "ci95_pct": 8.59,
+    "lo_pct": -14.83,
+    "hi_pct": 2.35,
+    "nA": 568,
+    "nB": 12319
+   },
+   "th0_eye1": {
+    "s_pct": 35.44,
+    "ci95_pct": 28.79,
+    "lo_pct": 6.65,
+    "hi_pct": 64.23,
+    "nA": 118,
+    "nB": 4573
+   },
+   "th1_eye1": {
+    "s_pct": -14.04,
+    "ci95_pct": 6.55,
+    "lo_pct": -20.59,
+    "hi_pct": -7.5,
+    "nA": 885,
+    "nB": 13329
+   }
+  },
+  "note": "At two parts the sign flips in both eye arms: +35.4 percent where one part was -11.7, and -14.0 where one part was +4.6. Several eye comparisons were examined, samples at two parts are small, and signs that flip with context are what a lineage confound would produce."
+ },
+ "interpretation": [
+  "The preregistered test failed decisively. Seeing food farther away did not make an eye pay; it made it cost.",
+  "Two candidate explanations cannot be told apart by this design. First, a mechanism in the code: a creature with food in sight heads for it at full speed (arrive rises with distance, index.html:1343) while one with no target wanders at 75 percent speed (index.html:1483), and movement burn grows with speed squared (index.html:1500). An eye that finds distant food in a grazed, crowded dish may mostly buy expensive chases lost to nearer grazers. Second, a design limit: eyed and eyeless creatures are not randomised, so the effect of an eye cannot be separated from the lineage that happens to carry it, and small, context dependent, sign flipping effects are its signature.",
+  "A randomised common garden design would separate them: release matched genomes that differ only in an eye into the same world and compare their descendants. The Workshop already releases designed genomes deterministically.",
+  "The breeding threshold is a real, large share of the body cost, about a third of it, not the majority the hypothesis proposed."
+ ],
+ "reproducibility": {
+  "asPreregistered": "FAILED: the control arm did not reproduce the v1.42 ledger exactly.",
+  "cause": "The v1.43 harness checked the generation 400 stop every 60 steps; the v1.42 harness every 3,600. Runs stopped slightly earlier and recorded fewer deaths.",
+  "perSeed": [
+   {
+    "seed": 60606,
+    "v142_individuals": 67490,
+    "v143_individuals": 67483,
+    "shortBy": 7,
+    "everyBinAtOrBelow": true
+   },
+   {
+    "seed": 1001,
+    "v142_individuals": 64264,
+    "v143_individuals": 64094,
+    "shortBy": 170,
+    "everyBinAtOrBelow": true
+   },
+   {
+    "seed": 1002,
+    "v142_individuals": 67485,
+    "v143_individuals": 67429,
+    "shortBy": 56,
+    "everyBinAtOrBelow": true
+   },
+   {
+    "seed": 1003,
+    "v142_individuals": 65222,
+    "v143_individuals": 65219,
+    "shortBy": 3,
+    "everyBinAtOrBelow": true
+   },
+   {
+    "seed": 1004,
+    "v142_individuals": 72556,
+    "v143_individuals": 72419,
+    "shortBy": 137,
+    "everyBinAtOrBelow": true
+   },
+   {
+    "seed": 1005,
+    "v142_individuals": 59092,
+    "v143_individuals": 59040,
+    "shortBy": 52,
+    "everyBinAtOrBelow": true
+   }
+  ],
+  "everyControlBinAtOrBelowV142": true,
+  "totalShortBy": 425,
+  "verification": "Seed 60606 rerun on v1.43 with the stop checked every 3,600 steps reproduced the v1.42 ledger in every field (n, offspring, lifespan, algae, flesh, eyeSum, parts): 67,490 individuals, zero differences. The 60 step rule stopped at step 1,123,080 and the 3,600 step rule at 1,123,200.",
+  "consequences": [
+   "v1.43 with both switches off is bit for bit v1.42 at WORLD 3 over 400 generations.",
+   "The stop rule is identical across all four arms, so between arm comparisons are unaffected.",
+   "The v1.42 eye selection study was not perturbed by the resize hazard found during this run."
+  ]
+ },
+ "toolingFaults": [
+  "The game's window resize handler regenerates terrain and rescues creatures, drawing from the simulation's random stream; a capture phase event block failed its own test because the game's listener fires first. Fixed by guarding genTerrain and rescue so only initWorld may call them during a study.",
+  "The desktop app clears emulated viewports when a turn ends; the game recomputed R in three tabs (to 822 and 1074), the harness's geometry guard stopped them, and three runs were voided and rerun. Fixed by fixing study geometry at 1280x720 regardless of the window.",
+  "Stop check granularity differed from the previous study (see reproducibility).",
+  "zsh does not word split an unquoted variable, so the first progress monitor read no logs and reported only a stall. Replaced with a Python watcher."
+ ],
+ "voidedRuns": [
+  {
+   "arm": "th1_eye0",
+   "seed": 60606,
+   "atGen": 308
+  },
+  {
+   "arm": "th0_eye1",
+   "seed": 60606,
+   "atGen": 143
+  },
+  {
+   "arm": "th1_eye1",
+   "seed": 60606,
+   "atGen": 137
+  }
+ ],
+ "honestLimitations": [
+  "Observational: eyes are whatever mutation produced, not randomised.",
+  "One machine; cross machine determinism is known broken.",
+  "Six seeds per arm, 400 generations each.",
+  "EYE_FOOD's wider algae query is also the neighbourhood the mouth scans, part of the switch rather than a separate effect."
+ ],
+ "scored": {
+  "arms": {
+   "th0_eye0": {
+    "seeds": [
+     60606,
+     1001,
+     1002,
+     1003,
+     1004,
+     1005
+    ],
+    "stops": [
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen"
+    ],
+    "individuals": 395684,
+    "W": {
+     "0/-": 1.476,
+     "1/eye": 0.8609,
+     "1/noeye": 0.8811,
+     "2/eye": 0.5208,
+     "2/noeye": 0.5365,
+     "3+/eye": 0.2857,
+     "3+/noeye": 0.4983
+    },
+    "bodyCost_1part_vs_bodiless": {
+     "s_pct": -40.31,
+     "ci95_pct": 0.56,
+     "lo_pct": -40.87,
+     "hi_pct": -39.75,
+     "nA": 54243,
+     "nB": 335365
+    },
+    "eye_given_1part": {
+     "s_pct": -2.29,
+     "ci95_pct": 6.35,
+     "lo_pct": -8.64,
+     "hi_pct": 4.05,
+     "nA": 1078,
+     "nB": 54243
+    },
+    "eye_given_2parts": {
+     "s_pct": -2.92,
+     "ci95_pct": 22.31,
+     "lo_pct": -25.22,
+     "hi_pct": 19.39,
+     "nA": 144,
+     "nB": 4537
+    },
+    "bodiedShareMeanPct": 14.64,
+    "eyedAmongBodiedMeanPct": 1.79,
+    "shareSpanGenBySeed": {
+     "60606": 0,
+     "1001": 0,
+     "1002": 0,
+     "1003": 0,
+     "1004": 0,
+     "1005": 0
+    },
+    "shareCriterionSeedsMet": 0,
+    "primaryCriterionMet": false,
+    "secondaryCriterionMet": false
+   },
+   "th1_eye0": {
+    "seeds": [
+     60606,
+     1001,
+     1002,
+     1003,
+     1004,
+     1005
+    ],
+    "stops": [
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen"
+    ],
+    "individuals": 417008,
+    "W": {
+     "0/-": 1.4869,
+     "1/eye": 1.0807,
+     "1/noeye": 1.0987,
+     "2/eye": 0.8415,
+     "2/noeye": 0.8976,
+     "3+/eye": 0.6421,
+     "3+/noeye": 0.765
+    },
+    "bodyCost_1part_vs_bodiless": {
+     "s_pct": -26.11,
+     "ci95_pct": 0.53,
+     "lo_pct": -26.64,
+     "hi_pct": -25.57,
+     "nA": 79569,
+     "nB": 320392
+    },
+    "eye_given_1part": {
+     "s_pct": -1.64,
+     "ci95_pct": 3.76,
+     "lo_pct": -5.4,
+     "hi_pct": 2.12,
+     "nA": 2503,
+     "nB": 79569
+    },
+    "eye_given_2parts": {
+     "s_pct": -6.24,
+     "ci95_pct": 8.59,
+     "lo_pct": -14.83,
+     "hi_pct": 2.35,
+     "nA": 568,
+     "nB": 12319
+    },
+    "bodiedShareMeanPct": 21.08,
+    "eyedAmongBodiedMeanPct": 3.27,
+    "shareSpanGenBySeed": {
+     "60606": 0,
+     "1001": 0,
+     "1002": 0,
+     "1003": 0,
+     "1004": 0,
+     "1005": 0
+    },
+    "shareCriterionSeedsMet": 0,
+    "primaryCriterionMet": false,
+    "secondaryCriterionMet": false
+   },
+   "th0_eye1": {
+    "seeds": [
+     60606,
+     1001,
+     1002,
+     1003,
+     1004,
+     1005
+    ],
+    "stops": [
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen"
+    ],
+    "individuals": 397998,
+    "W": {
+     "0/-": 1.4716,
+     "1/eye": 0.7737,
+     "1/noeye": 0.8766,
+     "2/eye": 0.7458,
+     "2/noeye": 0.5506,
+     "3+/eye": 0.5,
+     "3+/noeye": 0.2679
+    },
+    "bodyCost_1part_vs_bodiless": {
+     "s_pct": -40.43,
+     "ci95_pct": 0.56,
+     "lo_pct": -40.99,
+     "hi_pct": -39.87,
+     "nA": 54593,
+     "nB": 337511
+    },
+    "eye_given_1part": {
+     "s_pct": -11.74,
+     "ci95_pct": 6.4,
+     "lo_pct": -18.14,
+     "hi_pct": -5.34,
+     "nA": 959,
+     "nB": 54593
+    },
+    "eye_given_2parts": {
+     "s_pct": 35.44,
+     "ci95_pct": 28.79,
+     "lo_pct": 6.65,
+     "hi_pct": 64.23,
+     "nA": 118,
+     "nB": 4573
+    },
+    "bodiedShareMeanPct": 14.82,
+    "eyedAmongBodiedMeanPct": 1.55,
+    "shareSpanGenBySeed": {
+     "60606": 0,
+     "1001": 0,
+     "1002": 0,
+     "1003": 0,
+     "1004": 0,
+     "1005": 0
+    },
+    "shareCriterionSeedsMet": 0,
+    "primaryCriterionMet": false,
+    "secondaryCriterionMet": false
+   },
+   "th1_eye1": {
+    "seeds": [
+     60606,
+     1001,
+     1002,
+     1003,
+     1004,
+     1005
+    ],
+    "stops": [
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen",
+     "gen"
+    ],
+    "individuals": 420535,
+    "W": {
+     "0/-": 1.4891,
+     "1/eye": 1.1717,
+     "1/noeye": 1.1198,
+     "2/eye": 0.791,
+     "2/noeye": 0.9202,
+     "3+/eye": 0.9887,
+     "3+/noeye": 0.8009
+    },
+    "bodyCost_1part_vs_bodiless": {
+     "s_pct": -24.8,
+     "ci95_pct": 0.53,
+     "lo_pct": -25.33,
+     "hi_pct": -24.27,
+     "nA": 82429,
+     "nB": 318361
+    },
+    "eye_given_1part": {
+     "s_pct": 4.63,
+     "ci95_pct": 3.3,
+     "lo_pct": 1.33,
+     "hi_pct": 7.93,
+     "nA": 3442,
+     "nB": 82429
+    },
+    "eye_given_2parts": {
+     "s_pct": -14.04,
+     "ci95_pct": 6.55,
+     "lo_pct": -20.59,
+     "hi_pct": -7.5,
+     "nA": 885,
+     "nB": 13329
+    },
+    "bodiedShareMeanPct": 21.87,
+    "eyedAmongBodiedMeanPct": 4.54,
+    "shareSpanGenBySeed": {
+     "60606": 0,
+     "1001": 0,
+     "1002": 0,
+     "1003": 0,
+     "1004": 0,
+     "1005": 0
+    },
+    "shareCriterionSeedsMet": 0,
+    "primaryCriterionMet": false,
+    "secondaryCriterionMet": false
+   }
+  },
+  "thresholdExplains": {
+   "eye not wired": {
+    "bodyCost_off_pct": -40.31,
+    "bodyCost_on_pct": -26.11,
+    "fractionRemoved": 0.352
+   },
+   "eye wired to food": {
+    "bodyCost_off_pct": -40.43,
+    "bodyCost_on_pct": -24.8,
+    "fractionRemoved": 0.387
+   }
+  },
+  "reproducibility_vs_v142": {
+   "seedsCompared": [
+    60606,
+    1001,
+    1002,
+    1003,
+    1004,
+    1005
+   ],
+   "mismatches": [
+    [
+     60606,
+     "0/-",
+     57661,
+     57655
+    ],
+    [
+     60606,
+     "1/noeye",
+     8889,
+     8888
+    ],
+    [
+     1001,
+     "1/eye",
+     180,
+     179
+    ],
+    [
+     1001,
+     "0/-",
+     54673,
+     54530
+    ],
+    [
+     1001,
+     "1/noeye",
+     8693,
+     8667
+    ],
+    [
+     1002,
+     "2/noeye",
+     802,
+     800
+    ],
+    [
+     1002,
+     "0/-",
+     56941,
+     56898
+    ],
+    [
+     1002,
+     "1/noeye",
+     9450,
+     9439
+    ],
+    [
+     1003,
+     "0/-",
+     56069,
+     56066
+    ],
+    [
+     1004,
+     "2/noeye",
+     815,
+     814
+    ],
+    [
+     1004,
+     "1/eye",
+     200,
+     199
+    ],
+    [
+     1004,
+     "0/-",
+     61511,
+     61395
+    ],
+    [
+     1004,
+     "1/noeye",
+     9926,
+     9907
+    ],
+    [
+     1005,
+     "0/-",
+     48864,
+     48821
+    ],
+    [
+     1005,
+     "1/noeye",
+     8963,
+     8954
+    ]
+   ]
+  }
+ },
+ "raw": {
+  "runs": [
+   {
+    "seed": 60606,
+    "th": 0,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 412686,
+    "fin": {
+     "gen": 400,
+     "min": 312,
+     "pop": 166,
+     "dKill": 5585,
+     "births": 67649,
+     "deaths": 68113
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      14,
+      351,
+      39,
+      0
+     ],
+     [
+      12,
+      26,
+      236,
+      45,
+      1
+     ],
+     [
+      18,
+      36,
+      233,
+      25,
+      0
+     ],
+     [
+      24,
+      48,
+      219,
+      20,
+      0
+     ],
+     [
+      30,
+      59,
+      248,
+      61,
+      4
+     ],
+     [
+      36,
+      68,
+      218,
+      31,
+      1
+     ],
+     [
+      42,
+      77,
+      232,
+      40,
+      0
+     ],
+     [
+      48,
+      86,
+      215,
+      22,
+      0
+     ],
+     [
+      54,
+      93,
+      215,
+      32,
+      0
+     ],
+     [
+      60,
+      102,
+      183,
+      28,
+      0
+     ],
+     [
+      66,
+      109,
+      210,
+      45,
+      0
+     ],
+     [
+      72,
+      117,
+      152,
+      26,
+      0
+     ],
+     [
+      78,
+      125,
+      164,
+      33,
+      0
+     ],
+     [
+      84,
+      133,
+      175,
+      24,
+      1
+     ],
+     [
+      90,
+      137,
+      194,
+      31,
+      0
+     ],
+     [
+      96,
+      144,
+      220,
+      34,
+      0
+     ],
+     [
+      102,
+      151,
+      256,
+      40,
+      0
+     ],
+     [
+      108,
+      158,
+      217,
+      28,
+      0
+     ],
+     [
+      114,
+      168,
+      196,
+      28,
+      0
+     ],
+     [
+      120,
+      175,
+      157,
+      19,
+      1
+     ],
+     [
+      126,
+      181,
+      198,
+      24,
+      0
+     ],
+     [
+      132,
+      189,
+      177,
+      21,
+      0
+     ],
+     [
+      138,
+      196,
+      173,
+      29,
+      4
+     ],
+     [
+      144,
+      200,
+      144,
+      39,
+      5
+     ],
+     [
+      150,
+      206,
+      167,
+      22,
+      0
+     ],
+     [
+      156,
+      213,
+      156,
+      13,
+      0
+     ],
+     [
+      162,
+      221,
+      186,
+      9,
+      0
+     ],
+     [
+      168,
+      226,
+      151,
+      12,
+      1
+     ],
+     [
+      174,
+      234,
+      185,
+      21,
+      0
+     ],
+     [
+      180,
+      241,
+      171,
+      16,
+      0
+     ],
+     [
+      186,
+      248,
+      188,
+      24,
+      0
+     ],
+     [
+      192,
+      255,
+      159,
+      17,
+      0
+     ],
+     [
+      198,
+      263,
+      200,
+      28,
+      0
+     ],
+     [
+      204,
+      271,
+      169,
+      23,
+      2
+     ],
+     [
+      210,
+      278,
+      203,
+      20,
+      2
+     ],
+     [
+      216,
+      285,
+      194,
+      26,
+      0
+     ],
+     [
+      222,
+      293,
+      195,
+      21,
+      0
+     ],
+     [
+      228,
+      299,
+      181,
+      18,
+      0
+     ],
+     [
+      234,
+      306,
+      221,
+      32,
+      2
+     ],
+     [
+      240,
+      312,
+      199,
+      39,
+      0
+     ],
+     [
+      246,
+      324,
+      220,
+      20,
+      0
+     ],
+     [
+      252,
+      329,
+      190,
+      32,
+      0
+     ],
+     [
+      258,
+      337,
+      185,
+      37,
+      1
+     ],
+     [
+      264,
+      344,
+      167,
+      17,
+      0
+     ],
+     [
+      270,
+      352,
+      200,
+      19,
+      0
+     ],
+     [
+      276,
+      357,
+      154,
+      16,
+      0
+     ],
+     [
+      282,
+      364,
+      217,
+      24,
+      0
+     ],
+     [
+      288,
+      370,
+      183,
+      23,
+      0
+     ],
+     [
+      294,
+      378,
+      191,
+      26,
+      0
+     ],
+     [
+      300,
+      385,
+      180,
+      22,
+      0
+     ],
+     [
+      306,
+      394,
+      183,
+      17,
+      0
+     ],
+     [
+      312,
+      400,
+      166,
+      15,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 57655,
+       "kids": 83423,
+       "age": 3208778.2833333737,
+       "ateA": 124249480.53337651,
+       "ateM": 272763.5195299197,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 8888,
+       "kids": 7243,
+       "age": 471220.73333333427,
+       "ateA": 15228977.576510841,
+       "ateM": 31166.394029125266,
+       "eyeSum": 263.5820280771408,
+       "parts": 8888
+      },
+      "2/noeye": {
+       "n": 685,
+       "kids": 335,
+       "age": 35121.95000000038,
+       "ateA": 1040209.1800207219,
+       "ateM": 1734.7728896173976,
+       "eyeSum": 30.143591982410843,
+       "parts": 1370
+      },
+      "1/eye": {
+       "n": 192,
+       "kids": 160,
+       "age": 11314.483333333426,
+       "ateA": 409195.23373462155,
+       "ateM": 1090.4080989721147,
+       "eyeSum": 106.39200757297597,
+       "parts": 192
+      },
+      "3+/noeye": {
+       "n": 44,
+       "kids": 14,
+       "age": 2348.6166666666754,
+       "ateA": 69693.07780471146,
+       "ateM": 0,
+       "eyeSum": 3.0417542405056124,
+       "parts": 132
+      },
+      "2/eye": {
+       "n": 19,
+       "kids": 6,
+       "age": 732.9166666667141,
+       "ateA": 24543.46771548682,
+       "ateM": 13.129598465265587,
+       "eyeSum": 10.495840893845113,
+       "parts": 38
+      }
+     },
+     "deaths": 67483,
+     "kills": 5585
+    },
+    "tab": "A"
+   },
+   {
+    "seed": 1001,
+    "th": 0,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 399409,
+    "fin": {
+     "gen": 400,
+     "min": 305,
+     "pop": 151,
+     "dKill": 5397,
+     "births": 64245,
+     "deaths": 64724
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      394,
+      39,
+      0
+     ],
+     [
+      12,
+      24,
+      277,
+      45,
+      0
+     ],
+     [
+      18,
+      33,
+      286,
+      49,
+      0
+     ],
+     [
+      24,
+      45,
+      214,
+      36,
+      0
+     ],
+     [
+      30,
+      56,
+      212,
+      28,
+      1
+     ],
+     [
+      36,
+      70,
+      201,
+      38,
+      0
+     ],
+     [
+      42,
+      78,
+      256,
+      34,
+      0
+     ],
+     [
+      48,
+      87,
+      230,
+      37,
+      1
+     ],
+     [
+      54,
+      97,
+      233,
+      23,
+      0
+     ],
+     [
+      60,
+      106,
+      190,
+      22,
+      0
+     ],
+     [
+      66,
+      115,
+      165,
+      26,
+      1
+     ],
+     [
+      72,
+      121,
+      133,
+      24,
+      0
+     ],
+     [
+      78,
+      130,
+      156,
+      17,
+      1
+     ],
+     [
+      84,
+      137,
+      135,
+      14,
+      0
+     ],
+     [
+      90,
+      146,
+      164,
+      37,
+      1
+     ],
+     [
+      96,
+      152,
+      129,
+      15,
+      0
+     ],
+     [
+      102,
+      160,
+      135,
+      14,
+      0
+     ],
+     [
+      108,
+      166,
+      122,
+      16,
+      0
+     ],
+     [
+      114,
+      173,
+      160,
+      15,
+      0
+     ],
+     [
+      120,
+      181,
+      155,
+      23,
+      0
+     ],
+     [
+      126,
+      188,
+      174,
+      27,
+      0
+     ],
+     [
+      132,
+      195,
+      175,
+      18,
+      0
+     ],
+     [
+      138,
+      203,
+      199,
+      27,
+      0
+     ],
+     [
+      144,
+      210,
+      185,
+      38,
+      0
+     ],
+     [
+      150,
+      217,
+      190,
+      26,
+      0
+     ],
+     [
+      156,
+      222,
+      210,
+      14,
+      0
+     ],
+     [
+      162,
+      233,
+      193,
+      19,
+      0
+     ],
+     [
+      168,
+      240,
+      217,
+      19,
+      0
+     ],
+     [
+      174,
+      246,
+      193,
+      20,
+      0
+     ],
+     [
+      180,
+      251,
+      191,
+      29,
+      0
+     ],
+     [
+      186,
+      260,
+      212,
+      41,
+      1
+     ],
+     [
+      192,
+      265,
+      185,
+      30,
+      0
+     ],
+     [
+      198,
+      274,
+      221,
+      50,
+      0
+     ],
+     [
+      204,
+      282,
+      165,
+      17,
+      0
+     ],
+     [
+      210,
+      289,
+      223,
+      36,
+      0
+     ],
+     [
+      216,
+      296,
+      179,
+      18,
+      0
+     ],
+     [
+      222,
+      303,
+      210,
+      22,
+      0
+     ],
+     [
+      228,
+      311,
+      192,
+      37,
+      0
+     ],
+     [
+      234,
+      317,
+      212,
+      50,
+      8
+     ],
+     [
+      240,
+      325,
+      209,
+      32,
+      2
+     ],
+     [
+      246,
+      332,
+      203,
+      39,
+      0
+     ],
+     [
+      252,
+      338,
+      184,
+      28,
+      0
+     ],
+     [
+      258,
+      345,
+      209,
+      39,
+      2
+     ],
+     [
+      264,
+      352,
+      168,
+      21,
+      0
+     ],
+     [
+      270,
+      360,
+      167,
+      13,
+      0
+     ],
+     [
+      276,
+      367,
+      145,
+      27,
+      0
+     ],
+     [
+      282,
+      373,
+      155,
+      36,
+      0
+     ],
+     [
+      288,
+      381,
+      158,
+      13,
+      0
+     ],
+     [
+      294,
+      387,
+      201,
+      35,
+      0
+     ],
+     [
+      300,
+      394,
+      175,
+      30,
+      2
+     ],
+     [
+      305,
+      400,
+      151,
+      20,
+      1
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 54530,
+       "kids": 78151,
+       "age": 3056116.3666666993,
+       "ateA": 123333297.06643128,
+       "ateM": 307546.2402742041,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "2/noeye": {
+       "n": 681,
+       "kids": 320,
+       "age": 33235.583333333234,
+       "ateA": 1000814.6633584534,
+       "ateM": 1049.0632775269512,
+       "eyeSum": 30.947015733431247,
+       "parts": 1362
+      },
+      "1/noeye": {
+       "n": 8667,
+       "kids": 7155,
+       "age": 468685.3833333367,
+       "ateA": 16038836.696276188,
+       "ateM": 28883.56422785041,
+       "eyeSum": 254.65256577066594,
+       "parts": 8667
+      },
+      "1/eye": {
+       "n": 179,
+       "kids": 157,
+       "age": 9701.7166666666,
+       "ateA": 339164.01285518357,
+       "ateM": 221.52689805168274,
+       "eyeSum": 100.1163959367023,
+       "parts": 179
+      },
+      "3+/noeye": {
+       "n": 22,
+       "kids": 1,
+       "age": 1002.7000000000005,
+       "ateA": 21664.059547015757,
+       "ateM": 0,
+       "eyeSum": 1.1492074857063852,
+       "parts": 68
+      },
+      "2/eye": {
+       "n": 15,
+       "kids": 5,
+       "age": 687.9166666667023,
+       "ateA": 15261.09704626977,
+       "ateM": 0,
+       "eyeSum": 8.559541415939027,
+       "parts": 30
+      }
+     },
+     "deaths": 64094,
+     "kills": 5397
+    },
+    "tab": "A"
+   },
+   {
+    "seed": 1002,
+    "th": 0,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 410382,
+    "fin": {
+     "gen": 400,
+     "min": 307,
+     "pop": 177,
+     "dKill": 5843,
+     "births": 67606,
+     "deaths": 68059
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      398,
+      74,
+      1
+     ],
+     [
+      12,
+      25,
+      297,
+      48,
+      0
+     ],
+     [
+      18,
+      38,
+      292,
+      46,
+      3
+     ],
+     [
+      24,
+      51,
+      222,
+      46,
+      0
+     ],
+     [
+      30,
+      61,
+      260,
+      44,
+      0
+     ],
+     [
+      36,
+      71,
+      274,
+      72,
+      0
+     ],
+     [
+      42,
+      83,
+      265,
+      48,
+      0
+     ],
+     [
+      48,
+      93,
+      230,
+      24,
+      0
+     ],
+     [
+      54,
+      101,
+      227,
+      26,
+      2
+     ],
+     [
+      60,
+      110,
+      229,
+      42,
+      5
+     ],
+     [
+      66,
+      121,
+      225,
+      39,
+      1
+     ],
+     [
+      72,
+      128,
+      232,
+      42,
+      1
+     ],
+     [
+      78,
+      136,
+      254,
+      23,
+      0
+     ],
+     [
+      84,
+      144,
+      223,
+      31,
+      4
+     ],
+     [
+      90,
+      153,
+      225,
+      31,
+      0
+     ],
+     [
+      96,
+      159,
+      191,
+      23,
+      3
+     ],
+     [
+      102,
+      170,
+      196,
+      26,
+      0
+     ],
+     [
+      108,
+      175,
+      142,
+      17,
+      0
+     ],
+     [
+      114,
+      183,
+      146,
+      22,
+      0
+     ],
+     [
+      120,
+      190,
+      139,
+      32,
+      0
+     ],
+     [
+      126,
+      200,
+      134,
+      20,
+      0
+     ],
+     [
+      132,
+      208,
+      136,
+      10,
+      0
+     ],
+     [
+      138,
+      215,
+      159,
+      17,
+      0
+     ],
+     [
+      144,
+      221,
+      147,
+      11,
+      0
+     ],
+     [
+      150,
+      229,
+      184,
+      28,
+      0
+     ],
+     [
+      156,
+      235,
+      167,
+      26,
+      0
+     ],
+     [
+      162,
+      242,
+      182,
+      24,
+      1
+     ],
+     [
+      168,
+      249,
+      183,
+      24,
+      0
+     ],
+     [
+      174,
+      258,
+      189,
+      33,
+      0
+     ],
+     [
+      180,
+      264,
+      170,
+      13,
+      0
+     ],
+     [
+      186,
+      269,
+      165,
+      18,
+      0
+     ],
+     [
+      192,
+      275,
+      144,
+      14,
+      0
+     ],
+     [
+      198,
+      283,
+      169,
+      24,
+      0
+     ],
+     [
+      204,
+      288,
+      166,
+      19,
+      1
+     ],
+     [
+      210,
+      295,
+      168,
+      26,
+      0
+     ],
+     [
+      216,
+      302,
+      156,
+      28,
+      0
+     ],
+     [
+      222,
+      308,
+      174,
+      37,
+      1
+     ],
+     [
+      228,
+      311,
+      144,
+      21,
+      1
+     ],
+     [
+      234,
+      319,
+      175,
+      25,
+      3
+     ],
+     [
+      240,
+      324,
+      160,
+      23,
+      0
+     ],
+     [
+      246,
+      331,
+      181,
+      28,
+      0
+     ],
+     [
+      252,
+      339,
+      173,
+      26,
+      0
+     ],
+     [
+      258,
+      346,
+      179,
+      21,
+      0
+     ],
+     [
+      264,
+      352,
+      187,
+      19,
+      0
+     ],
+     [
+      270,
+      361,
+      211,
+      25,
+      0
+     ],
+     [
+      276,
+      367,
+      188,
+      17,
+      0
+     ],
+     [
+      282,
+      373,
+      195,
+      25,
+      0
+     ],
+     [
+      288,
+      378,
+      178,
+      20,
+      1
+     ],
+     [
+      294,
+      385,
+      207,
+      21,
+      0
+     ],
+     [
+      300,
+      391,
+      197,
+      28,
+      0
+     ],
+     [
+      306,
+      398,
+      191,
+      38,
+      0
+     ],
+     [
+      307,
+      400,
+      177,
+      31,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 56898,
+       "kids": 86428,
+       "age": 3155784.0166667136,
+       "ateA": 122900944.24789143,
+       "ateM": 286521.04709127586,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 9439,
+       "kids": 8936,
+       "age": 495319.54999999894,
+       "ateA": 15798182.994305696,
+       "ateM": 33408.54759915798,
+       "eyeSum": 294.9496315238131,
+       "parts": 9439
+      },
+      "2/noeye": {
+       "n": 800,
+       "kids": 416,
+       "age": 39522.21666666681,
+       "ateA": 1061487.4862075713,
+       "ateM": 1766.6775579398416,
+       "eyeSum": 37.81007930083102,
+       "parts": 1600
+      },
+      "1/eye": {
+       "n": 204,
+       "kids": 211,
+       "age": 10678.8,
+       "ateA": 296716.397109388,
+       "ateM": 194.18472408703863,
+       "eyeSum": 116.55297488826119,
+       "parts": 204
+      },
+      "2/eye": {
+       "n": 33,
+       "kids": 11,
+       "age": 1221.6833333333254,
+       "ateA": 29696.67783834119,
+       "ateM": 0,
+       "eyeSum": 19.92316098153643,
+       "parts": 66
+      },
+      "3+/noeye": {
+       "n": 52,
+       "kids": 34,
+       "age": 2527.7666666666382,
+       "ateA": 59388.54180561279,
+       "ateM": 55.299181417886984,
+       "eyeSum": 3.0581348006885634,
+       "parts": 162
+      },
+      "3+/eye": {
+       "n": 3,
+       "kids": 0,
+       "age": 135.98333333332855,
+       "ateA": 3191.1497407787183,
+       "ateM": 0,
+       "eyeSum": 1.4118759254130169,
+       "parts": 9
+      }
+     },
+     "deaths": 67429,
+     "kills": 5843
+    },
+    "tab": "A"
+   },
+   {
+    "seed": 1003,
+    "th": 0,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 405669,
+    "fin": {
+     "gen": 400,
+     "min": 313,
+     "pop": 174,
+     "dKill": 5839,
+     "births": 65393,
+     "deaths": 65849
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      418,
+      40,
+      0
+     ],
+     [
+      12,
+      26,
+      254,
+      51,
+      2
+     ],
+     [
+      18,
+      39,
+      285,
+      39,
+      1
+     ],
+     [
+      24,
+      48,
+      222,
+      43,
+      0
+     ],
+     [
+      30,
+      59,
+      248,
+      76,
+      0
+     ],
+     [
+      36,
+      69,
+      240,
+      32,
+      0
+     ],
+     [
+      42,
+      79,
+      242,
+      40,
+      1
+     ],
+     [
+      48,
+      90,
+      196,
+      33,
+      0
+     ],
+     [
+      54,
+      97,
+      216,
+      29,
+      0
+     ],
+     [
+      60,
+      105,
+      204,
+      19,
+      0
+     ],
+     [
+      66,
+      112,
+      196,
+      30,
+      1
+     ],
+     [
+      72,
+      118,
+      173,
+      26,
+      0
+     ],
+     [
+      78,
+      128,
+      186,
+      23,
+      1
+     ],
+     [
+      84,
+      134,
+      159,
+      19,
+      1
+     ],
+     [
+      90,
+      141,
+      173,
+      15,
+      0
+     ],
+     [
+      96,
+      148,
+      148,
+      18,
+      0
+     ],
+     [
+      102,
+      157,
+      163,
+      26,
+      0
+     ],
+     [
+      108,
+      163,
+      160,
+      12,
+      0
+     ],
+     [
+      114,
+      172,
+      171,
+      25,
+      0
+     ],
+     [
+      120,
+      178,
+      158,
+      26,
+      0
+     ],
+     [
+      126,
+      185,
+      187,
+      24,
+      0
+     ],
+     [
+      132,
+      192,
+      141,
+      19,
+      1
+     ],
+     [
+      138,
+      201,
+      182,
+      18,
+      0
+     ],
+     [
+      144,
+      206,
+      170,
+      18,
+      0
+     ],
+     [
+      150,
+      213,
+      184,
+      18,
+      0
+     ],
+     [
+      156,
+      219,
+      151,
+      15,
+      0
+     ],
+     [
+      162,
+      226,
+      181,
+      22,
+      0
+     ],
+     [
+      168,
+      233,
+      162,
+      20,
+      0
+     ],
+     [
+      174,
+      241,
+      196,
+      14,
+      0
+     ],
+     [
+      180,
+      246,
+      167,
+      18,
+      0
+     ],
+     [
+      186,
+      253,
+      185,
+      30,
+      0
+     ],
+     [
+      192,
+      259,
+      145,
+      8,
+      0
+     ],
+     [
+      198,
+      267,
+      180,
+      36,
+      1
+     ],
+     [
+      204,
+      272,
+      152,
+      19,
+      1
+     ],
+     [
+      210,
+      280,
+      188,
+      40,
+      0
+     ],
+     [
+      216,
+      286,
+      139,
+      16,
+      2
+     ],
+     [
+      222,
+      292,
+      158,
+      21,
+      2
+     ],
+     [
+      228,
+      301,
+      154,
+      19,
+      0
+     ],
+     [
+      234,
+      308,
+      161,
+      20,
+      0
+     ],
+     [
+      240,
+      313,
+      149,
+      17,
+      0
+     ],
+     [
+      246,
+      322,
+      181,
+      17,
+      0
+     ],
+     [
+      252,
+      327,
+      142,
+      22,
+      0
+     ],
+     [
+      258,
+      333,
+      184,
+      26,
+      0
+     ],
+     [
+      264,
+      339,
+      170,
+      34,
+      0
+     ],
+     [
+      270,
+      349,
+      169,
+      31,
+      0
+     ],
+     [
+      276,
+      354,
+      166,
+      20,
+      0
+     ],
+     [
+      282,
+      360,
+      187,
+      28,
+      0
+     ],
+     [
+      288,
+      366,
+      187,
+      16,
+      0
+     ],
+     [
+      294,
+      374,
+      182,
+      26,
+      0
+     ],
+     [
+      300,
+      384,
+      173,
+      25,
+      0
+     ],
+     [
+      306,
+      392,
+      211,
+      30,
+      0
+     ],
+     [
+      312,
+      397,
+      158,
+      21,
+      0
+     ],
+     [
+      313,
+      400,
+      174,
+      18,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 56066,
+       "kids": 83267,
+       "age": 3067209.183333388,
+       "ateA": 125820925.9815404,
+       "ateM": 289040.277591527,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 8388,
+       "kids": 6808,
+       "age": 431707.7166666674,
+       "ateA": 14237854.94892529,
+       "ateM": 31404.623279029965,
+       "eyeSum": 222.52204465920315,
+       "parts": 8388
+      },
+      "2/noeye": {
+       "n": 600,
+       "kids": 256,
+       "age": 28554.333333333307,
+       "ateA": 792139.5981044566,
+       "ateM": 2039.7145319692631,
+       "eyeSum": 24.124488844997323,
+       "parts": 1200
+      },
+      "1/eye": {
+       "n": 133,
+       "kids": 76,
+       "age": 5991.933333333336,
+       "ateA": 192351.75122794294,
+       "ateM": 0,
+       "eyeSum": 74.87506654642947,
+       "parts": 133
+      },
+      "3+/noeye": {
+       "n": 21,
+       "kids": 6,
+       "age": 730.98333333333,
+       "ateA": 20909.622762262654,
+       "ateM": 0,
+       "eyeSum": 1.369192746999741,
+       "parts": 63
+      },
+      "2/eye": {
+       "n": 11,
+       "kids": 0,
+       "age": 375.8666666666919,
+       "ateA": 7111.008669328945,
+       "ateM": 2.9309638377279086,
+       "eyeSum": 6.059621655935737,
+       "parts": 22
+      }
+     },
+     "deaths": 65219,
+     "kills": 5839
+    },
+    "tab": "A"
+   },
+   {
+    "seed": 1004,
+    "th": 0,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 428775,
+    "fin": {
+     "gen": 400,
+     "min": 303,
+     "pop": 189,
+     "dKill": 6224,
+     "births": 72608,
+     "deaths": 73049
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      416,
+      74,
+      4
+     ],
+     [
+      12,
+      24,
+      275,
+      85,
+      3
+     ],
+     [
+      18,
+      34,
+      287,
+      80,
+      2
+     ],
+     [
+      24,
+      43,
+      252,
+      41,
+      0
+     ],
+     [
+      30,
+      55,
+      245,
+      59,
+      2
+     ],
+     [
+      36,
+      64,
+      240,
+      36,
+      0
+     ],
+     [
+      42,
+      75,
+      268,
+      48,
+      0
+     ],
+     [
+      48,
+      87,
+      275,
+      41,
+      0
+     ],
+     [
+      54,
+      95,
+      294,
+      45,
+      0
+     ],
+     [
+      60,
+      104,
+      246,
+      47,
+      1
+     ],
+     [
+      66,
+      115,
+      303,
+      57,
+      2
+     ],
+     [
+      72,
+      122,
+      252,
+      58,
+      3
+     ],
+     [
+      78,
+      133,
+      260,
+      56,
+      0
+     ],
+     [
+      84,
+      142,
+      233,
+      22,
+      0
+     ],
+     [
+      90,
+      149,
+      225,
+      31,
+      0
+     ],
+     [
+      96,
+      158,
+      194,
+      18,
+      1
+     ],
+     [
+      102,
+      165,
+      185,
+      31,
+      0
+     ],
+     [
+      108,
+      171,
+      143,
+      19,
+      0
+     ],
+     [
+      114,
+      182,
+      170,
+      32,
+      0
+     ],
+     [
+      120,
+      189,
+      162,
+      21,
+      0
+     ],
+     [
+      126,
+      192,
+      191,
+      33,
+      0
+     ],
+     [
+      132,
+      199,
+      185,
+      23,
+      0
+     ],
+     [
+      138,
+      206,
+      173,
+      13,
+      0
+     ],
+     [
+      144,
+      212,
+      156,
+      14,
+      0
+     ],
+     [
+      150,
+      219,
+      176,
+      23,
+      0
+     ],
+     [
+      156,
+      228,
+      187,
+      20,
+      0
+     ],
+     [
+      162,
+      234,
+      201,
+      32,
+      3
+     ],
+     [
+      168,
+      240,
+      197,
+      19,
+      1
+     ],
+     [
+      174,
+      247,
+      193,
+      27,
+      0
+     ],
+     [
+      180,
+      253,
+      214,
+      22,
+      0
+     ],
+     [
+      186,
+      260,
+      227,
+      37,
+      0
+     ],
+     [
+      192,
+      268,
+      207,
+      23,
+      0
+     ],
+     [
+      198,
+      273,
+      197,
+      17,
+      0
+     ],
+     [
+      204,
+      281,
+      179,
+      24,
+      0
+     ],
+     [
+      210,
+      289,
+      188,
+      33,
+      2
+     ],
+     [
+      216,
+      296,
+      177,
+      22,
+      2
+     ],
+     [
+      222,
+      304,
+      219,
+      35,
+      1
+     ],
+     [
+      228,
+      310,
+      179,
+      13,
+      0
+     ],
+     [
+      234,
+      318,
+      185,
+      16,
+      0
+     ],
+     [
+      240,
+      324,
+      163,
+      20,
+      0
+     ],
+     [
+      246,
+      330,
+      161,
+      9,
+      0
+     ],
+     [
+      252,
+      337,
+      151,
+      30,
+      0
+     ],
+     [
+      258,
+      344,
+      169,
+      31,
+      0
+     ],
+     [
+      264,
+      351,
+      162,
+      16,
+      0
+     ],
+     [
+      270,
+      357,
+      187,
+      25,
+      0
+     ],
+     [
+      276,
+      365,
+      171,
+      16,
+      2
+     ],
+     [
+      282,
+      373,
+      189,
+      18,
+      0
+     ],
+     [
+      288,
+      380,
+      173,
+      18,
+      0
+     ],
+     [
+      294,
+      392,
+      184,
+      29,
+      2
+     ],
+     [
+      300,
+      398,
+      190,
+      25,
+      2
+     ],
+     [
+      303,
+      400,
+      189,
+      22,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 61395,
+       "kids": 91262,
+       "age": 3243004.9833333585,
+       "ateA": 116170302.74050646,
+       "ateM": 268766.15230070136,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 9907,
+       "kids": 8837,
+       "age": 501751.2666666672,
+       "ateA": 14172284.291577164,
+       "ateM": 41950.50484511675,
+       "eyeSum": 284.6286225899461,
+       "parts": 9907
+      },
+      "2/noeye": {
+       "n": 814,
+       "kids": 411,
+       "age": 39616.21666666684,
+       "ateA": 1032356.7402675155,
+       "ateM": 1387.2722471495385,
+       "eyeSum": 35.74473662564434,
+       "parts": 1628
+      },
+      "3+/noeye": {
+       "n": 57,
+       "kids": 19,
+       "age": 2284.950000000019,
+       "ateA": 65305.93479956859,
+       "ateM": 765.0945783838022,
+       "eyeSum": 3.699743768970453,
+       "parts": 174
+      },
+      "1/eye": {
+       "n": 199,
+       "kids": 177,
+       "age": 8830.433333333174,
+       "ateA": 231395.0460515943,
+       "ateM": 81.54107938239883,
+       "eyeSum": 113.52746927772434,
+       "parts": 199
+      },
+      "2/eye": {
+       "n": 44,
+       "kids": 37,
+       "age": 2330.099999999998,
+       "ateA": 66320.71676938691,
+       "ateM": 0,
+       "eyeSum": 28.410743300401325,
+       "parts": 88
+      },
+      "3+/eye": {
+       "n": 3,
+       "kids": 0,
+       "age": 35.06666666666699,
+       "ateA": 199.3961742911266,
+       "ateM": 0,
+       "eyeSum": 1.8139364018637207,
+       "parts": 9
+      }
+     },
+     "deaths": 72419,
+     "kills": 6224
+    },
+    "tab": "A"
+   },
+   {
+    "seed": 1005,
+    "th": 0,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 375560,
+    "fin": {
+     "gen": 400,
+     "min": 306,
+     "pop": 181,
+     "dKill": 4852,
+     "births": 59221,
+     "deaths": 59670
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      13,
+      377,
+      65,
+      1
+     ],
+     [
+      12,
+      22,
+      235,
+      22,
+      1
+     ],
+     [
+      18,
+      36,
+      321,
+      81,
+      1
+     ],
+     [
+      24,
+      45,
+      299,
+      83,
+      1
+     ],
+     [
+      30,
+      54,
+      336,
+      96,
+      1
+     ],
+     [
+      36,
+      62,
+      285,
+      62,
+      0
+     ],
+     [
+      42,
+      73,
+      295,
+      55,
+      1
+     ],
+     [
+      48,
+      82,
+      218,
+      45,
+      1
+     ],
+     [
+      54,
+      93,
+      234,
+      42,
+      6
+     ],
+     [
+      60,
+      102,
+      212,
+      28,
+      0
+     ],
+     [
+      66,
+      112,
+      248,
+      41,
+      1
+     ],
+     [
+      72,
+      116,
+      211,
+      33,
+      0
+     ],
+     [
+      78,
+      122,
+      227,
+      33,
+      0
+     ],
+     [
+      84,
+      131,
+      195,
+      15,
+      0
+     ],
+     [
+      90,
+      143,
+      194,
+      20,
+      0
+     ],
+     [
+      96,
+      149,
+      167,
+      14,
+      0
+     ],
+     [
+      102,
+      156,
+      148,
+      19,
+      0
+     ],
+     [
+      108,
+      159,
+      121,
+      9,
+      0
+     ],
+     [
+      114,
+      169,
+      135,
+      28,
+      0
+     ],
+     [
+      120,
+      174,
+      123,
+      19,
+      0
+     ],
+     [
+      126,
+      180,
+      135,
+      34,
+      0
+     ],
+     [
+      132,
+      188,
+      105,
+      14,
+      0
+     ],
+     [
+      138,
+      194,
+      127,
+      17,
+      5
+     ],
+     [
+      144,
+      197,
+      112,
+      15,
+      0
+     ],
+     [
+      150,
+      202,
+      131,
+      23,
+      0
+     ],
+     [
+      156,
+      206,
+      107,
+      11,
+      0
+     ],
+     [
+      162,
+      215,
+      127,
+      23,
+      0
+     ],
+     [
+      168,
+      221,
+      121,
+      29,
+      5
+     ],
+     [
+      174,
+      228,
+      144,
+      9,
+      0
+     ],
+     [
+      180,
+      235,
+      132,
+      28,
+      0
+     ],
+     [
+      186,
+      242,
+      131,
+      22,
+      0
+     ],
+     [
+      192,
+      253,
+      107,
+      17,
+      0
+     ],
+     [
+      198,
+      261,
+      133,
+      15,
+      0
+     ],
+     [
+      204,
+      266,
+      98,
+      10,
+      0
+     ],
+     [
+      210,
+      276,
+      137,
+      20,
+      0
+     ],
+     [
+      216,
+      281,
+      117,
+      25,
+      0
+     ],
+     [
+      222,
+      291,
+      131,
+      25,
+      0
+     ],
+     [
+      228,
+      298,
+      135,
+      19,
+      0
+     ],
+     [
+      234,
+      304,
+      124,
+      25,
+      0
+     ],
+     [
+      240,
+      309,
+      124,
+      16,
+      0
+     ],
+     [
+      246,
+      322,
+      138,
+      20,
+      1
+     ],
+     [
+      252,
+      332,
+      134,
+      16,
+      0
+     ],
+     [
+      258,
+      340,
+      148,
+      13,
+      0
+     ],
+     [
+      264,
+      348,
+      137,
+      9,
+      0
+     ],
+     [
+      270,
+      357,
+      153,
+      34,
+      3
+     ],
+     [
+      276,
+      364,
+      132,
+      19,
+      0
+     ],
+     [
+      282,
+      371,
+      149,
+      37,
+      4
+     ],
+     [
+      288,
+      380,
+      155,
+      15,
+      0
+     ],
+     [
+      294,
+      387,
+      181,
+      15,
+      3
+     ],
+     [
+      300,
+      392,
+      151,
+      16,
+      0
+     ],
+     [
+      306,
+      400,
+      181,
+      21,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 48821,
+       "kids": 72482,
+       "age": 2669142.233333354,
+       "ateA": 131922849.99066772,
+       "ateM": 300069.2193017306,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 8954,
+       "kids": 8812,
+       "age": 460932.5833333318,
+       "ateA": 17690772.727670144,
+       "ateM": 30346.715902345473,
+       "eyeSum": 324.17427065567745,
+       "parts": 8954
+      },
+      "2/noeye": {
+       "n": 957,
+       "kids": 696,
+       "age": 44831.533333333384,
+       "ateA": 1595377.3591816444,
+       "ateM": 539.0136103449655,
+       "eyeSum": 69.38790228343085,
+       "parts": 1914
+      },
+      "3+/noeye": {
+       "n": 107,
+       "kids": 77,
+       "age": 4660.333333333307,
+       "ateA": 124375.78595310386,
+       "ateM": 242.6536323631471,
+       "eyeSum": 17.58901483930225,
+       "parts": 324
+      },
+      "1/eye": {
+       "n": 171,
+       "kids": 147,
+       "age": 9096.799999999927,
+       "ateA": 346946.4205677965,
+       "ateM": 1408.3573959850455,
+       "eyeSum": 93.40562227479748,
+       "parts": 171
+      },
+      "2/eye": {
+       "n": 22,
+       "kids": 16,
+       "age": 1129.5333333332983,
+       "ateA": 26055.550846411796,
+       "ateM": 0,
+       "eyeSum": 11.482741989006168,
+       "parts": 44
+      },
+      "3+/eye": {
+       "n": 8,
+       "kids": 4,
+       "age": 364.2333333333203,
+       "ateA": 7165.72186933388,
+       "ateM": 0,
+       "eyeSum": 6.008481708375536,
+       "parts": 24
+      }
+     },
+     "deaths": 59040,
+     "kills": 4852
+    },
+    "tab": "A"
+   },
+   {
+    "seed": 60606,
+    "th": 1,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 450429,
+    "fin": {
+     "gen": 400,
+     "min": 331,
+     "pop": 143,
+     "dKill": 6565,
+     "births": 72651,
+     "deaths": 73138
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      365,
+      77,
+      0
+     ],
+     [
+      12,
+      25,
+      236,
+      64,
+      3
+     ],
+     [
+      18,
+      35,
+      285,
+      123,
+      7
+     ],
+     [
+      24,
+      45,
+      240,
+      67,
+      9
+     ],
+     [
+      30,
+      55,
+      252,
+      56,
+      2
+     ],
+     [
+      36,
+      66,
+      236,
+      49,
+      4
+     ],
+     [
+      42,
+      73,
+      264,
+      48,
+      0
+     ],
+     [
+      48,
+      81,
+      235,
+      59,
+      0
+     ],
+     [
+      54,
+      89,
+      234,
+      62,
+      0
+     ],
+     [
+      60,
+      99,
+      209,
+      55,
+      0
+     ],
+     [
+      66,
+      107,
+      191,
+      51,
+      1
+     ],
+     [
+      72,
+      114,
+      177,
+      66,
+      14
+     ],
+     [
+      78,
+      125,
+      179,
+      24,
+      0
+     ],
+     [
+      84,
+      128,
+      147,
+      32,
+      0
+     ],
+     [
+      90,
+      133,
+      148,
+      30,
+      1
+     ],
+     [
+      96,
+      138,
+      158,
+      29,
+      0
+     ],
+     [
+      102,
+      146,
+      171,
+      21,
+      1
+     ],
+     [
+      108,
+      154,
+      170,
+      32,
+      0
+     ],
+     [
+      114,
+      160,
+      176,
+      27,
+      2
+     ],
+     [
+      120,
+      166,
+      159,
+      33,
+      0
+     ],
+     [
+      126,
+      172,
+      154,
+      23,
+      0
+     ],
+     [
+      132,
+      178,
+      160,
+      24,
+      0
+     ],
+     [
+      138,
+      188,
+      180,
+      30,
+      10
+     ],
+     [
+      144,
+      198,
+      161,
+      30,
+      5
+     ],
+     [
+      150,
+      202,
+      201,
+      46,
+      0
+     ],
+     [
+      156,
+      211,
+      203,
+      39,
+      0
+     ],
+     [
+      162,
+      218,
+      209,
+      32,
+      0
+     ],
+     [
+      168,
+      226,
+      174,
+      33,
+      1
+     ],
+     [
+      174,
+      235,
+      167,
+      36,
+      1
+     ],
+     [
+      180,
+      242,
+      163,
+      17,
+      0
+     ],
+     [
+      186,
+      250,
+      201,
+      22,
+      0
+     ],
+     [
+      192,
+      257,
+      160,
+      26,
+      2
+     ],
+     [
+      198,
+      264,
+      168,
+      38,
+      4
+     ],
+     [
+      204,
+      271,
+      162,
+      23,
+      0
+     ],
+     [
+      210,
+      277,
+      178,
+      25,
+      0
+     ],
+     [
+      216,
+      283,
+      161,
+      42,
+      0
+     ],
+     [
+      222,
+      290,
+      185,
+      41,
+      2
+     ],
+     [
+      228,
+      296,
+      156,
+      48,
+      1
+     ],
+     [
+      234,
+      303,
+      159,
+      30,
+      7
+     ],
+     [
+      240,
+      308,
+      156,
+      18,
+      9
+     ],
+     [
+      246,
+      313,
+      197,
+      43,
+      7
+     ],
+     [
+      252,
+      321,
+      166,
+      10,
+      0
+     ],
+     [
+      258,
+      329,
+      169,
+      26,
+      0
+     ],
+     [
+      264,
+      334,
+      160,
+      30,
+      0
+     ],
+     [
+      270,
+      340,
+      167,
+      40,
+      2
+     ],
+     [
+      276,
+      347,
+      146,
+      10,
+      0
+     ],
+     [
+      282,
+      355,
+      219,
+      32,
+      0
+     ],
+     [
+      288,
+      360,
+      226,
+      52,
+      1
+     ],
+     [
+      294,
+      365,
+      257,
+      37,
+      0
+     ],
+     [
+      300,
+      367,
+      204,
+      44,
+      4
+     ],
+     [
+      306,
+      367,
+      216,
+      51,
+      0
+     ],
+     [
+      312,
+      372,
+      165,
+      22,
+      0
+     ],
+     [
+      318,
+      379,
+      196,
+      36,
+      2
+     ],
+     [
+      324,
+      389,
+      173,
+      36,
+      1
+     ],
+     [
+      330,
+      397,
+      195,
+      42,
+      0
+     ],
+     [
+      331,
+      400,
+      143,
+      29,
+      2
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 55955,
+       "kids": 82551,
+       "age": 3069764.633333361,
+       "ateA": 126561641.77578893,
+       "ateM": 328096.1044978894,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 13744,
+       "kids": 15252,
+       "age": 644841.7666666606,
+       "ateA": 20735441.812917046,
+       "ateM": 58194.869387133636,
+       "eyeSum": 541.8056941649631,
+       "parts": 13744
+      },
+      "2/noeye": {
+       "n": 1963,
+       "kids": 1678,
+       "age": 81248.21666666609,
+       "ateA": 2279142.101077011,
+       "ateM": 5496.814142337901,
+       "eyeSum": 109.75437475527661,
+       "parts": 3926
+      },
+      "1/eye": {
+       "n": 561,
+       "kids": 675,
+       "age": 27745.283333333336,
+       "ateA": 882911.7027047669,
+       "ateM": 933.0921513895768,
+       "eyeSum": 351.9706991859426,
+       "parts": 561
+      },
+      "3+/noeye": {
+       "n": 148,
+       "kids": 69,
+       "age": 4726.100000000011,
+       "ateA": 117646.77874653698,
+       "ateM": 178.94695064754012,
+       "eyeSum": 10.234152976025491,
+       "parts": 451
+      },
+      "2/eye": {
+       "n": 117,
+       "kids": 96,
+       "age": 4349.566666666626,
+       "ateA": 118746.45082583098,
+       "ateM": 0,
+       "eyeSum": 69.07643877045872,
+       "parts": 234
+      },
+      "3+/eye": {
+       "n": 20,
+       "kids": 17,
+       "age": 714.9166666666484,
+       "ateA": 16153.038714794666,
+       "ateM": 0,
+       "eyeSum": 11.348649342441925,
+       "parts": 62
+      }
+     },
+     "deaths": 72508,
+     "kills": 6565
+    },
+    "tab": "B"
+   },
+   {
+    "seed": 1001,
+    "th": 1,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 452395,
+    "fin": {
+     "gen": 400,
+     "min": 308,
+     "pop": 198,
+     "dKill": 6994,
+     "births": 67587,
+     "deaths": 68019
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      17,
+      293,
+      68,
+      1
+     ],
+     [
+      12,
+      25,
+      188,
+      57,
+      0
+     ],
+     [
+      18,
+      33,
+      209,
+      77,
+      6
+     ],
+     [
+      24,
+      45,
+      229,
+      66,
+      0
+     ],
+     [
+      30,
+      54,
+      278,
+      77,
+      10
+     ],
+     [
+      36,
+      62,
+      208,
+      48,
+      1
+     ],
+     [
+      42,
+      72,
+      216,
+      28,
+      1
+     ],
+     [
+      48,
+      82,
+      197,
+      27,
+      0
+     ],
+     [
+      54,
+      93,
+      217,
+      32,
+      0
+     ],
+     [
+      60,
+      99,
+      195,
+      33,
+      0
+     ],
+     [
+      66,
+      112,
+      226,
+      67,
+      1
+     ],
+     [
+      72,
+      116,
+      212,
+      54,
+      0
+     ],
+     [
+      78,
+      123,
+      223,
+      59,
+      2
+     ],
+     [
+      84,
+      132,
+      190,
+      52,
+      5
+     ],
+     [
+      90,
+      136,
+      178,
+      46,
+      13
+     ],
+     [
+      96,
+      142,
+      154,
+      29,
+      4
+     ],
+     [
+      102,
+      148,
+      159,
+      29,
+      0
+     ],
+     [
+      108,
+      153,
+      149,
+      17,
+      0
+     ],
+     [
+      114,
+      161,
+      179,
+      46,
+      0
+     ],
+     [
+      120,
+      168,
+      165,
+      53,
+      0
+     ],
+     [
+      126,
+      174,
+      167,
+      45,
+      0
+     ],
+     [
+      132,
+      182,
+      178,
+      39,
+      2
+     ],
+     [
+      138,
+      188,
+      206,
+      22,
+      0
+     ],
+     [
+      144,
+      195,
+      160,
+      26,
+      0
+     ],
+     [
+      150,
+      204,
+      176,
+      39,
+      0
+     ],
+     [
+      156,
+      212,
+      166,
+      46,
+      4
+     ],
+     [
+      162,
+      221,
+      174,
+      35,
+      0
+     ],
+     [
+      168,
+      229,
+      184,
+      23,
+      0
+     ],
+     [
+      174,
+      237,
+      200,
+      24,
+      0
+     ],
+     [
+      180,
+      244,
+      173,
+      26,
+      0
+     ],
+     [
+      186,
+      252,
+      198,
+      59,
+      7
+     ],
+     [
+      192,
+      257,
+      184,
+      36,
+      4
+     ],
+     [
+      198,
+      264,
+      186,
+      84,
+      1
+     ],
+     [
+      204,
+      272,
+      166,
+      29,
+      0
+     ],
+     [
+      210,
+      279,
+      189,
+      42,
+      1
+     ],
+     [
+      216,
+      284,
+      172,
+      39,
+      1
+     ],
+     [
+      222,
+      292,
+      219,
+      66,
+      2
+     ],
+     [
+      228,
+      299,
+      198,
+      45,
+      0
+     ],
+     [
+      234,
+      308,
+      198,
+      37,
+      2
+     ],
+     [
+      240,
+      316,
+      164,
+      26,
+      1
+     ],
+     [
+      246,
+      323,
+      174,
+      54,
+      11
+     ],
+     [
+      252,
+      333,
+      145,
+      33,
+      3
+     ],
+     [
+      258,
+      342,
+      162,
+      15,
+      1
+     ],
+     [
+      264,
+      348,
+      148,
+      26,
+      1
+     ],
+     [
+      270,
+      356,
+      174,
+      29,
+      0
+     ],
+     [
+      276,
+      361,
+      183,
+      40,
+      1
+     ],
+     [
+      282,
+      371,
+      208,
+      34,
+      1
+     ],
+     [
+      288,
+      377,
+      197,
+      54,
+      8
+     ],
+     [
+      294,
+      383,
+      194,
+      35,
+      0
+     ],
+     [
+      300,
+      390,
+      208,
+      51,
+      0
+     ],
+     [
+      306,
+      396,
+      216,
+      41,
+      3
+     ],
+     [
+      308,
+      400,
+      198,
+      37,
+      1
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 51235,
+       "kids": 75283,
+       "age": 2824610.933333341,
+       "ateA": 115391812.12820338,
+       "ateM": 322183.39494879835,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "2/noeye": {
+       "n": 2290,
+       "kids": 2075,
+       "age": 97926.01666666553,
+       "ateA": 2797697.398980859,
+       "ateM": 3357.6075307167166,
+       "eyeSum": 161.18056927587264,
+       "parts": 4580
+      },
+      "1/noeye": {
+       "n": 13013,
+       "kids": 14507,
+       "age": 631329.5499999943,
+       "ateA": 20700877.80674397,
+       "ateM": 48151.132307681204,
+       "eyeSum": 534.1860940775065,
+       "parts": 13013
+      },
+      "1/eye": {
+       "n": 531,
+       "kids": 598,
+       "age": 25115.149999999863,
+       "ateA": 952138.7269092723,
+       "ateM": 942.0002370676843,
+       "eyeSum": 334.9795673048173,
+       "parts": 531
+      },
+      "3+/noeye": {
+       "n": 189,
+       "kids": 109,
+       "age": 6419.38333333319,
+       "ateA": 171939.8098544297,
+       "ateM": 267.7698872028143,
+       "eyeSum": 15.320284905572999,
+       "parts": 586
+      },
+      "2/eye": {
+       "n": 123,
+       "kids": 125,
+       "age": 5403.166666666683,
+       "ateA": 168734.5347654962,
+       "ateM": 46.775305938861095,
+       "eyeSum": 71.44580453925752,
+       "parts": 246
+      },
+      "3+/eye": {
+       "n": 8,
+       "kids": 0,
+       "age": 122.08333333333206,
+       "ateA": 2077.8457332839234,
+       "ateM": 0,
+       "eyeSum": 5.062275294882404,
+       "parts": 24
+      }
+     },
+     "deaths": 67389,
+     "kills": 6992
+    },
+    "tab": "B"
+   },
+   {
+    "seed": 1002,
+    "th": 1,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 941167,
+    "fin": {
+     "gen": 400,
+     "min": 325,
+     "pop": 214,
+     "dKill": 6482,
+     "births": 70886,
+     "deaths": 71302
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      366,
+      63,
+      0
+     ],
+     [
+      12,
+      29,
+      236,
+      52,
+      1
+     ],
+     [
+      18,
+      40,
+      307,
+      114,
+      13
+     ],
+     [
+      24,
+      48,
+      235,
+      72,
+      0
+     ],
+     [
+      30,
+      58,
+      261,
+      69,
+      4
+     ],
+     [
+      36,
+      66,
+      200,
+      52,
+      0
+     ],
+     [
+      42,
+      73,
+      244,
+      86,
+      5
+     ],
+     [
+      48,
+      81,
+      208,
+      32,
+      5
+     ],
+     [
+      54,
+      91,
+      210,
+      50,
+      0
+     ],
+     [
+      60,
+      96,
+      167,
+      21,
+      2
+     ],
+     [
+      66,
+      102,
+      202,
+      43,
+      1
+     ],
+     [
+      72,
+      108,
+      177,
+      40,
+      0
+     ],
+     [
+      78,
+      116,
+      185,
+      41,
+      0
+     ],
+     [
+      84,
+      125,
+      175,
+      55,
+      1
+     ],
+     [
+      90,
+      131,
+      183,
+      31,
+      0
+     ],
+     [
+      96,
+      139,
+      154,
+      35,
+      5
+     ],
+     [
+      102,
+      147,
+      183,
+      54,
+      0
+     ],
+     [
+      108,
+      153,
+      139,
+      30,
+      0
+     ],
+     [
+      114,
+      160,
+      170,
+      28,
+      0
+     ],
+     [
+      120,
+      167,
+      149,
+      33,
+      0
+     ],
+     [
+      126,
+      179,
+      164,
+      60,
+      2
+     ],
+     [
+      132,
+      184,
+      160,
+      31,
+      0
+     ],
+     [
+      138,
+      191,
+      211,
+      35,
+      0
+     ],
+     [
+      144,
+      195,
+      192,
+      28,
+      3
+     ],
+     [
+      150,
+      202,
+      202,
+      37,
+      0
+     ],
+     [
+      156,
+      207,
+      199,
+      30,
+      0
+     ],
+     [
+      162,
+      216,
+      228,
+      49,
+      0
+     ],
+     [
+      168,
+      222,
+      192,
+      57,
+      2
+     ],
+     [
+      174,
+      228,
+      221,
+      46,
+      2
+     ],
+     [
+      180,
+      234,
+      199,
+      43,
+      0
+     ],
+     [
+      186,
+      241,
+      220,
+      30,
+      0
+     ],
+     [
+      192,
+      248,
+      175,
+      61,
+      7
+     ],
+     [
+      198,
+      255,
+      196,
+      45,
+      0
+     ],
+     [
+      204,
+      265,
+      181,
+      45,
+      3
+     ],
+     [
+      210,
+      272,
+      219,
+      61,
+      11
+     ],
+     [
+      216,
+      276,
+      163,
+      22,
+      0
+     ],
+     [
+      222,
+      280,
+      196,
+      22,
+      2
+     ],
+     [
+      228,
+      287,
+      195,
+      39,
+      0
+     ],
+     [
+      234,
+      292,
+      212,
+      33,
+      0
+     ],
+     [
+      240,
+      299,
+      203,
+      49,
+      0
+     ],
+     [
+      246,
+      306,
+      210,
+      29,
+      0
+     ],
+     [
+      252,
+      314,
+      183,
+      27,
+      0
+     ],
+     [
+      258,
+      321,
+      203,
+      23,
+      0
+     ],
+     [
+      264,
+      327,
+      174,
+      23,
+      0
+     ],
+     [
+      270,
+      335,
+      194,
+      45,
+      2
+     ],
+     [
+      276,
+      340,
+      164,
+      24,
+      0
+     ],
+     [
+      282,
+      344,
+      187,
+      41,
+      2
+     ],
+     [
+      288,
+      352,
+      148,
+      46,
+      3
+     ],
+     [
+      294,
+      360,
+      181,
+      29,
+      0
+     ],
+     [
+      300,
+      367,
+      166,
+      22,
+      1
+     ],
+     [
+      306,
+      374,
+      191,
+      39,
+      1
+     ],
+     [
+      312,
+      381,
+      175,
+      23,
+      0
+     ],
+     [
+      318,
+      390,
+      191,
+      32,
+      1
+     ],
+     [
+      324,
+      399,
+      202,
+      28,
+      0
+     ],
+     [
+      325,
+      400,
+      214,
+      35,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 54803,
+       "kids": 80662,
+       "age": 3077844.700000014,
+       "ateA": 121821707.92978838,
+       "ateM": 315972.4728506484,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 13150,
+       "kids": 13946,
+       "age": 648940.9666666647,
+       "ateA": 20579463.27443448,
+       "ateM": 43025.56778171546,
+       "eyeSum": 555.4918372007152,
+       "parts": 13150
+      },
+      "2/noeye": {
+       "n": 1853,
+       "kids": 1554,
+       "age": 82868.34999999893,
+       "ateA": 2266209.827679412,
+       "ateM": 5218.908309013629,
+       "eyeSum": 125.89517952631431,
+       "parts": 3706
+      },
+      "1/eye": {
+       "n": 430,
+       "kids": 421,
+       "age": 18657.916666666417,
+       "ateA": 595051.5909998824,
+       "ateM": 2392.8192183171222,
+       "eyeSum": 246.12374404428456,
+       "parts": 430
+      },
+      "3+/noeye": {
+       "n": 333,
+       "kids": 288,
+       "age": 13983.733333333194,
+       "ateA": 364651.53658668057,
+       "ateM": 371.5470393449415,
+       "eyeSum": 33.688345121488425,
+       "parts": 1017
+      },
+      "2/eye": {
+       "n": 75,
+       "kids": 43,
+       "age": 2897.2666666666214,
+       "ateA": 62755.46913447277,
+       "ateM": 229.8711276739126,
+       "eyeSum": 43.3639909467166,
+       "parts": 150
+      },
+      "3+/eye": {
+       "n": 28,
+       "kids": 23,
+       "age": 1243.099999999958,
+       "ateA": 27117.382177807336,
+       "ateM": 105.51101417310969,
+       "eyeSum": 14.640559940297935,
+       "parts": 86
+      }
+     },
+     "deaths": 70672,
+     "kills": 6482
+    },
+    "tab": "B"
+   },
+   {
+    "seed": 1003,
+    "th": 1,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 428222,
+    "fin": {
+     "gen": 400,
+     "min": 298,
+     "pop": 202,
+     "dKill": 6627,
+     "births": 73067,
+     "deaths": 73495
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      416,
+      88,
+      5
+     ],
+     [
+      12,
+      25,
+      234,
+      54,
+      0
+     ],
+     [
+      18,
+      36,
+      263,
+      89,
+      2
+     ],
+     [
+      24,
+      48,
+      248,
+      69,
+      2
+     ],
+     [
+      30,
+      58,
+      291,
+      120,
+      0
+     ],
+     [
+      36,
+      67,
+      281,
+      56,
+      0
+     ],
+     [
+      42,
+      76,
+      267,
+      51,
+      5
+     ],
+     [
+      48,
+      85,
+      241,
+      39,
+      8
+     ],
+     [
+      54,
+      95,
+      269,
+      58,
+      3
+     ],
+     [
+      60,
+      107,
+      243,
+      50,
+      1
+     ],
+     [
+      66,
+      112,
+      296,
+      71,
+      6
+     ],
+     [
+      72,
+      120,
+      307,
+      55,
+      4
+     ],
+     [
+      78,
+      130,
+      310,
+      51,
+      0
+     ],
+     [
+      84,
+      136,
+      240,
+      43,
+      2
+     ],
+     [
+      90,
+      146,
+      258,
+      60,
+      0
+     ],
+     [
+      96,
+      156,
+      248,
+      46,
+      5
+     ],
+     [
+      102,
+      165,
+      259,
+      50,
+      1
+     ],
+     [
+      108,
+      172,
+      178,
+      31,
+      0
+     ],
+     [
+      114,
+      181,
+      184,
+      48,
+      1
+     ],
+     [
+      120,
+      193,
+      153,
+      36,
+      6
+     ],
+     [
+      126,
+      201,
+      156,
+      39,
+      0
+     ],
+     [
+      132,
+      209,
+      149,
+      26,
+      1
+     ],
+     [
+      138,
+      213,
+      155,
+      33,
+      2
+     ],
+     [
+      144,
+      219,
+      133,
+      18,
+      0
+     ],
+     [
+      150,
+      226,
+      144,
+      18,
+      0
+     ],
+     [
+      156,
+      234,
+      127,
+      52,
+      0
+     ],
+     [
+      162,
+      240,
+      154,
+      36,
+      2
+     ],
+     [
+      168,
+      246,
+      133,
+      24,
+      0
+     ],
+     [
+      174,
+      251,
+      173,
+      55,
+      1
+     ],
+     [
+      180,
+      259,
+      149,
+      49,
+      6
+     ],
+     [
+      186,
+      267,
+      175,
+      32,
+      2
+     ],
+     [
+      192,
+      273,
+      159,
+      16,
+      0
+     ],
+     [
+      198,
+      280,
+      179,
+      34,
+      0
+     ],
+     [
+      204,
+      286,
+      159,
+      21,
+      0
+     ],
+     [
+      210,
+      292,
+      161,
+      33,
+      0
+     ],
+     [
+      216,
+      300,
+      135,
+      50,
+      0
+     ],
+     [
+      222,
+      307,
+      141,
+      43,
+      1
+     ],
+     [
+      228,
+      314,
+      127,
+      35,
+      3
+     ],
+     [
+      234,
+      321,
+      153,
+      33,
+      0
+     ],
+     [
+      240,
+      329,
+      160,
+      31,
+      0
+     ],
+     [
+      246,
+      336,
+      152,
+      19,
+      0
+     ],
+     [
+      252,
+      343,
+      146,
+      30,
+      0
+     ],
+     [
+      258,
+      349,
+      156,
+      26,
+      0
+     ],
+     [
+      264,
+      357,
+      142,
+      17,
+      0
+     ],
+     [
+      270,
+      368,
+      167,
+      12,
+      0
+     ],
+     [
+      276,
+      372,
+      169,
+      38,
+      0
+     ],
+     [
+      282,
+      381,
+      210,
+      43,
+      1
+     ],
+     [
+      288,
+      386,
+      184,
+      44,
+      0
+     ],
+     [
+      294,
+      393,
+      190,
+      23,
+      0
+     ],
+     [
+      298,
+      400,
+      202,
+      26,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 55310,
+       "kids": 82335,
+       "age": 2819616.31666667,
+       "ateA": 113455370.2131541,
+       "ateM": 296534.3673060629,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 14242,
+       "kids": 15767,
+       "age": 632103.3999999954,
+       "ateA": 20382068.375505697,
+       "ateM": 56906.688699360326,
+       "eyeSum": 607.7586037767917,
+       "parts": 14242
+      },
+      "2/noeye": {
+       "n": 2334,
+       "kids": 2187,
+       "age": 91958.08333333216,
+       "ateA": 2384175.459533142,
+       "ateM": 5111.61456307729,
+       "eyeSum": 171.4523510772461,
+       "parts": 4668
+      },
+      "1/eye": {
+       "n": 447,
+       "kids": 512,
+       "age": 19331.166666666497,
+       "ateA": 598036.2954441222,
+       "ateM": 275.55108133814895,
+       "eyeSum": 279.607947254213,
+       "parts": 447
+      },
+      "2/eye": {
+       "n": 116,
+       "kids": 105,
+       "age": 4421.716666666607,
+       "ateA": 88294.94336013,
+       "ateM": 684.5479482628241,
+       "eyeSum": 72.12823118640534,
+       "parts": 232
+      },
+      "3+/noeye": {
+       "n": 400,
+       "kids": 362,
+       "age": 14127.449999999846,
+       "ateA": 316938.1330911347,
+       "ateM": 3290.321198967295,
+       "eyeSum": 37.07428453308449,
+       "parts": 1273
+      },
+      "3+/eye": {
+       "n": 16,
+       "kids": 10,
+       "age": 369.1499999999948,
+       "ateA": 6303.826057767672,
+       "ateM": 0,
+       "eyeSum": 9.205957565796886,
+       "parts": 48
+      }
+     },
+     "deaths": 72865,
+     "kills": 6627
+    },
+    "tab": "B"
+   },
+   {
+    "seed": 1004,
+    "th": 1,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 403473,
+    "fin": {
+     "gen": 400,
+     "min": 285,
+     "pop": 180,
+     "dKill": 6009,
+     "births": 68997,
+     "deaths": 69447
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      16,
+      413,
+      92,
+      1
+     ],
+     [
+      12,
+      29,
+      246,
+      71,
+      0
+     ],
+     [
+      18,
+      39,
+      267,
+      49,
+      0
+     ],
+     [
+      24,
+      50,
+      278,
+      79,
+      0
+     ],
+     [
+      30,
+      61,
+      287,
+      70,
+      2
+     ],
+     [
+      36,
+      70,
+      270,
+      78,
+      0
+     ],
+     [
+      42,
+      81,
+      280,
+      97,
+      1
+     ],
+     [
+      48,
+      92,
+      263,
+      76,
+      0
+     ],
+     [
+      54,
+      102,
+      305,
+      86,
+      5
+     ],
+     [
+      60,
+      112,
+      228,
+      46,
+      1
+     ],
+     [
+      66,
+      121,
+      293,
+      81,
+      2
+     ],
+     [
+      72,
+      129,
+      237,
+      49,
+      0
+     ],
+     [
+      78,
+      139,
+      245,
+      53,
+      0
+     ],
+     [
+      84,
+      145,
+      190,
+      28,
+      1
+     ],
+     [
+      90,
+      155,
+      197,
+      50,
+      0
+     ],
+     [
+      96,
+      161,
+      136,
+      24,
+      0
+     ],
+     [
+      102,
+      172,
+      198,
+      28,
+      0
+     ],
+     [
+      108,
+      180,
+      211,
+      39,
+      0
+     ],
+     [
+      114,
+      187,
+      225,
+      45,
+      0
+     ],
+     [
+      120,
+      196,
+      244,
+      53,
+      3
+     ],
+     [
+      126,
+      201,
+      250,
+      51,
+      2
+     ],
+     [
+      132,
+      210,
+      226,
+      23,
+      1
+     ],
+     [
+      138,
+      217,
+      241,
+      22,
+      0
+     ],
+     [
+      144,
+      223,
+      204,
+      30,
+      1
+     ],
+     [
+      150,
+      230,
+      195,
+      49,
+      2
+     ],
+     [
+      156,
+      240,
+      198,
+      56,
+      3
+     ],
+     [
+      162,
+      248,
+      213,
+      39,
+      0
+     ],
+     [
+      168,
+      253,
+      220,
+      47,
+      1
+     ],
+     [
+      174,
+      261,
+      222,
+      57,
+      3
+     ],
+     [
+      180,
+      269,
+      211,
+      43,
+      1
+     ],
+     [
+      186,
+      276,
+      222,
+      44,
+      3
+     ],
+     [
+      192,
+      284,
+      197,
+      57,
+      1
+     ],
+     [
+      198,
+      291,
+      188,
+      44,
+      4
+     ],
+     [
+      204,
+      298,
+      175,
+      30,
+      0
+     ],
+     [
+      210,
+      305,
+      159,
+      40,
+      0
+     ],
+     [
+      216,
+      314,
+      137,
+      46,
+      1
+     ],
+     [
+      222,
+      322,
+      117,
+      11,
+      0
+     ],
+     [
+      228,
+      329,
+      116,
+      20,
+      0
+     ],
+     [
+      234,
+      336,
+      140,
+      23,
+      0
+     ],
+     [
+      240,
+      346,
+      104,
+      15,
+      0
+     ],
+     [
+      246,
+      354,
+      136,
+      32,
+      0
+     ],
+     [
+      252,
+      360,
+      123,
+      19,
+      0
+     ],
+     [
+      258,
+      366,
+      153,
+      17,
+      0
+     ],
+     [
+      264,
+      372,
+      146,
+      34,
+      0
+     ],
+     [
+      270,
+      380,
+      184,
+      34,
+      0
+     ],
+     [
+      276,
+      388,
+      143,
+      16,
+      0
+     ],
+     [
+      282,
+      395,
+      180,
+      29,
+      0
+     ],
+     [
+      285,
+      400,
+      180,
+      33,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 52101,
+       "kids": 78714,
+       "age": 2833126.9166666875,
+       "ateA": 108394890.89912309,
+       "ateM": 247672.3195791989,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 13720,
+       "kids": 15685,
+       "age": 649380.883333329,
+       "ateA": 18331014.30006274,
+       "ateM": 33466.9194726927,
+       "eyeSum": 582.748361149723,
+       "parts": 13720
+      },
+      "1/eye": {
+       "n": 304,
+       "kids": 308,
+       "age": 11694.483333333095,
+       "ateA": 279403.0248402823,
+       "ateM": 786.1415436772559,
+       "eyeSum": 187.06629999192285,
+       "parts": 304
+      },
+      "2/noeye": {
+       "n": 2257,
+       "kids": 2117,
+       "age": 90108.53333333225,
+       "ateA": 2206262.0283028404,
+       "ateM": 2795.701752289363,
+       "eyeSum": 177.47744201109987,
+       "parts": 4514
+      },
+      "3+/noeye": {
+       "n": 339,
+       "kids": 274,
+       "age": 11652.783333333182,
+       "ateA": 229462.47053453344,
+       "ateM": 474.0939990816514,
+       "eyeSum": 31.649666791431176,
+       "parts": 1034
+      },
+      "2/eye": {
+       "n": 81,
+       "kids": 67,
+       "age": 2832.1666666666224,
+       "ateA": 57060.1000947984,
+       "ateM": 0,
+       "eyeSum": 51.335689417008325,
+       "parts": 162
+      },
+      "3+/eye": {
+       "n": 15,
+       "kids": 10,
+       "age": 476.9999999999868,
+       "ateA": 10546.83555090879,
+       "ateM": 0,
+       "eyeSum": 9.562820118343053,
+       "parts": 46
+      }
+     },
+     "deaths": 68817,
+     "kills": 6009
+    },
+    "tab": "B"
+   },
+   {
+    "seed": 1005,
+    "th": 1,
+    "ey": 0,
+    "stop": "gen",
+    "wallMs": 388896,
+    "fin": {
+     "gen": 400,
+     "min": 314,
+     "pop": 152,
+     "dKill": 5855,
+     "births": 64909,
+     "deaths": 65387
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      443,
+      49,
+      1
+     ],
+     [
+      12,
+      26,
+      274,
+      62,
+      4
+     ],
+     [
+      18,
+      36,
+      262,
+      53,
+      0
+     ],
+     [
+      24,
+      45,
+      226,
+      42,
+      0
+     ],
+     [
+      30,
+      55,
+      249,
+      62,
+      0
+     ],
+     [
+      36,
+      63,
+      215,
+      31,
+      1
+     ],
+     [
+      42,
+      75,
+      255,
+      53,
+      1
+     ],
+     [
+      48,
+      83,
+      193,
+      32,
+      0
+     ],
+     [
+      54,
+      93,
+      225,
+      68,
+      0
+     ],
+     [
+      60,
+      101,
+      183,
+      31,
+      0
+     ],
+     [
+      66,
+      109,
+      206,
+      37,
+      0
+     ],
+     [
+      72,
+      114,
+      182,
+      40,
+      1
+     ],
+     [
+      78,
+      124,
+      206,
+      67,
+      1
+     ],
+     [
+      84,
+      132,
+      197,
+      41,
+      2
+     ],
+     [
+      90,
+      143,
+      202,
+      71,
+      1
+     ],
+     [
+      96,
+      149,
+      213,
+      47,
+      0
+     ],
+     [
+      102,
+      158,
+      211,
+      32,
+      0
+     ],
+     [
+      108,
+      165,
+      160,
+      44,
+      0
+     ],
+     [
+      114,
+      173,
+      171,
+      54,
+      0
+     ],
+     [
+      120,
+      181,
+      169,
+      25,
+      1
+     ],
+     [
+      126,
+      190,
+      208,
+      53,
+      2
+     ],
+     [
+      132,
+      196,
+      195,
+      53,
+      0
+     ],
+     [
+      138,
+      205,
+      184,
+      28,
+      0
+     ],
+     [
+      144,
+      207,
+      177,
+      15,
+      0
+     ],
+     [
+      150,
+      213,
+      191,
+      53,
+      2
+     ],
+     [
+      156,
+      218,
+      155,
+      30,
+      1
+     ],
+     [
+      162,
+      225,
+      175,
+      30,
+      0
+     ],
+     [
+      168,
+      230,
+      154,
+      17,
+      0
+     ],
+     [
+      174,
+      235,
+      162,
+      27,
+      0
+     ],
+     [
+      180,
+      242,
+      177,
+      35,
+      0
+     ],
+     [
+      186,
+      250,
+      202,
+      54,
+      3
+     ],
+     [
+      192,
+      256,
+      206,
+      32,
+      0
+     ],
+     [
+      198,
+      265,
+      188,
+      20,
+      0
+     ],
+     [
+      204,
+      268,
+      160,
+      17,
+      0
+     ],
+     [
+      210,
+      276,
+      168,
+      29,
+      0
+     ],
+     [
+      216,
+      282,
+      144,
+      10,
+      0
+     ],
+     [
+      222,
+      293,
+      154,
+      24,
+      0
+     ],
+     [
+      228,
+      299,
+      138,
+      41,
+      0
+     ],
+     [
+      234,
+      306,
+      165,
+      49,
+      2
+     ],
+     [
+      240,
+      315,
+      152,
+      38,
+      1
+     ],
+     [
+      246,
+      324,
+      171,
+      39,
+      0
+     ],
+     [
+      252,
+      332,
+      136,
+      22,
+      0
+     ],
+     [
+      258,
+      336,
+      175,
+      25,
+      0
+     ],
+     [
+      264,
+      343,
+      153,
+      21,
+      2
+     ],
+     [
+      270,
+      350,
+      150,
+      17,
+      1
+     ],
+     [
+      276,
+      356,
+      137,
+      15,
+      0
+     ],
+     [
+      282,
+      365,
+      157,
+      13,
+      0
+     ],
+     [
+      288,
+      372,
+      125,
+      23,
+      0
+     ],
+     [
+      294,
+      378,
+      158,
+      52,
+      4
+     ],
+     [
+      300,
+      382,
+      131,
+      37,
+      1
+     ],
+     [
+      306,
+      390,
+      123,
+      27,
+      2
+     ],
+     [
+      312,
+      396,
+      118,
+      29,
+      0
+     ],
+     [
+      314,
+      400,
+      152,
+      41,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 50988,
+       "kids": 76847,
+       "age": 2854865.016666696,
+       "ateA": 123624937.2862137,
+       "ateM": 339806.3691985364,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 11700,
+       "kids": 12267,
+       "age": 571307.9166666653,
+       "ateA": 20094544.436455693,
+       "ateM": 42311.38684703992,
+       "eyeSum": 470.4576938771719,
+       "parts": 11700
+      },
+      "2/noeye": {
+       "n": 1622,
+       "kids": 1446,
+       "age": 73090.33333333246,
+       "ateA": 2358684.3124894476,
+       "ateM": 2440.165810047438,
+       "eyeSum": 104.17673347384977,
+       "parts": 3244
+      },
+      "1/eye": {
+       "n": 230,
+       "kids": 191,
+       "age": 9262.766666666586,
+       "ateA": 318690.02916865825,
+       "ateM": 484.17205587095646,
+       "eyeSum": 128.3407041408867,
+       "parts": 230
+      },
+      "3+/noeye": {
+       "n": 153,
+       "kids": 93,
+       "age": 6054.733333333261,
+       "ateA": 193682.82504122413,
+       "ateM": 5.808742919702809,
+       "eyeSum": 13.854515795381964,
+       "parts": 481
+      },
+      "2/eye": {
+       "n": 56,
+       "kids": 42,
+       "age": 2521.9666666666485,
+       "ateA": 99142.69731606064,
+       "ateM": 300.90332441113793,
+       "eyeSum": 31.175860476659356,
+       "parts": 112
+      },
+      "3+/eye": {
+       "n": 8,
+       "kids": 1,
+       "age": 134.96666666666619,
+       "ateA": 4863.018878645147,
+       "ateM": 0,
+       "eyeSum": 4.874364578594235,
+       "parts": 24
+      }
+     },
+     "deaths": 64757,
+     "kills": 5855
+    },
+    "tab": "B"
+   },
+   {
+    "seed": 60606,
+    "th": 0,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 398103,
+    "fin": {
+     "gen": 400,
+     "min": 313,
+     "pop": 175,
+     "dKill": 5028,
+     "births": 62529,
+     "deaths": 62984
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      398,
+      47,
+      5
+     ],
+     [
+      12,
+      26,
+      278,
+      42,
+      0
+     ],
+     [
+      18,
+      37,
+      284,
+      68,
+      1
+     ],
+     [
+      24,
+      45,
+      223,
+      37,
+      0
+     ],
+     [
+      30,
+      58,
+      235,
+      36,
+      0
+     ],
+     [
+      36,
+      65,
+      194,
+      24,
+      0
+     ],
+     [
+      42,
+      74,
+      177,
+      29,
+      0
+     ],
+     [
+      48,
+      82,
+      160,
+      24,
+      0
+     ],
+     [
+      54,
+      89,
+      182,
+      32,
+      0
+     ],
+     [
+      60,
+      95,
+      135,
+      9,
+      0
+     ],
+     [
+      66,
+      105,
+      179,
+      25,
+      3
+     ],
+     [
+      72,
+      110,
+      125,
+      14,
+      1
+     ],
+     [
+      78,
+      119,
+      156,
+      26,
+      0
+     ],
+     [
+      84,
+      127,
+      129,
+      12,
+      0
+     ],
+     [
+      90,
+      133,
+      142,
+      15,
+      1
+     ],
+     [
+      96,
+      140,
+      129,
+      14,
+      0
+     ],
+     [
+      102,
+      149,
+      131,
+      17,
+      1
+     ],
+     [
+      108,
+      155,
+      156,
+      27,
+      0
+     ],
+     [
+      114,
+      159,
+      166,
+      26,
+      0
+     ],
+     [
+      120,
+      166,
+      135,
+      15,
+      0
+     ],
+     [
+      126,
+      173,
+      165,
+      12,
+      0
+     ],
+     [
+      132,
+      181,
+      152,
+      12,
+      0
+     ],
+     [
+      138,
+      188,
+      176,
+      33,
+      0
+     ],
+     [
+      144,
+      195,
+      169,
+      22,
+      0
+     ],
+     [
+      150,
+      200,
+      207,
+      28,
+      0
+     ],
+     [
+      156,
+      207,
+      194,
+      15,
+      0
+     ],
+     [
+      162,
+      215,
+      226,
+      22,
+      0
+     ],
+     [
+      168,
+      224,
+      185,
+      31,
+      0
+     ],
+     [
+      174,
+      230,
+      188,
+      32,
+      0
+     ],
+     [
+      180,
+      236,
+      202,
+      19,
+      0
+     ],
+     [
+      186,
+      244,
+      197,
+      26,
+      2
+     ],
+     [
+      192,
+      249,
+      162,
+      23,
+      1
+     ],
+     [
+      198,
+      255,
+      148,
+      18,
+      0
+     ],
+     [
+      204,
+      262,
+      140,
+      24,
+      0
+     ],
+     [
+      210,
+      271,
+      166,
+      16,
+      0
+     ],
+     [
+      216,
+      277,
+      152,
+      25,
+      0
+     ],
+     [
+      222,
+      286,
+      165,
+      23,
+      0
+     ],
+     [
+      228,
+      292,
+      151,
+      28,
+      2
+     ],
+     [
+      234,
+      301,
+      171,
+      37,
+      0
+     ],
+     [
+      240,
+      306,
+      181,
+      10,
+      0
+     ],
+     [
+      246,
+      316,
+      176,
+      27,
+      0
+     ],
+     [
+      252,
+      324,
+      176,
+      13,
+      0
+     ],
+     [
+      258,
+      330,
+      197,
+      41,
+      6
+     ],
+     [
+      264,
+      337,
+      177,
+      17,
+      0
+     ],
+     [
+      270,
+      347,
+      186,
+      24,
+      0
+     ],
+     [
+      276,
+      353,
+      181,
+      33,
+      0
+     ],
+     [
+      282,
+      362,
+      222,
+      35,
+      4
+     ],
+     [
+      288,
+      369,
+      227,
+      28,
+      0
+     ],
+     [
+      294,
+      376,
+      249,
+      20,
+      0
+     ],
+     [
+      300,
+      385,
+      205,
+      31,
+      0
+     ],
+     [
+      306,
+      392,
+      223,
+      32,
+      1
+     ],
+     [
+      312,
+      398,
+      171,
+      23,
+      0
+     ],
+     [
+      313,
+      400,
+      175,
+      25,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 53694,
+       "kids": 78761,
+       "age": 3005813.983333373,
+       "ateA": 129655210.53922166,
+       "ateM": 285393.431867005,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 7802,
+       "kids": 6354,
+       "age": 411599.75000000023,
+       "ateA": 14783430.835082585,
+       "ateM": 22967.119568791786,
+       "eyeSum": 221.3663459762608,
+       "parts": 7802
+      },
+      "2/noeye": {
+       "n": 651,
+       "kids": 425,
+       "age": 31483.049999999916,
+       "ateA": 979785.5293479285,
+       "ateM": 2899.7315798618024,
+       "eyeSum": 28.280223122999107,
+       "parts": 1302
+      },
+      "1/eye": {
+       "n": 162,
+       "kids": 132,
+       "age": 9454.950000000123,
+       "ateA": 340383.23486050504,
+       "ateM": 535.4905200289139,
+       "eyeSum": 90.59229674942253,
+       "parts": 162
+      },
+      "3+/noeye": {
+       "n": 31,
+       "kids": 9,
+       "age": 1473.2833333333317,
+       "ateA": 45933.13222346821,
+       "ateM": 0,
+       "eyeSum": 2.2881700209090714,
+       "parts": 95
+      },
+      "2/eye": {
+       "n": 13,
+       "kids": 2,
+       "age": 443.8333333333196,
+       "ateA": 13439.985574279093,
+       "ateM": 0,
+       "eyeSum": 7.701924049676138,
+       "parts": 26
+      },
+      "3+/eye": {
+       "n": 1,
+       "kids": 0,
+       "age": 14.650000000000308,
+       "ateA": 0,
+       "ateM": 0,
+       "eyeSum": 0.4985434073954821,
+       "parts": 3
+      }
+     },
+     "deaths": 62354,
+     "kills": 5028
+    },
+    "tab": "C"
+   },
+   {
+    "seed": 1001,
+    "th": 0,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 436480,
+    "fin": {
+     "gen": 400,
+     "min": 315,
+     "pop": 220,
+     "dKill": 4982,
+     "births": 64875,
+     "deaths": 65285
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      16,
+      430,
+      57,
+      2
+     ],
+     [
+      12,
+      27,
+      297,
+      32,
+      0
+     ],
+     [
+      18,
+      39,
+      260,
+      55,
+      0
+     ],
+     [
+      24,
+      48,
+      195,
+      53,
+      0
+     ],
+     [
+      30,
+      56,
+      208,
+      38,
+      0
+     ],
+     [
+      36,
+      67,
+      193,
+      58,
+      0
+     ],
+     [
+      42,
+      74,
+      220,
+      26,
+      1
+     ],
+     [
+      48,
+      83,
+      196,
+      33,
+      3
+     ],
+     [
+      54,
+      92,
+      199,
+      43,
+      0
+     ],
+     [
+      60,
+      99,
+      158,
+      14,
+      0
+     ],
+     [
+      66,
+      109,
+      160,
+      17,
+      0
+     ],
+     [
+      72,
+      117,
+      136,
+      15,
+      0
+     ],
+     [
+      78,
+      123,
+      140,
+      22,
+      0
+     ],
+     [
+      84,
+      128,
+      126,
+      19,
+      0
+     ],
+     [
+      90,
+      133,
+      154,
+      28,
+      0
+     ],
+     [
+      96,
+      136,
+      157,
+      31,
+      3
+     ],
+     [
+      102,
+      145,
+      186,
+      38,
+      0
+     ],
+     [
+      108,
+      153,
+      201,
+      26,
+      0
+     ],
+     [
+      114,
+      162,
+      190,
+      31,
+      0
+     ],
+     [
+      120,
+      170,
+      172,
+      10,
+      0
+     ],
+     [
+      126,
+      179,
+      198,
+      27,
+      1
+     ],
+     [
+      132,
+      188,
+      177,
+      21,
+      0
+     ],
+     [
+      138,
+      197,
+      208,
+      31,
+      1
+     ],
+     [
+      144,
+      204,
+      174,
+      28,
+      0
+     ],
+     [
+      150,
+      211,
+      194,
+      35,
+      4
+     ],
+     [
+      156,
+      218,
+      167,
+      23,
+      1
+     ],
+     [
+      162,
+      223,
+      171,
+      29,
+      1
+     ],
+     [
+      168,
+      232,
+      149,
+      20,
+      0
+     ],
+     [
+      174,
+      242,
+      164,
+      15,
+      0
+     ],
+     [
+      180,
+      248,
+      148,
+      20,
+      0
+     ],
+     [
+      186,
+      256,
+      179,
+      43,
+      0
+     ],
+     [
+      192,
+      263,
+      151,
+      22,
+      0
+     ],
+     [
+      198,
+      270,
+      204,
+      21,
+      0
+     ],
+     [
+      204,
+      277,
+      172,
+      12,
+      0
+     ],
+     [
+      210,
+      283,
+      188,
+      14,
+      0
+     ],
+     [
+      216,
+      291,
+      167,
+      30,
+      0
+     ],
+     [
+      222,
+      299,
+      183,
+      17,
+      0
+     ],
+     [
+      228,
+      305,
+      168,
+      19,
+      2
+     ],
+     [
+      234,
+      313,
+      192,
+      29,
+      0
+     ],
+     [
+      240,
+      323,
+      196,
+      36,
+      0
+     ],
+     [
+      246,
+      327,
+      192,
+      33,
+      0
+     ],
+     [
+      252,
+      334,
+      163,
+      31,
+      0
+     ],
+     [
+      258,
+      340,
+      171,
+      23,
+      1
+     ],
+     [
+      264,
+      346,
+      183,
+      32,
+      2
+     ],
+     [
+      270,
+      354,
+      176,
+      21,
+      1
+     ],
+     [
+      276,
+      360,
+      158,
+      18,
+      1
+     ],
+     [
+      282,
+      366,
+      175,
+      20,
+      0
+     ],
+     [
+      288,
+      374,
+      162,
+      15,
+      0
+     ],
+     [
+      294,
+      378,
+      181,
+      19,
+      0
+     ],
+     [
+      300,
+      386,
+      183,
+      32,
+      1
+     ],
+     [
+      306,
+      392,
+      181,
+      22,
+      0
+     ],
+     [
+      312,
+      397,
+      194,
+      31,
+      0
+     ],
+     [
+      315,
+      400,
+      220,
+      19,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 55122,
+       "kids": 79976,
+       "age": 3064919.9000000022,
+       "ateA": 126785803.32120822,
+       "ateM": 257474.76854866717,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "2/noeye": {
+       "n": 714,
+       "kids": 390,
+       "age": 35957.43333333325,
+       "ateA": 1113017.981056383,
+       "ateM": 1279.3590710676726,
+       "eyeSum": 31.60330480288467,
+       "parts": 1428
+      },
+      "1/noeye": {
+       "n": 8616,
+       "kids": 7403,
+       "age": 462940.73333333497,
+       "ateA": 16360884.54968916,
+       "ateM": 31084.674077662272,
+       "eyeSum": 246.22541511166088,
+       "parts": 8616
+      },
+      "1/eye": {
+       "n": 150,
+       "kids": 113,
+       "age": 8223.5166666667,
+       "ateA": 282819.1875326959,
+       "ateM": 207.93677127298437,
+       "eyeSum": 83.58372796111968,
+       "parts": 150
+      },
+      "3+/noeye": {
+       "n": 37,
+       "kids": 12,
+       "age": 1390.1166666666504,
+       "ateA": 33136.83417979858,
+       "ateM": 4.629413225061974,
+       "eyeSum": 2.4422208555179488,
+       "parts": 114
+      },
+      "2/eye": {
+       "n": 12,
+       "kids": 5,
+       "age": 521.2166666666865,
+       "ateA": 17914.105511337977,
+       "ateM": 0,
+       "eyeSum": 7.00179275922345,
+       "parts": 24
+      },
+      "3+/eye": {
+       "n": 4,
+       "kids": 1,
+       "age": 197.81666666666385,
+       "ateA": 7589.300307616714,
+       "ateM": 0,
+       "eyeSum": 2.958231319095697,
+       "parts": 12
+      }
+     },
+     "deaths": 64655,
+     "kills": 4982
+    },
+    "tab": "C"
+   },
+   {
+    "seed": 1002,
+    "th": 0,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 425389,
+    "fin": {
+     "gen": 400,
+     "min": 326,
+     "pop": 135,
+     "dKill": 5910,
+     "births": 64567,
+     "deaths": 65062
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      358,
+      49,
+      0
+     ],
+     [
+      12,
+      26,
+      200,
+      21,
+      2
+     ],
+     [
+      18,
+      34,
+      210,
+      57,
+      4
+     ],
+     [
+      24,
+      44,
+      191,
+      31,
+      0
+     ],
+     [
+      30,
+      53,
+      191,
+      41,
+      1
+     ],
+     [
+      36,
+      62,
+      181,
+      17,
+      0
+     ],
+     [
+      42,
+      73,
+      233,
+      27,
+      0
+     ],
+     [
+      48,
+      79,
+      205,
+      24,
+      0
+     ],
+     [
+      54,
+      88,
+      223,
+      22,
+      0
+     ],
+     [
+      60,
+      95,
+      205,
+      25,
+      0
+     ],
+     [
+      66,
+      103,
+      207,
+      29,
+      0
+     ],
+     [
+      72,
+      109,
+      177,
+      30,
+      0
+     ],
+     [
+      78,
+      118,
+      206,
+      21,
+      1
+     ],
+     [
+      84,
+      124,
+      180,
+      26,
+      0
+     ],
+     [
+      90,
+      133,
+      171,
+      20,
+      0
+     ],
+     [
+      96,
+      140,
+      159,
+      12,
+      0
+     ],
+     [
+      102,
+      146,
+      155,
+      27,
+      0
+     ],
+     [
+      108,
+      151,
+      132,
+      21,
+      0
+     ],
+     [
+      114,
+      157,
+      136,
+      15,
+      1
+     ],
+     [
+      120,
+      163,
+      118,
+      18,
+      1
+     ],
+     [
+      126,
+      171,
+      150,
+      17,
+      0
+     ],
+     [
+      132,
+      178,
+      128,
+      18,
+      0
+     ],
+     [
+      138,
+      187,
+      153,
+      23,
+      0
+     ],
+     [
+      144,
+      195,
+      152,
+      27,
+      0
+     ],
+     [
+      150,
+      201,
+      189,
+      30,
+      0
+     ],
+     [
+      156,
+      207,
+      185,
+      37,
+      0
+     ],
+     [
+      162,
+      214,
+      215,
+      37,
+      0
+     ],
+     [
+      168,
+      220,
+      162,
+      26,
+      0
+     ],
+     [
+      174,
+      227,
+      184,
+      29,
+      0
+     ],
+     [
+      180,
+      237,
+      165,
+      18,
+      0
+     ],
+     [
+      186,
+      245,
+      196,
+      29,
+      0
+     ],
+     [
+      192,
+      255,
+      178,
+      19,
+      0
+     ],
+     [
+      198,
+      261,
+      208,
+      29,
+      0
+     ],
+     [
+      204,
+      264,
+      178,
+      15,
+      0
+     ],
+     [
+      210,
+      269,
+      206,
+      35,
+      0
+     ],
+     [
+      216,
+      276,
+      183,
+      19,
+      0
+     ],
+     [
+      222,
+      281,
+      258,
+      43,
+      1
+     ],
+     [
+      228,
+      287,
+      208,
+      29,
+      0
+     ],
+     [
+      234,
+      292,
+      206,
+      25,
+      0
+     ],
+     [
+      240,
+      297,
+      165,
+      13,
+      0
+     ],
+     [
+      246,
+      306,
+      182,
+      13,
+      0
+     ],
+     [
+      252,
+      310,
+      144,
+      17,
+      0
+     ],
+     [
+      258,
+      319,
+      160,
+      22,
+      0
+     ],
+     [
+      264,
+      326,
+      151,
+      13,
+      0
+     ],
+     [
+      270,
+      335,
+      159,
+      19,
+      0
+     ],
+     [
+      276,
+      340,
+      134,
+      16,
+      0
+     ],
+     [
+      282,
+      349,
+      149,
+      32,
+      0
+     ],
+     [
+      288,
+      357,
+      127,
+      23,
+      0
+     ],
+     [
+      294,
+      363,
+      143,
+      16,
+      0
+     ],
+     [
+      300,
+      370,
+      141,
+      23,
+      0
+     ],
+     [
+      306,
+      379,
+      144,
+      24,
+      1
+     ],
+     [
+      312,
+      384,
+      123,
+      10,
+      0
+     ],
+     [
+      318,
+      393,
+      142,
+      28,
+      1
+     ],
+     [
+      324,
+      397,
+      128,
+      13,
+      0
+     ],
+     [
+      326,
+      400,
+      135,
+      20,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 55166,
+       "kids": 81863,
+       "age": 3030012.5833333465,
+       "ateA": 138101189.72697985,
+       "ateM": 347483.576740712,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 8401,
+       "kids": 7077,
+       "age": 442460.2666666672,
+       "ateA": 16520834.259793833,
+       "ateM": 41636.78442632434,
+       "eyeSum": 247.7379054958421,
+       "parts": 8401
+      },
+      "2/noeye": {
+       "n": 679,
+       "kids": 326,
+       "age": 31509.583333333405,
+       "ateA": 1034139.8311686413,
+       "ateM": 992.834244113134,
+       "eyeSum": 30.448192167049857,
+       "parts": 1358
+      },
+      "1/eye": {
+       "n": 131,
+       "kids": 77,
+       "age": 5744.549999999998,
+       "ateA": 246958.2044952942,
+       "ateM": 3325.8750414952265,
+       "eyeSum": 75.963975453978,
+       "parts": 131
+      },
+      "2/eye": {
+       "n": 28,
+       "kids": 30,
+       "age": 1518.9500000000326,
+       "ateA": 55756.64996738837,
+       "ateM": 0,
+       "eyeSum": 14.609814235884333,
+       "parts": 56
+      },
+      "3+/eye": {
+       "n": 3,
+       "kids": 0,
+       "age": 95.98333333333173,
+       "ateA": 4249.623908087946,
+       "ateM": 0,
+       "eyeSum": 1.5016019151713689,
+       "parts": 9
+      },
+      "3+/noeye": {
+       "n": 24,
+       "kids": 4,
+       "age": 1112.1500000000087,
+       "ateA": 26137.550355647487,
+       "ateM": 0,
+       "eyeSum": 1.7087012694511436,
+       "parts": 73
+      }
+     },
+     "deaths": 64432,
+     "kills": 5910
+    },
+    "tab": "C"
+   },
+   {
+    "seed": 1003,
+    "th": 0,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 982172,
+    "fin": {
+     "gen": 400,
+     "min": 312,
+     "pop": 176,
+     "dKill": 7270,
+     "births": 81454,
+     "deaths": 81908
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      441,
+      71,
+      0
+     ],
+     [
+      12,
+      27,
+      308,
+      69,
+      4
+     ],
+     [
+      18,
+      39,
+      296,
+      100,
+      0
+     ],
+     [
+      24,
+      53,
+      267,
+      73,
+      0
+     ],
+     [
+      30,
+      64,
+      311,
+      69,
+      1
+     ],
+     [
+      36,
+      72,
+      241,
+      52,
+      2
+     ],
+     [
+      42,
+      80,
+      285,
+      73,
+      0
+     ],
+     [
+      48,
+      89,
+      271,
+      71,
+      2
+     ],
+     [
+      54,
+      99,
+      298,
+      51,
+      0
+     ],
+     [
+      60,
+      108,
+      262,
+      69,
+      0
+     ],
+     [
+      66,
+      117,
+      257,
+      54,
+      1
+     ],
+     [
+      72,
+      124,
+      217,
+      45,
+      3
+     ],
+     [
+      78,
+      134,
+      271,
+      42,
+      0
+     ],
+     [
+      84,
+      139,
+      239,
+      54,
+      3
+     ],
+     [
+      90,
+      151,
+      248,
+      40,
+      1
+     ],
+     [
+      96,
+      155,
+      230,
+      29,
+      0
+     ],
+     [
+      102,
+      160,
+      222,
+      51,
+      1
+     ],
+     [
+      108,
+      165,
+      199,
+      27,
+      0
+     ],
+     [
+      114,
+      174,
+      216,
+      31,
+      0
+     ],
+     [
+      120,
+      179,
+      180,
+      24,
+      3
+     ],
+     [
+      126,
+      187,
+      208,
+      24,
+      0
+     ],
+     [
+      132,
+      194,
+      173,
+      21,
+      0
+     ],
+     [
+      138,
+      203,
+      222,
+      56,
+      1
+     ],
+     [
+      144,
+      208,
+      189,
+      29,
+      0
+     ],
+     [
+      150,
+      215,
+      225,
+      29,
+      0
+     ],
+     [
+      156,
+      219,
+      198,
+      26,
+      0
+     ],
+     [
+      162,
+      225,
+      185,
+      32,
+      0
+     ],
+     [
+      168,
+      232,
+      174,
+      24,
+      0
+     ],
+     [
+      174,
+      240,
+      198,
+      14,
+      0
+     ],
+     [
+      180,
+      246,
+      180,
+      27,
+      0
+     ],
+     [
+      186,
+      256,
+      176,
+      18,
+      0
+     ],
+     [
+      192,
+      258,
+      179,
+      12,
+      0
+     ],
+     [
+      198,
+      267,
+      201,
+      29,
+      0
+     ],
+     [
+      204,
+      275,
+      187,
+      10,
+      0
+     ],
+     [
+      210,
+      281,
+      198,
+      15,
+      0
+     ],
+     [
+      216,
+      288,
+      205,
+      30,
+      2
+     ],
+     [
+      222,
+      295,
+      214,
+      32,
+      0
+     ],
+     [
+      228,
+      299,
+      233,
+      24,
+      0
+     ],
+     [
+      234,
+      309,
+      215,
+      31,
+      0
+     ],
+     [
+      240,
+      318,
+      200,
+      22,
+      0
+     ],
+     [
+      246,
+      329,
+      206,
+      32,
+      0
+     ],
+     [
+      252,
+      334,
+      178,
+      43,
+      1
+     ],
+     [
+      258,
+      341,
+      181,
+      17,
+      0
+     ],
+     [
+      264,
+      347,
+      150,
+      10,
+      0
+     ],
+     [
+      270,
+      353,
+      192,
+      38,
+      0
+     ],
+     [
+      276,
+      362,
+      185,
+      26,
+      0
+     ],
+     [
+      282,
+      370,
+      182,
+      15,
+      0
+     ],
+     [
+      288,
+      377,
+      160,
+      21,
+      0
+     ],
+     [
+      294,
+      378,
+      164,
+      19,
+      0
+     ],
+     [
+      300,
+      386,
+      166,
+      14,
+      0
+     ],
+     [
+      306,
+      393,
+      191,
+      13,
+      0
+     ],
+     [
+      312,
+      399,
+      184,
+      36,
+      0
+     ],
+     [
+      312,
+      400,
+      176,
+      33,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 67289,
+       "kids": 99424,
+       "age": 3448716.4666667148,
+       "ateA": 116848020.16015434,
+       "ateM": 293513.41433267324,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 12443,
+       "kids": 12125,
+       "age": 604708.449999997,
+       "ateA": 15534918.221276471,
+       "ateM": 31934.145939994276,
+       "eyeSum": 400.09021224872595,
+       "parts": 12443
+      },
+      "2/noeye": {
+       "n": 1201,
+       "kids": 733,
+       "age": 50885.966666666434,
+       "ateA": 1071714.0810551227,
+       "ateM": 3452.3912293858,
+       "eyeSum": 64.00312293656839,
+       "parts": 2402
+      },
+      "1/eye": {
+       "n": 242,
+       "kids": 195,
+       "age": 9501.650000000054,
+       "ateA": 246960.03785915623,
+       "ateM": 4.453235714609953,
+       "eyeSum": 135.8419151456121,
+       "parts": 242
+      },
+      "3+/noeye": {
+       "n": 65,
+       "kids": 22,
+       "age": 2467.2666666666996,
+       "ateA": 45169.524930232845,
+       "ateM": 0,
+       "eyeSum": 5.56660431571586,
+       "parts": 197
+      },
+      "2/eye": {
+       "n": 37,
+       "kids": 29,
+       "age": 1841.0666666666682,
+       "ateA": 38820.34008009939,
+       "ateM": 3.137674753523271,
+       "eyeSum": 22.284019111713782,
+       "parts": 74
+      },
+      "3+/eye": {
+       "n": 1,
+       "kids": 0,
+       "age": 5.033333333333321,
+       "ateA": 0,
+       "ateM": 0,
+       "eyeSum": 0.7094049850622428,
+       "parts": 3
+      }
+     },
+     "deaths": 81278,
+     "kills": 7263
+    },
+    "tab": "C"
+   },
+   {
+    "seed": 1004,
+    "th": 0,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 413045,
+    "fin": {
+     "gen": 400,
+     "min": 309,
+     "pop": 171,
+     "dKill": 5602,
+     "births": 65971,
+     "deaths": 66430
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      387,
+      64,
+      0
+     ],
+     [
+      12,
+      24,
+      244,
+      27,
+      0
+     ],
+     [
+      18,
+      36,
+      253,
+      43,
+      0
+     ],
+     [
+      24,
+      47,
+      246,
+      42,
+      0
+     ],
+     [
+      30,
+      56,
+      255,
+      35,
+      0
+     ],
+     [
+      36,
+      66,
+      211,
+      32,
+      0
+     ],
+     [
+      42,
+      76,
+      265,
+      56,
+      0
+     ],
+     [
+      48,
+      83,
+      236,
+      34,
+      0
+     ],
+     [
+      54,
+      89,
+      228,
+      29,
+      0
+     ],
+     [
+      60,
+      95,
+      175,
+      15,
+      0
+     ],
+     [
+      66,
+      103,
+      176,
+      24,
+      0
+     ],
+     [
+      72,
+      110,
+      158,
+      23,
+      0
+     ],
+     [
+      78,
+      119,
+      154,
+      13,
+      1
+     ],
+     [
+      84,
+      123,
+      143,
+      20,
+      0
+     ],
+     [
+      90,
+      131,
+      143,
+      14,
+      0
+     ],
+     [
+      96,
+      141,
+      131,
+      15,
+      0
+     ],
+     [
+      102,
+      151,
+      145,
+      24,
+      0
+     ],
+     [
+      108,
+      158,
+      148,
+      23,
+      0
+     ],
+     [
+      114,
+      166,
+      174,
+      24,
+      2
+     ],
+     [
+      120,
+      174,
+      153,
+      20,
+      1
+     ],
+     [
+      126,
+      180,
+      170,
+      25,
+      1
+     ],
+     [
+      132,
+      188,
+      155,
+      12,
+      0
+     ],
+     [
+      138,
+      195,
+      161,
+      32,
+      0
+     ],
+     [
+      144,
+      202,
+      170,
+      37,
+      0
+     ],
+     [
+      150,
+      210,
+      211,
+      24,
+      1
+     ],
+     [
+      156,
+      215,
+      176,
+      14,
+      0
+     ],
+     [
+      162,
+      223,
+      216,
+      47,
+      0
+     ],
+     [
+      168,
+      229,
+      168,
+      30,
+      0
+     ],
+     [
+      174,
+      235,
+      197,
+      29,
+      0
+     ],
+     [
+      180,
+      243,
+      198,
+      30,
+      1
+     ],
+     [
+      186,
+      250,
+      197,
+      25,
+      0
+     ],
+     [
+      192,
+      258,
+      186,
+      21,
+      0
+     ],
+     [
+      198,
+      265,
+      212,
+      40,
+      0
+     ],
+     [
+      204,
+      272,
+      173,
+      19,
+      0
+     ],
+     [
+      210,
+      283,
+      187,
+      26,
+      1
+     ],
+     [
+      216,
+      289,
+      191,
+      33,
+      0
+     ],
+     [
+      222,
+      296,
+      188,
+      38,
+      8
+     ],
+     [
+      228,
+      301,
+      196,
+      16,
+      0
+     ],
+     [
+      234,
+      310,
+      216,
+      29,
+      0
+     ],
+     [
+      240,
+      317,
+      192,
+      43,
+      2
+     ],
+     [
+      246,
+      324,
+      228,
+      59,
+      0
+     ],
+     [
+      252,
+      331,
+      209,
+      20,
+      3
+     ],
+     [
+      258,
+      336,
+      213,
+      33,
+      0
+     ],
+     [
+      264,
+      344,
+      185,
+      16,
+      0
+     ],
+     [
+      270,
+      354,
+      205,
+      16,
+      0
+     ],
+     [
+      276,
+      360,
+      192,
+      31,
+      4
+     ],
+     [
+      282,
+      368,
+      219,
+      32,
+      0
+     ],
+     [
+      288,
+      377,
+      225,
+      21,
+      0
+     ],
+     [
+      294,
+      384,
+      242,
+      64,
+      0
+     ],
+     [
+      300,
+      389,
+      214,
+      31,
+      0
+     ],
+     [
+      306,
+      397,
+      190,
+      24,
+      0
+     ],
+     [
+      309,
+      400,
+      171,
+      21,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 55936,
+       "kids": 83355,
+       "age": 3153799.350000036,
+       "ateA": 121702799.59606826,
+       "ateM": 269016.61082625296,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 8988,
+       "kids": 7569,
+       "age": 489166.2166666689,
+       "ateA": 15305220.658307377,
+       "ateM": 33211.075204049055,
+       "eyeSum": 274.0535436550631,
+       "parts": 8988
+      },
+      "2/noeye": {
+       "n": 671,
+       "kids": 324,
+       "age": 33867.450000000266,
+       "ateA": 870836.6711507558,
+       "ateM": 1413.99150724918,
+       "eyeSum": 34.21776219609835,
+       "parts": 1342
+      },
+      "3+/noeye": {
+       "n": 33,
+       "kids": 6,
+       "age": 1351.3666666666845,
+       "ateA": 26785.53502746481,
+       "ateM": 0,
+       "eyeSum": 1.611320081794077,
+       "parts": 99
+      },
+      "1/eye": {
+       "n": 140,
+       "kids": 111,
+       "age": 7230.216666666768,
+       "ateA": 229071.87844757357,
+       "ateM": 13.159331461353702,
+       "eyeSum": 78.60596968871934,
+       "parts": 140
+      },
+      "2/eye": {
+       "n": 22,
+       "kids": 21,
+       "age": 1446.28333333331,
+       "ateA": 54024.176491293234,
+       "ateM": 0,
+       "eyeSum": 12.104871648505666,
+       "parts": 44
+      },
+      "3+/eye": {
+       "n": 10,
+       "kids": 9,
+       "age": 427.1166666666616,
+       "ateA": 7894.447367198556,
+       "ateM": 79.30247189527205,
+       "eyeSum": 5.049270474526103,
+       "parts": 32
+      }
+     },
+     "deaths": 65800,
+     "kills": 5602
+    },
+    "tab": "C"
+   },
+   {
+    "seed": 1005,
+    "th": 0,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 375969,
+    "fin": {
+     "gen": 400,
+     "min": 313,
+     "pop": 154,
+     "dKill": 5303,
+     "births": 59633,
+     "deaths": 60109
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      13,
+      379,
+      71,
+      1
+     ],
+     [
+      12,
+      24,
+      221,
+      33,
+      0
+     ],
+     [
+      18,
+      33,
+      223,
+      34,
+      0
+     ],
+     [
+      24,
+      44,
+      223,
+      43,
+      0
+     ],
+     [
+      30,
+      56,
+      288,
+      57,
+      0
+     ],
+     [
+      36,
+      66,
+      304,
+      47,
+      0
+     ],
+     [
+      42,
+      78,
+      282,
+      48,
+      0
+     ],
+     [
+      48,
+      86,
+      227,
+      26,
+      0
+     ],
+     [
+      54,
+      96,
+      217,
+      26,
+      1
+     ],
+     [
+      60,
+      104,
+      199,
+      19,
+      0
+     ],
+     [
+      66,
+      113,
+      197,
+      32,
+      0
+     ],
+     [
+      72,
+      121,
+      158,
+      23,
+      0
+     ],
+     [
+      78,
+      130,
+      145,
+      15,
+      1
+     ],
+     [
+      84,
+      137,
+      133,
+      7,
+      0
+     ],
+     [
+      90,
+      146,
+      133,
+      22,
+      0
+     ],
+     [
+      96,
+      151,
+      115,
+      12,
+      0
+     ],
+     [
+      102,
+      157,
+      137,
+      33,
+      0
+     ],
+     [
+      108,
+      163,
+      122,
+      33,
+      2
+     ],
+     [
+      114,
+      170,
+      135,
+      24,
+      0
+     ],
+     [
+      120,
+      175,
+      113,
+      13,
+      0
+     ],
+     [
+      126,
+      183,
+      129,
+      22,
+      0
+     ],
+     [
+      132,
+      190,
+      102,
+      11,
+      0
+     ],
+     [
+      138,
+      197,
+      138,
+      12,
+      0
+     ],
+     [
+      144,
+      200,
+      127,
+      9,
+      0
+     ],
+     [
+      150,
+      208,
+      143,
+      25,
+      0
+     ],
+     [
+      156,
+      215,
+      132,
+      10,
+      0
+     ],
+     [
+      162,
+      221,
+      138,
+      33,
+      5
+     ],
+     [
+      168,
+      229,
+      121,
+      25,
+      0
+     ],
+     [
+      174,
+      237,
+      155,
+      15,
+      0
+     ],
+     [
+      180,
+      243,
+      130,
+      23,
+      2
+     ],
+     [
+      186,
+      253,
+      153,
+      16,
+      0
+     ],
+     [
+      192,
+      259,
+      127,
+      15,
+      0
+     ],
+     [
+      198,
+      267,
+      159,
+      22,
+      2
+     ],
+     [
+      204,
+      274,
+      144,
+      8,
+      0
+     ],
+     [
+      210,
+      281,
+      198,
+      29,
+      0
+     ],
+     [
+      216,
+      288,
+      172,
+      31,
+      0
+     ],
+     [
+      222,
+      295,
+      190,
+      28,
+      1
+     ],
+     [
+      228,
+      303,
+      167,
+      17,
+      1
+     ],
+     [
+      234,
+      309,
+      179,
+      27,
+      0
+     ],
+     [
+      240,
+      312,
+      168,
+      24,
+      0
+     ],
+     [
+      246,
+      322,
+      192,
+      39,
+      1
+     ],
+     [
+      252,
+      328,
+      171,
+      35,
+      0
+     ],
+     [
+      258,
+      334,
+      181,
+      37,
+      0
+     ],
+     [
+      264,
+      342,
+      160,
+      37,
+      0
+     ],
+     [
+      270,
+      349,
+      177,
+      30,
+      0
+     ],
+     [
+      276,
+      357,
+      152,
+      21,
+      0
+     ],
+     [
+      282,
+      364,
+      179,
+      36,
+      2
+     ],
+     [
+      288,
+      371,
+      155,
+      16,
+      0
+     ],
+     [
+      294,
+      379,
+      172,
+      23,
+      0
+     ],
+     [
+      300,
+      385,
+      172,
+      26,
+      2
+     ],
+     [
+      306,
+      392,
+      173,
+      20,
+      1
+     ],
+     [
+      312,
+      398,
+      165,
+      24,
+      0
+     ],
+     [
+      313,
+      400,
+      154,
+      24,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 50304,
+       "kids": 73316,
+       "age": 2806428.8666666853,
+       "ateA": 133836643.08179766,
+       "ateM": 319829.0375319369,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 8343,
+       "kids": 7330,
+       "age": 455443.1499999999,
+       "ateA": 17418383.137488328,
+       "ateM": 32216.586075780135,
+       "eyeSum": 238.74454224916022,
+       "parts": 8343
+      },
+      "2/noeye": {
+       "n": 657,
+       "kids": 320,
+       "age": 32336.450000000055,
+       "ateA": 1097595.6627621301,
+       "ateM": 788.3875764921473,
+       "eyeSum": 27.952964936254933,
+       "parts": 1314
+      },
+      "3+/noeye": {
+       "n": 34,
+       "kids": 7,
+       "age": 1517.4166666666868,
+       "ateA": 48488.57332013607,
+       "ateM": 189.110198355514,
+       "eyeSum": 1.8938169443717368,
+       "parts": 103
+      },
+      "1/eye": {
+       "n": 134,
+       "kids": 114,
+       "age": 7594.566666666636,
+       "ateA": 340433.6197857695,
+       "ateM": 358.9138721481739,
+       "eyeSum": 74.14064108325773,
+       "parts": 134
+      },
+      "2/eye": {
+       "n": 6,
+       "kids": 1,
+       "age": 129.29999999999885,
+       "ateA": 4081.312011216191,
+       "ateM": 0,
+       "eyeSum": 3.437887128142172,
+       "parts": 12
+      },
+      "3+/eye": {
+       "n": 1,
+       "kids": 0,
+       "age": 15.216666666667003,
+       "ateA": 224.41575572305896,
+       "ateM": 0,
+       "eyeSum": 0.48928498572684576,
+       "parts": 3
+      }
+     },
+     "deaths": 59479,
+     "kills": 5303
+    },
+    "tab": "C"
+   },
+   {
+    "seed": 60606,
+    "th": 1,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 434711,
+    "fin": {
+     "gen": 400,
+     "min": 324,
+     "pop": 118,
+     "dKill": 5286,
+     "births": 66790,
+     "deaths": 67302
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      408,
+      88,
+      1
+     ],
+     [
+      12,
+      26,
+      276,
+      80,
+      1
+     ],
+     [
+      18,
+      38,
+      258,
+      63,
+      3
+     ],
+     [
+      24,
+      48,
+      189,
+      18,
+      0
+     ],
+     [
+      30,
+      56,
+      234,
+      53,
+      0
+     ],
+     [
+      36,
+      66,
+      201,
+      31,
+      0
+     ],
+     [
+      42,
+      76,
+      220,
+      34,
+      0
+     ],
+     [
+      48,
+      82,
+      177,
+      30,
+      0
+     ],
+     [
+      54,
+      91,
+      181,
+      33,
+      0
+     ],
+     [
+      60,
+      99,
+      165,
+      26,
+      0
+     ],
+     [
+      66,
+      108,
+      153,
+      31,
+      0
+     ],
+     [
+      72,
+      114,
+      142,
+      31,
+      0
+     ],
+     [
+      78,
+      122,
+      136,
+      21,
+      0
+     ],
+     [
+      84,
+      130,
+      125,
+      12,
+      0
+     ],
+     [
+      90,
+      138,
+      154,
+      37,
+      0
+     ],
+     [
+      96,
+      145,
+      122,
+      53,
+      6
+     ],
+     [
+      102,
+      154,
+      158,
+      44,
+      3
+     ],
+     [
+      108,
+      160,
+      159,
+      43,
+      1
+     ],
+     [
+      114,
+      169,
+      195,
+      51,
+      0
+     ],
+     [
+      120,
+      174,
+      163,
+      32,
+      0
+     ],
+     [
+      126,
+      182,
+      185,
+      31,
+      0
+     ],
+     [
+      132,
+      189,
+      161,
+      19,
+      0
+     ],
+     [
+      138,
+      197,
+      178,
+      35,
+      0
+     ],
+     [
+      144,
+      204,
+      167,
+      39,
+      0
+     ],
+     [
+      150,
+      205,
+      176,
+      15,
+      0
+     ],
+     [
+      156,
+      208,
+      168,
+      27,
+      0
+     ],
+     [
+      162,
+      214,
+      194,
+      32,
+      1
+     ],
+     [
+      168,
+      221,
+      168,
+      33,
+      1
+     ],
+     [
+      174,
+      228,
+      202,
+      37,
+      0
+     ],
+     [
+      180,
+      235,
+      190,
+      43,
+      1
+     ],
+     [
+      186,
+      246,
+      205,
+      39,
+      0
+     ],
+     [
+      192,
+      252,
+      200,
+      31,
+      0
+     ],
+     [
+      198,
+      260,
+      204,
+      59,
+      0
+     ],
+     [
+      204,
+      264,
+      189,
+      30,
+      1
+     ],
+     [
+      210,
+      271,
+      223,
+      41,
+      1
+     ],
+     [
+      216,
+      276,
+      192,
+      25,
+      1
+     ],
+     [
+      222,
+      283,
+      201,
+      42,
+      3
+     ],
+     [
+      228,
+      289,
+      174,
+      34,
+      0
+     ],
+     [
+      234,
+      293,
+      208,
+      37,
+      0
+     ],
+     [
+      240,
+      300,
+      185,
+      36,
+      0
+     ],
+     [
+      246,
+      306,
+      191,
+      47,
+      0
+     ],
+     [
+      252,
+      314,
+      191,
+      58,
+      0
+     ],
+     [
+      258,
+      320,
+      201,
+      43,
+      0
+     ],
+     [
+      264,
+      330,
+      182,
+      22,
+      0
+     ],
+     [
+      270,
+      336,
+      203,
+      38,
+      0
+     ],
+     [
+      276,
+      341,
+      170,
+      24,
+      2
+     ],
+     [
+      282,
+      349,
+      177,
+      40,
+      0
+     ],
+     [
+      288,
+      355,
+      165,
+      18,
+      0
+     ],
+     [
+      294,
+      363,
+      174,
+      35,
+      0
+     ],
+     [
+      300,
+      368,
+      135,
+      12,
+      3
+     ],
+     [
+      306,
+      377,
+      166,
+      29,
+      0
+     ],
+     [
+      312,
+      383,
+      151,
+      26,
+      1
+     ],
+     [
+      318,
+      391,
+      159,
+      37,
+      2
+     ],
+     [
+      324,
+      399,
+      117,
+      29,
+      0
+     ],
+     [
+      324,
+      400,
+      118,
+      32,
+      1
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 52482,
+       "kids": 74554,
+       "age": 2906273.400000006,
+       "ateA": 128329965.48331454,
+       "ateM": 313423.286157264,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 12241,
+       "kids": 12517,
+       "age": 602231.5666666641,
+       "ateA": 21416847.09261434,
+       "ateM": 44438.55920972948,
+       "eyeSum": 446.20735946093754,
+       "parts": 12241
+      },
+      "2/noeye": {
+       "n": 1470,
+       "kids": 1058,
+       "age": 61641.64999999946,
+       "ateA": 1955312.437533687,
+       "ateM": 1985.2515141919243,
+       "eyeSum": 82.02031949381096,
+       "parts": 2940
+      },
+      "1/eye": {
+       "n": 258,
+       "kids": 221,
+       "age": 12021.716666666536,
+       "ateA": 525104.6448711713,
+       "ateM": 1202.0073127006929,
+       "eyeSum": 148.64457014144767,
+       "parts": 258
+      },
+      "3+/noeye": {
+       "n": 126,
+       "kids": 75,
+       "age": 4909.2166666665935,
+       "ateA": 134794.34451351888,
+       "ateM": 311.3652829477561,
+       "eyeSum": 13.206266931075278,
+       "parts": 397
+      },
+      "3+/eye": {
+       "n": 51,
+       "kids": 57,
+       "age": 1691.6833333333077,
+       "ateA": 37616.44510464523,
+       "ateM": 49.11440351974261,
+       "eyeSum": 35.89125014153303,
+       "parts": 162
+      },
+      "2/eye": {
+       "n": 44,
+       "kids": 30,
+       "age": 1693.3333333332853,
+       "ateA": 65323.20550088473,
+       "ateM": 262.9957442294026,
+       "eyeSum": 26.898788139984315,
+       "parts": 88
+      }
+     },
+     "deaths": 66672,
+     "kills": 5286
+    },
+    "tab": "D"
+   },
+   {
+    "seed": 1001,
+    "th": 1,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 445959,
+    "fin": {
+     "gen": 400,
+     "min": 296,
+     "pop": 131,
+     "dKill": 6181,
+     "births": 66962,
+     "deaths": 67461
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      16,
+      439,
+      95,
+      2
+     ],
+     [
+      12,
+      25,
+      277,
+      70,
+      1
+     ],
+     [
+      18,
+      37,
+      301,
+      138,
+      2
+     ],
+     [
+      24,
+      48,
+      294,
+      99,
+      5
+     ],
+     [
+      30,
+      58,
+      366,
+      149,
+      11
+     ],
+     [
+      36,
+      68,
+      304,
+      94,
+      21
+     ],
+     [
+      42,
+      78,
+      290,
+      73,
+      13
+     ],
+     [
+      48,
+      89,
+      262,
+      58,
+      9
+     ],
+     [
+      54,
+      97,
+      218,
+      34,
+      0
+     ],
+     [
+      60,
+      105,
+      213,
+      30,
+      0
+     ],
+     [
+      66,
+      109,
+      199,
+      14,
+      1
+     ],
+     [
+      72,
+      115,
+      199,
+      58,
+      0
+     ],
+     [
+      78,
+      122,
+      200,
+      48,
+      1
+     ],
+     [
+      84,
+      129,
+      177,
+      58,
+      1
+     ],
+     [
+      90,
+      137,
+      168,
+      40,
+      10
+     ],
+     [
+      96,
+      144,
+      129,
+      33,
+      16
+     ],
+     [
+      102,
+      148,
+      139,
+      24,
+      13
+     ],
+     [
+      108,
+      156,
+      132,
+      39,
+      7
+     ],
+     [
+      114,
+      162,
+      142,
+      57,
+      19
+     ],
+     [
+      120,
+      171,
+      137,
+      28,
+      7
+     ],
+     [
+      126,
+      179,
+      172,
+      67,
+      7
+     ],
+     [
+      132,
+      186,
+      173,
+      26,
+      0
+     ],
+     [
+      138,
+      194,
+      212,
+      43,
+      0
+     ],
+     [
+      144,
+      200,
+      209,
+      57,
+      1
+     ],
+     [
+      150,
+      209,
+      240,
+      48,
+      0
+     ],
+     [
+      156,
+      216,
+      180,
+      40,
+      2
+     ],
+     [
+      162,
+      225,
+      182,
+      33,
+      5
+     ],
+     [
+      168,
+      233,
+      179,
+      25,
+      1
+     ],
+     [
+      174,
+      241,
+      211,
+      24,
+      0
+     ],
+     [
+      180,
+      247,
+      178,
+      32,
+      0
+     ],
+     [
+      186,
+      254,
+      220,
+      34,
+      2
+     ],
+     [
+      192,
+      261,
+      163,
+      19,
+      1
+     ],
+     [
+      198,
+      268,
+      156,
+      17,
+      0
+     ],
+     [
+      204,
+      275,
+      159,
+      30,
+      0
+     ],
+     [
+      210,
+      281,
+      164,
+      33,
+      2
+     ],
+     [
+      216,
+      290,
+      138,
+      20,
+      0
+     ],
+     [
+      222,
+      298,
+      153,
+      25,
+      0
+     ],
+     [
+      228,
+      303,
+      134,
+      47,
+      1
+     ],
+     [
+      234,
+      315,
+      142,
+      39,
+      0
+     ],
+     [
+      240,
+      323,
+      118,
+      38,
+      2
+     ],
+     [
+      246,
+      333,
+      164,
+      41,
+      0
+     ],
+     [
+      252,
+      343,
+      132,
+      30,
+      1
+     ],
+     [
+      258,
+      350,
+      129,
+      25,
+      0
+     ],
+     [
+      264,
+      355,
+      129,
+      25,
+      0
+     ],
+     [
+      270,
+      363,
+      146,
+      36,
+      5
+     ],
+     [
+      276,
+      371,
+      125,
+      18,
+      0
+     ],
+     [
+      282,
+      379,
+      153,
+      29,
+      3
+     ],
+     [
+      288,
+      388,
+      145,
+      31,
+      0
+     ],
+     [
+      294,
+      398,
+      146,
+      41,
+      1
+     ],
+     [
+      296,
+      400,
+      131,
+      36,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 49152,
+       "kids": 74047,
+       "age": 2629347.2333333488,
+       "ateA": 115107696.45920669,
+       "ateM": 288023.9714552991,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "2/noeye": {
+       "n": 2477,
+       "kids": 2361,
+       "age": 102894.56666666594,
+       "ateA": 3146111.7124898913,
+       "ateM": 6233.320555092556,
+       "eyeSum": 217.91110220435755,
+       "parts": 4954
+      },
+      "1/noeye": {
+       "n": 13602,
+       "kids": 15665,
+       "age": 617092.0166666622,
+       "ateA": 19925605.25438865,
+       "ateM": 37648.79166263477,
+       "eyeSum": 684.5972530489806,
+       "parts": 13602
+      },
+      "1/eye": {
+       "n": 896,
+       "kids": 1131,
+       "age": 45449.16666666626,
+       "ateA": 1485650.356845181,
+       "ateM": 1523.0713054455068,
+       "eyeSum": 562.0288539646477,
+       "parts": 896
+      },
+      "2/eye": {
+       "n": 287,
+       "kids": 247,
+       "age": 13187.716666666576,
+       "ateA": 383366.02364546113,
+       "ateM": 437.1589835503054,
+       "eyeSum": 178.21392915659598,
+       "parts": 574
+      },
+      "3+/noeye": {
+       "n": 371,
+       "kids": 312,
+       "age": 13426.566666666593,
+       "ateA": 377863.45031968714,
+       "ateM": 610.3774399942192,
+       "eyeSum": 48.145424086690696,
+       "parts": 1169
+      },
+      "3+/eye": {
+       "n": 46,
+       "kids": 33,
+       "age": 1677.2166666666153,
+       "ateA": 47188.83706551174,
+       "ateM": 0,
+       "eyeSum": 34.8289002131334,
+       "parts": 139
+      }
+     },
+     "deaths": 66831,
+     "kills": 6180
+    },
+    "tab": "D"
+   },
+   {
+    "seed": 1002,
+    "th": 1,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 631924,
+    "fin": {
+     "gen": 400,
+     "min": 291,
+     "pop": 161,
+     "dKill": 6484,
+     "births": 68710,
+     "deaths": 69179
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      416,
+      65,
+      0
+     ],
+     [
+      12,
+      26,
+      235,
+      79,
+      0
+     ],
+     [
+      18,
+      33,
+      270,
+      101,
+      12
+     ],
+     [
+      24,
+      43,
+      273,
+      80,
+      2
+     ],
+     [
+      30,
+      53,
+      303,
+      102,
+      13
+     ],
+     [
+      36,
+      65,
+      276,
+      59,
+      2
+     ],
+     [
+      42,
+      75,
+      311,
+      74,
+      0
+     ],
+     [
+      48,
+      85,
+      253,
+      76,
+      4
+     ],
+     [
+      54,
+      93,
+      251,
+      83,
+      2
+     ],
+     [
+      60,
+      102,
+      230,
+      28,
+      3
+     ],
+     [
+      66,
+      109,
+      202,
+      28,
+      1
+     ],
+     [
+      72,
+      116,
+      196,
+      29,
+      0
+     ],
+     [
+      78,
+      127,
+      199,
+      35,
+      0
+     ],
+     [
+      84,
+      133,
+      234,
+      51,
+      6
+     ],
+     [
+      90,
+      141,
+      222,
+      60,
+      9
+     ],
+     [
+      96,
+      147,
+      182,
+      63,
+      0
+     ],
+     [
+      102,
+      159,
+      177,
+      31,
+      2
+     ],
+     [
+      108,
+      165,
+      187,
+      33,
+      0
+     ],
+     [
+      114,
+      172,
+      199,
+      52,
+      1
+     ],
+     [
+      120,
+      179,
+      184,
+      31,
+      0
+     ],
+     [
+      126,
+      186,
+      203,
+      31,
+      2
+     ],
+     [
+      132,
+      193,
+      182,
+      20,
+      0
+     ],
+     [
+      138,
+      198,
+      227,
+      42,
+      2
+     ],
+     [
+      144,
+      206,
+      234,
+      39,
+      0
+     ],
+     [
+      150,
+      216,
+      225,
+      38,
+      0
+     ],
+     [
+      156,
+      223,
+      209,
+      24,
+      3
+     ],
+     [
+      162,
+      234,
+      225,
+      55,
+      0
+     ],
+     [
+      168,
+      241,
+      222,
+      30,
+      1
+     ],
+     [
+      174,
+      248,
+      227,
+      32,
+      2
+     ],
+     [
+      180,
+      257,
+      187,
+      31,
+      2
+     ],
+     [
+      186,
+      267,
+      184,
+      38,
+      3
+     ],
+     [
+      192,
+      274,
+      187,
+      26,
+      0
+     ],
+     [
+      198,
+      282,
+      211,
+      46,
+      2
+     ],
+     [
+      204,
+      289,
+      165,
+      18,
+      0
+     ],
+     [
+      210,
+      297,
+      177,
+      48,
+      1
+     ],
+     [
+      216,
+      302,
+      161,
+      37,
+      0
+     ],
+     [
+      222,
+      310,
+      174,
+      64,
+      0
+     ],
+     [
+      228,
+      317,
+      157,
+      41,
+      0
+     ],
+     [
+      234,
+      327,
+      161,
+      31,
+      0
+     ],
+     [
+      240,
+      334,
+      130,
+      33,
+      0
+     ],
+     [
+      246,
+      341,
+      164,
+      46,
+      3
+     ],
+     [
+      252,
+      352,
+      144,
+      18,
+      0
+     ],
+     [
+      258,
+      359,
+      180,
+      29,
+      0
+     ],
+     [
+      264,
+      369,
+      154,
+      24,
+      1
+     ],
+     [
+      270,
+      376,
+      187,
+      36,
+      1
+     ],
+     [
+      276,
+      381,
+      149,
+      26,
+      0
+     ],
+     [
+      282,
+      388,
+      179,
+      13,
+      0
+     ],
+     [
+      288,
+      394,
+      162,
+      23,
+      0
+     ],
+     [
+      291,
+      400,
+      161,
+      33,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 52425,
+       "kids": 79257,
+       "age": 2895414.0000000284,
+       "ateA": 108735874.34242025,
+       "ateM": 306494.9779457707,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 12794,
+       "kids": 14223,
+       "age": 609971.1166666613,
+       "ateA": 18569506.35289244,
+       "ateM": 38034.39575650214,
+       "eyeSum": 478.27283107773235,
+       "parts": 12794
+      },
+      "2/noeye": {
+       "n": 2198,
+       "kids": 2083,
+       "age": 91679.14999999902,
+       "ateA": 2260506.096736193,
+       "ateM": 6903.770008959338,
+       "eyeSum": 180.7207353632913,
+       "parts": 4396
+      },
+      "1/eye": {
+       "n": 380,
+       "kids": 419,
+       "age": 18671.616666666716,
+       "ateA": 499163.31605748046,
+       "ateM": 1356.1256352735802,
+       "eyeSum": 216.04635363741892,
+       "parts": 380
+      },
+      "3+/noeye": {
+       "n": 547,
+       "kids": 559,
+       "age": 20744.133333332993,
+       "ateA": 386896.20517582324,
+       "ateM": 1841.2495977885421,
+       "eyeSum": 101.70544224095727,
+       "parts": 1743
+      },
+      "2/eye": {
+       "n": 97,
+       "kids": 84,
+       "age": 4016.1666666666165,
+       "ateA": 76388.19847819551,
+       "ateM": 1049.6529544228356,
+       "eyeSum": 52.419793660385224,
+       "parts": 194
+      },
+      "3+/eye": {
+       "n": 108,
+       "kids": 126,
+       "age": 3756.9833333332326,
+       "ateA": 59113.417053539284,
+       "ateM": 21.78644715886178,
+       "eyeSum": 57.301755063661574,
+       "parts": 361
+      }
+     },
+     "deaths": 68549,
+     "kills": 6484
+    },
+    "tab": "D"
+   },
+   {
+    "seed": 1003,
+    "th": 1,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 711031,
+    "fin": {
+     "gen": 400,
+     "min": 314,
+     "pop": 183,
+     "dKill": 4943,
+     "births": 59698,
+     "deaths": 60145
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      13,
+      416,
+      76,
+      3
+     ],
+     [
+      12,
+      24,
+      320,
+      75,
+      1
+     ],
+     [
+      18,
+      38,
+      255,
+      59,
+      0
+     ],
+     [
+      24,
+      49,
+      215,
+      72,
+      0
+     ],
+     [
+      30,
+      59,
+      165,
+      53,
+      0
+     ],
+     [
+      36,
+      67,
+      201,
+      54,
+      4
+     ],
+     [
+      42,
+      76,
+      234,
+      71,
+      7
+     ],
+     [
+      48,
+      85,
+      172,
+      26,
+      0
+     ],
+     [
+      54,
+      94,
+      179,
+      37,
+      0
+     ],
+     [
+      60,
+      101,
+      138,
+      19,
+      0
+     ],
+     [
+      66,
+      110,
+      151,
+      35,
+      0
+     ],
+     [
+      72,
+      119,
+      128,
+      34,
+      1
+     ],
+     [
+      78,
+      127,
+      122,
+      29,
+      1
+     ],
+     [
+      84,
+      133,
+      121,
+      47,
+      12
+     ],
+     [
+      90,
+      140,
+      127,
+      37,
+      21
+     ],
+     [
+      96,
+      148,
+      124,
+      14,
+      2
+     ],
+     [
+      102,
+      157,
+      156,
+      55,
+      0
+     ],
+     [
+      108,
+      163,
+      125,
+      37,
+      0
+     ],
+     [
+      114,
+      169,
+      141,
+      42,
+      0
+     ],
+     [
+      120,
+      176,
+      123,
+      20,
+      1
+     ],
+     [
+      126,
+      183,
+      147,
+      32,
+      2
+     ],
+     [
+      132,
+      191,
+      123,
+      25,
+      0
+     ],
+     [
+      138,
+      200,
+      149,
+      40,
+      1
+     ],
+     [
+      144,
+      205,
+      130,
+      34,
+      0
+     ],
+     [
+      150,
+      213,
+      154,
+      37,
+      0
+     ],
+     [
+      156,
+      219,
+      168,
+      31,
+      0
+     ],
+     [
+      162,
+      226,
+      195,
+      30,
+      0
+     ],
+     [
+      168,
+      231,
+      194,
+      49,
+      4
+     ],
+     [
+      174,
+      240,
+      216,
+      42,
+      0
+     ],
+     [
+      180,
+      243,
+      205,
+      38,
+      0
+     ],
+     [
+      186,
+      251,
+      189,
+      46,
+      3
+     ],
+     [
+      192,
+      257,
+      186,
+      50,
+      0
+     ],
+     [
+      198,
+      263,
+      193,
+      65,
+      0
+     ],
+     [
+      204,
+      270,
+      165,
+      54,
+      6
+     ],
+     [
+      210,
+      279,
+      184,
+      45,
+      20
+     ],
+     [
+      216,
+      287,
+      133,
+      8,
+      1
+     ],
+     [
+      222,
+      295,
+      157,
+      35,
+      4
+     ],
+     [
+      228,
+      301,
+      135,
+      21,
+      0
+     ],
+     [
+      234,
+      312,
+      148,
+      28,
+      1
+     ],
+     [
+      240,
+      318,
+      136,
+      23,
+      2
+     ],
+     [
+      246,
+      327,
+      143,
+      24,
+      0
+     ],
+     [
+      252,
+      332,
+      118,
+      17,
+      0
+     ],
+     [
+      258,
+      336,
+      127,
+      22,
+      0
+     ],
+     [
+      264,
+      343,
+      115,
+      26,
+      0
+     ],
+     [
+      270,
+      351,
+      166,
+      26,
+      2
+     ],
+     [
+      276,
+      359,
+      177,
+      69,
+      3
+     ],
+     [
+      282,
+      364,
+      191,
+      37,
+      0
+     ],
+     [
+      288,
+      371,
+      159,
+      21,
+      6
+     ],
+     [
+      294,
+      377,
+      158,
+      30,
+      8
+     ],
+     [
+      300,
+      383,
+      128,
+      18,
+      2
+     ],
+     [
+      306,
+      391,
+      153,
+      35,
+      0
+     ],
+     [
+      312,
+      397,
+      140,
+      27,
+      0
+     ],
+     [
+      314,
+      400,
+      183,
+      40,
+      0
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 44561,
+       "kids": 65664,
+       "age": 2475201.250000014,
+       "ateA": 125136432.0821855,
+       "ateM": 271005.09709064546,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 12040,
+       "kids": 13507,
+       "age": 606710.9833333287,
+       "ateA": 24453756.516331945,
+       "ateM": 130919.76400754902,
+       "eyeSum": 506.56708575292475,
+       "parts": 12040
+      },
+      "2/noeye": {
+       "n": 1837,
+       "kids": 1608,
+       "age": 80588.93333333227,
+       "ateA": 2849068.318714639,
+       "ateM": 5826.2905909557785,
+       "eyeSum": 157.98048485496605,
+       "parts": 3674
+      },
+      "1/eye": {
+       "n": 709,
+       "kids": 889,
+       "age": 36638.34999999979,
+       "ateA": 1676385.8513472292,
+       "ateM": 1826.103314961253,
+       "eyeSum": 462.574783841045,
+       "parts": 709
+      },
+      "2/eye": {
+       "n": 148,
+       "kids": 88,
+       "age": 5431.649999999899,
+       "ateA": 186103.7993189373,
+       "ateM": 320.9749994011683,
+       "eyeSum": 86.397377917288,
+       "parts": 296
+      },
+      "3+/noeye": {
+       "n": 205,
+       "kids": 135,
+       "age": 8210.14999999993,
+       "ateA": 293874.81243977667,
+       "ateM": 1112.714972138387,
+       "eyeSum": 23.986922597810516,
+       "parts": 628
+      },
+      "3+/eye": {
+       "n": 15,
+       "kids": 10,
+       "age": 521.5833333333198,
+       "ateA": 16851.77058721343,
+       "ateM": 0,
+       "eyeSum": 9.639325158281407,
+       "parts": 45
+      }
+     },
+     "deaths": 59515,
+     "kills": 4943
+    },
+    "tab": "D"
+   },
+   {
+    "seed": 1004,
+    "th": 1,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 451933,
+    "fin": {
+     "gen": 400,
+     "min": 294,
+     "pop": 200,
+     "dKill": 7154,
+     "births": 83718,
+     "deaths": 84148
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      15,
+      420,
+      107,
+      0
+     ],
+     [
+      12,
+      23,
+      265,
+      87,
+      3
+     ],
+     [
+      18,
+      35,
+      283,
+      91,
+      8
+     ],
+     [
+      24,
+      44,
+      253,
+      89,
+      3
+     ],
+     [
+      30,
+      55,
+      274,
+      90,
+      10
+     ],
+     [
+      36,
+      65,
+      307,
+      100,
+      9
+     ],
+     [
+      42,
+      75,
+      329,
+      96,
+      11
+     ],
+     [
+      48,
+      86,
+      314,
+      95,
+      3
+     ],
+     [
+      54,
+      97,
+      346,
+      96,
+      1
+     ],
+     [
+      60,
+      107,
+      289,
+      62,
+      0
+     ],
+     [
+      66,
+      116,
+      346,
+      91,
+      8
+     ],
+     [
+      72,
+      126,
+      321,
+      81,
+      2
+     ],
+     [
+      78,
+      139,
+      344,
+      74,
+      6
+     ],
+     [
+      84,
+      149,
+      285,
+      40,
+      1
+     ],
+     [
+      90,
+      159,
+      285,
+      40,
+      1
+     ],
+     [
+      96,
+      167,
+      241,
+      64,
+      0
+     ],
+     [
+      102,
+      176,
+      244,
+      44,
+      0
+     ],
+     [
+      108,
+      183,
+      213,
+      52,
+      2
+     ],
+     [
+      114,
+      192,
+      247,
+      46,
+      0
+     ],
+     [
+      120,
+      200,
+      188,
+      19,
+      0
+     ],
+     [
+      126,
+      208,
+      191,
+      28,
+      0
+     ],
+     [
+      132,
+      215,
+      147,
+      20,
+      2
+     ],
+     [
+      138,
+      220,
+      212,
+      41,
+      0
+     ],
+     [
+      144,
+      227,
+      172,
+      15,
+      0
+     ],
+     [
+      150,
+      234,
+      181,
+      18,
+      3
+     ],
+     [
+      156,
+      239,
+      174,
+      16,
+      1
+     ],
+     [
+      162,
+      247,
+      184,
+      17,
+      0
+     ],
+     [
+      168,
+      254,
+      172,
+      22,
+      0
+     ],
+     [
+      174,
+      262,
+      202,
+      28,
+      1
+     ],
+     [
+      180,
+      268,
+      168,
+      24,
+      1
+     ],
+     [
+      186,
+      274,
+      203,
+      38,
+      1
+     ],
+     [
+      192,
+      280,
+      178,
+      43,
+      0
+     ],
+     [
+      198,
+      290,
+      182,
+      49,
+      0
+     ],
+     [
+      204,
+      298,
+      144,
+      50,
+      6
+     ],
+     [
+      210,
+      304,
+      200,
+      66,
+      9
+     ],
+     [
+      216,
+      310,
+      174,
+      36,
+      0
+     ],
+     [
+      222,
+      315,
+      174,
+      63,
+      2
+     ],
+     [
+      228,
+      321,
+      176,
+      47,
+      6
+     ],
+     [
+      234,
+      327,
+      185,
+      52,
+      0
+     ],
+     [
+      240,
+      334,
+      169,
+      46,
+      1
+     ],
+     [
+      246,
+      343,
+      188,
+      35,
+      3
+     ],
+     [
+      252,
+      350,
+      183,
+      31,
+      0
+     ],
+     [
+      258,
+      357,
+      189,
+      27,
+      0
+     ],
+     [
+      264,
+      364,
+      174,
+      33,
+      1
+     ],
+     [
+      270,
+      371,
+      174,
+      39,
+      1
+     ],
+     [
+      276,
+      377,
+      182,
+      56,
+      4
+     ],
+     [
+      282,
+      382,
+      167,
+      42,
+      1
+     ],
+     [
+      288,
+      392,
+      184,
+      43,
+      0
+     ],
+     [
+      294,
+      399,
+      189,
+      64,
+      13
+     ],
+     [
+      294,
+      400,
+      200,
+      71,
+      11
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 61593,
+       "kids": 92279,
+       "age": 3059428.1666667005,
+       "ateA": 104043544.7242128,
+       "ateM": 298304.76773198193,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 17362,
+       "kids": 19981,
+       "age": 755657.1166666641,
+       "ateA": 19408400.817513283,
+       "ateM": 46193.29428545118,
+       "eyeSum": 885.4208848198388,
+       "parts": 17362
+      },
+      "1/eye": {
+       "n": 672,
+       "kids": 801,
+       "age": 29072.816666666422,
+       "ateA": 790220.6966690597,
+       "ateM": 990.9133078404509,
+       "eyeSum": 399.2456345870691,
+       "parts": 672
+      },
+      "2/noeye": {
+       "n": 3267,
+       "kids": 3334,
+       "age": 127732.09999999852,
+       "ateA": 2644064.744794843,
+       "ateM": 4279.415452686215,
+       "eyeSum": 300.0543178497159,
+       "parts": 6534
+      },
+      "3+/noeye": {
+       "n": 373,
+       "kids": 254,
+       "age": 11558.533333333131,
+       "ateA": 215994.33837363074,
+       "ateM": 1043.341984755053,
+       "eyeSum": 42.561692717425345,
+       "parts": 1152
+      },
+      "2/eye": {
+       "n": 217,
+       "kids": 185,
+       "age": 8250.81666666661,
+       "ateA": 177832.98203056515,
+       "ateM": 3.22164215103993,
+       "eyeSum": 121.27016025224222,
+       "parts": 434
+      },
+      "3+/eye": {
+       "n": 34,
+       "kids": 32,
+       "age": 1260.1999999999634,
+       "ateA": 19330.978177753826,
+       "ateM": 120.10532455993692,
+       "eyeSum": 18.004551747698763,
+       "parts": 104
+      }
+     },
+     "deaths": 83518,
+     "kills": 7154
+    },
+    "tab": "D"
+   },
+   {
+    "seed": 1005,
+    "th": 1,
+    "ey": 1,
+    "stop": "gen",
+    "wallMs": 418891,
+    "fin": {
+     "gen": 400,
+     "min": 293,
+     "pop": 187,
+     "dKill": 6605,
+     "births": 75637,
+     "deaths": 76080
+    },
+    "s": [
+     [
+      0,
+      1,
+      630,
+      0,
+      0
+     ],
+     [
+      6,
+      16,
+      406,
+      80,
+      7
+     ],
+     [
+      12,
+      26,
+      280,
+      82,
+      1
+     ],
+     [
+      18,
+      37,
+      311,
+      114,
+      0
+     ],
+     [
+      24,
+      48,
+      293,
+      46,
+      0
+     ],
+     [
+      30,
+      62,
+      261,
+      41,
+      0
+     ],
+     [
+      36,
+      73,
+      246,
+      36,
+      0
+     ],
+     [
+      42,
+      82,
+      277,
+      38,
+      0
+     ],
+     [
+      48,
+      91,
+      255,
+      54,
+      4
+     ],
+     [
+      54,
+      104,
+      296,
+      115,
+      2
+     ],
+     [
+      60,
+      115,
+      268,
+      79,
+      1
+     ],
+     [
+      66,
+      126,
+      289,
+      103,
+      7
+     ],
+     [
+      72,
+      133,
+      267,
+      88,
+      0
+     ],
+     [
+      78,
+      142,
+      282,
+      67,
+      0
+     ],
+     [
+      84,
+      150,
+      224,
+      32,
+      0
+     ],
+     [
+      90,
+      157,
+      204,
+      19,
+      0
+     ],
+     [
+      96,
+      164,
+      181,
+      29,
+      0
+     ],
+     [
+      102,
+      170,
+      187,
+      39,
+      0
+     ],
+     [
+      108,
+      177,
+      173,
+      34,
+      0
+     ],
+     [
+      114,
+      184,
+      187,
+      43,
+      0
+     ],
+     [
+      120,
+      189,
+      172,
+      26,
+      0
+     ],
+     [
+      126,
+      197,
+      183,
+      51,
+      2
+     ],
+     [
+      132,
+      202,
+      184,
+      39,
+      0
+     ],
+     [
+      138,
+      210,
+      201,
+      58,
+      2
+     ],
+     [
+      144,
+      217,
+      181,
+      26,
+      1
+     ],
+     [
+      150,
+      225,
+      230,
+      18,
+      1
+     ],
+     [
+      156,
+      232,
+      195,
+      49,
+      1
+     ],
+     [
+      162,
+      237,
+      227,
+      38,
+      1
+     ],
+     [
+      168,
+      244,
+      200,
+      45,
+      0
+     ],
+     [
+      174,
+      251,
+      255,
+      26,
+      0
+     ],
+     [
+      180,
+      258,
+      206,
+      30,
+      4
+     ],
+     [
+      186,
+      267,
+      217,
+      32,
+      4
+     ],
+     [
+      192,
+      272,
+      182,
+      27,
+      8
+     ],
+     [
+      198,
+      278,
+      191,
+      39,
+      3
+     ],
+     [
+      204,
+      286,
+      187,
+      46,
+      0
+     ],
+     [
+      210,
+      295,
+      149,
+      18,
+      0
+     ],
+     [
+      216,
+      304,
+      189,
+      28,
+      0
+     ],
+     [
+      222,
+      312,
+      201,
+      29,
+      0
+     ],
+     [
+      228,
+      321,
+      198,
+      55,
+      3
+     ],
+     [
+      234,
+      325,
+      226,
+      64,
+      0
+     ],
+     [
+      240,
+      334,
+      191,
+      57,
+      1
+     ],
+     [
+      246,
+      342,
+      205,
+      65,
+      6
+     ],
+     [
+      252,
+      345,
+      153,
+      19,
+      2
+     ],
+     [
+      258,
+      355,
+      165,
+      19,
+      1
+     ],
+     [
+      264,
+      361,
+      144,
+      9,
+      0
+     ],
+     [
+      270,
+      369,
+      181,
+      31,
+      3
+     ],
+     [
+      276,
+      379,
+      155,
+      26,
+      0
+     ],
+     [
+      282,
+      384,
+      167,
+      19,
+      0
+     ],
+     [
+      288,
+      393,
+      188,
+      28,
+      2
+     ],
+     [
+      293,
+      400,
+      187,
+      29,
+      1
+     ]
+    ],
+    "FIT": {
+     "bins": {
+      "0/-": {
+       "n": 58148,
+       "kids": 88260,
+       "age": 3083240.400000016,
+       "ateA": 107805412.27299395,
+       "ateM": 278174.0719529811,
+       "eyeSum": 0,
+       "parts": 0
+      },
+      "1/noeye": {
+       "n": 14390,
+       "kids": 16414,
+       "age": 655559.9999999959,
+       "ateA": 17706387.743491046,
+       "ateM": 34321.16408342167,
+       "eyeSum": 637.595785284875,
+       "parts": 14390
+      },
+      "2/noeye": {
+       "n": 2080,
+       "kids": 1821,
+       "age": 78251.69999999923,
+       "ateA": 1707409.249595235,
+       "ateM": 2841.028378368596,
+       "eyeSum": 131.02206126732239,
+       "parts": 4160
+      },
+      "1/eye": {
+       "n": 527,
+       "kids": 572,
+       "age": 23441.71666666648,
+       "ateA": 725352.1943063054,
+       "ateM": 793.5838321771788,
+       "eyeSum": 315.8289469154258,
+       "parts": 527
+      },
+      "3+/noeye": {
+       "n": 201,
+       "kids": 125,
+       "age": 6732.866666666565,
+       "ateA": 126914.54530377683,
+       "ateM": 187.2017700242058,
+       "eyeSum": 18.770418226651636,
+       "parts": 612
+      },
+      "2/eye": {
+       "n": 92,
+       "kids": 66,
+       "age": 3426.0833333332594,
+       "ateA": 73174.51186817391,
+       "ateM": 0,
+       "eyeSum": 53.237803035458256,
+       "parts": 184
+      },
+      "3+/eye": {
+       "n": 12,
+       "kids": 5,
+       "age": 410.1500000000034,
+       "ateA": 6858.764757373896,
+       "ateM": 0,
+       "eyeSum": 6.347244744972909,
+       "parts": 36
+      }
+     },
+     "deaths": 75450,
+     "kills": 6605
+    },
+    "tab": "D"
+   }
+  ]
+ }
+}

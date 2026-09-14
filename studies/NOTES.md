@@ -76,3 +76,17 @@ Six seeds at WORLD 3, four hundred generations each, **396,109 individuals recor
 **The body costs 40 percent of fitness.** Bodiless 1.476 offspring, one part 0.881 (s = −40.3 ±0.6), two parts 0.536 (−63.7), three or more 0.498 (−66.2). Roughly 130 standard errors. The designed cost is 10 percent metabolism; the realised cost is 4× that because bodied creatures also **eat less**, 1,718 against 2,220 a lifetime, and die younger. v1.33 priced segment rent at population thirty where a 40 percent coefficient was invisible under a 4 percent drift barrier.
 
 Next, preregistered: wire the eye to the algae channel. Mean sense is 113 px against 140 px mean algae spacing, so a creature usually cannot see one alga; 1.5× would cover 2.25× the area, taking expected algae in range from 0.65 to 1.46. **Criterion set before the run:** s rises above +10 percent with an interval excluding zero, and eyed share exceeds 50 percent for 100 generations in most of six seeds. **Falsifier:** if s stays at zero after wiring, abandon the vision line and go after the body cost instead.
+
+## 2026-09-14 the threshold (threshold.json)
+
+A 2x2 of THRESH_BASE (breeding readiness against base storage) and EYE_FOOD (an eye extends algae detection), six seeds, WORLD 3, 400 generations, fitness ledger on, preregistered in `threshold-prereg.md` before any run.
+
+**Primary test failed, harmfully.** Eye wired to food, threshold off: s(eye | 1 part) = −11.7 percent, 95 percent interval −18.1 to −5.3. The falsifier applies and the vision line is set aside. With the threshold on the same eye is +4.6 percent (+1.3 to +7.9), short of the +10 bar; controls with the eye unwired sit at zero (−2.3, −1.6). At two parts the signs flip in both eye arms, which is exploratory and small but is also what a lineage confound looks like. Secondary share test: 0 of 6 seeds in both arms; eyed share among bodied averaged 1.6 and 4.5 percent.
+
+Two explanations the design cannot separate. A code mechanism: food in sight means a full speed chase (arrive rises with distance, `index.html:1343`) where a creature with no target wanders at 75 percent speed (`index.html:1483`), and movement burn scales with speed squared (`index.html:1500`), so an eye in a grazed, crowded dish may mostly buy chases lost to nearer grazers. A design limit: eyes are not randomised, so an eye cannot be separated from the lineage carrying it. A common garden release of matched genomes differing only in an eye would decide it.
+
+**The threshold explains about a third of the body cost:** one part costs 40.3 percent with it off, 26.1 with it on, so 35 percent removed (39 with the eye wired); the two seed pilot said 43. Bodied share rises from 14.6 to 21.1 percent.
+
+**Reproducibility, as preregistered: failed, then exact.** The control arm came in 425 deaths short of v1.42 across six seeds, every bin at or below, because the new harness checked its stop every 60 steps rather than 3,600. Rerunning seed 60606 with the stop aligned reproduced v1.42's ledger in every field over 1.12 million steps: the build is bit for bit v1.42 with both switches off, and the v1.42 eye study was never touched by the resize hazard found during this run.
+
+Tooling faults found and fixed during the run, all recorded in the study file: the resize handler regenerating terrain, viewport clears at turn end voiding three runs, stop granularity, and zsh word splitting blinding the monitor.
