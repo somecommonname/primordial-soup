@@ -1,0 +1,5265 @@
+{
+ "study": "THE BURDEN (v1.44)",
+ "runDate": "2026-09-14 to 2026-09-15",
+ "gameVersion": "v1.44",
+ "preregistration": "studies/burden-prereg.md, committed in 701b750 with the switches, the lab and the analysis script before any run",
+ "analysis": "studies/burden_analysis.py, unchanged since 701b750",
+ "rawData": "studies/burden-runs.json.gz: all 97 runs exactly as extracted. Reproduce every preregistered number with: python3 studies/burden_analysis.py <(gunzip -c studies/burden-runs.json.gz) scored.json",
+ "design": {
+  "arms": "THRESH_BASE x SEG_MOVE x SEG_BURN, full factorial, for two instruments",
+  "armNames": {
+   "000": "all penalties on (v1.43 default)",
+   "T00": "THRESH_BASE",
+   "0M0": "SEG_MOVE",
+   "00B": "SEG_BURN",
+   "TM0": "THRESH_BASE + SEG_MOVE",
+   "T0B": "THRESH_BASE + SEG_BURN",
+   "0MB": "SEG_MOVE + SEG_BURN",
+   "TMB": "all three"
+  },
+  "seeds": [
+   60606,
+   1001,
+   1002,
+   1003,
+   1004,
+   1005
+  ],
+  "world": "WORLD 3, R = 1002, classic",
+  "stop": "maxGen >= 400, checked every 60 steps",
+  "ledger": "cost = 1 - W(one part, no eye) / W(bodiless), founders excluded",
+  "garden": "every 1,800 steps from step 72,000: three matched newborns beside a random adult resident; A and A2 bodiless, B one bare part; lifetime offspring; cost = 1 - W(B) / W(A and A2)",
+  "runs": "48 ledger + 48 garden + the v1.42 acceptance test, eight tabs, 176 minutes of wall time, 21.4 tab hours"
+ },
+ "validity": {
+  "V1_preflight": {
+   "pass": true,
+   "tabs": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H"
+   ],
+   "tabsWithPassingPreflight": [
+    "A",
+    "B",
+    "C",
+    "D",
+    "E",
+    "F",
+    "G",
+    "H"
+   ],
+   "buildsUsed": [
+    [
+     "1.44",
+     3855907619,
+     3781730788
+    ]
+   ],
+   "note": "a queue refuses to start without a passing preflight; each tab posts its checks when armed"
+  },
+  "V2_acceptance": {
+   "pass": true,
+   "individuals": 67490,
+   "stopStep": 1123200,
+   "diffs": []
+  },
+  "V3_reproducesV143": {
+   "pass": true,
+   "runs": [
+    {
+     "arm": "000",
+     "seed": 60606,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "000",
+     "seed": 1004,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "T00",
+     "seed": 1002,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "000",
+     "seed": 1001,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "000",
+     "seed": 1005,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "T00",
+     "seed": 1003,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "000",
+     "seed": 1002,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "T00",
+     "seed": 60606,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "T00",
+     "seed": 1004,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "000",
+     "seed": 1003,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "T00",
+     "seed": 1001,
+     "identical": true,
+     "diffs": []
+    },
+    {
+     "arm": "T00",
+     "seed": 1005,
+     "identical": true,
+     "diffs": []
+    }
+   ]
+  },
+  "V4_gardenNull": {
+   "point": -0.0121,
+   "ci95": [
+    -0.0361,
+    0.0117
+   ],
+   "pass": true,
+   "perArm": {
+    "000": 0.0098,
+    "T00": -0.0042,
+    "0M0": -0.051,
+    "00B": -0.0014,
+    "TM0": 0.0053,
+    "T0B": 0.0228,
+    "0MB": -0.0964,
+    "TMB": 0.0292
+   }
+  }
+ },
+ "headline": {
+  "causal": "A bare part cuts lifetime offspring by 52.2 percent (49.2 to 55.9) in the garden, against 40.3 in the ledger.",
+  "movement": "Freeing movement alone leaves a cost of 2.4 percent in the ledger (-1.7 to 5.9) and 6.1 in the garden (-1.9 to 13.4).",
+  "allOff": "With all three penalties off a part is an advantage: cost -35.5 percent in the ledger and -53.7 in the garden."
+ },
+ "ledger": {
+  "cost": {
+   "000": {
+    "point": 0.4031,
+    "ci95": [
+     0.3725,
+     0.4332
+    ],
+    "perSeed": [
+     0.4368,
+     0.424,
+     0.3768,
+     0.4535,
+     0.3999,
+     0.3371
+    ],
+    "poissonCi95": [
+     0.3975,
+     0.4087
+    ]
+   },
+   "T00": {
+    "point": 0.2611,
+    "ci95": [
+     0.2455,
+     0.2805
+    ],
+    "perSeed": [
+     0.2478,
+     0.2413,
+     0.2795,
+     0.2563,
+     0.2433,
+     0.3043
+    ],
+    "poissonCi95": [
+     0.2557,
+     0.2664
+    ]
+   },
+   "0M0": {
+    "point": 0.0242,
+    "ci95": [
+     -0.0167,
+     0.0587
+    ],
+    "perSeed": [
+     -0.0064,
+     -0.0327,
+     -0.056,
+     0.0886,
+     0.0534,
+     0.05
+    ],
+    "poissonCi95": [
+     0.0179,
+     0.0305
+    ]
+   },
+   "00B": {
+    "point": 0.2751,
+    "ci95": [
+     0.2649,
+     0.2864
+    ],
+    "perSeed": [
+     0.2916,
+     0.264,
+     0.2669,
+     0.2931,
+     0.2811,
+     0.2584
+    ],
+    "poissonCi95": [
+     0.2698,
+     0.2804
+    ]
+   },
+   "TM0": {
+    "point": -0.1857,
+    "ci95": [
+     -0.217,
+     -0.1566
+    ],
+    "perSeed": [
+     -0.1776,
+     -0.1782,
+     -0.0853,
+     -0.1842,
+     -0.2121,
+     -0.2585
+    ],
+    "poissonCi95": [
+     -0.1983,
+     -0.1732
+    ]
+   },
+   "T0B": {
+    "point": -0.0215,
+    "ci95": [
+     -0.0838,
+     0.0397
+    ],
+    "perSeed": [
+     -0.0215,
+     -0.0962,
+     -0.0301,
+     -0.0166,
+     0.1105,
+     -0.1248
+    ],
+    "poissonCi95": [
+     -0.028,
+     -0.0151
+    ]
+   },
+   "0MB": {
+    "point": -0.1626,
+    "ci95": [
+     -0.198,
+     -0.1299
+    ],
+    "perSeed": [
+     -0.1368,
+     -0.1532,
+     -0.2277,
+     -0.1555,
+     -0.2106,
+     -0.1085
+    ],
+    "poissonCi95": [
+     -0.1804,
+     -0.1449
+    ]
+   },
+   "TMB": {
+    "point": -0.3545,
+    "ci95": [
+     -0.4377,
+     -0.2884
+    ],
+    "perSeed": [
+     -0.3064,
+     -0.2772,
+     -0.2633,
+     -0.5013,
+     -0.3666,
+     -0.4582
+    ],
+    "poissonCi95": [
+     -0.378,
+     -0.331
+    ]
+   }
+  },
+  "decomposition": {
+   "THRESH_BASE": {
+    "point": 0.4856,
+    "ci95": [
+     0.4133,
+     0.5716
+    ]
+   },
+   "SEG_MOVE": {
+    "point": 0.9544,
+    "ci95": [
+     0.8587,
+     1.0632
+    ]
+   },
+   "SEG_BURN": {
+    "point": 0.4395,
+    "ci95": [
+     0.368,
+     0.5235
+    ]
+   },
+   "residual": {
+    "point": -0.8795,
+    "ci95": [
+     -1.1068,
+     -0.7059
+    ]
+   }
+  },
+  "statements": {
+   "THRESH_BASE": "carries part of the body cost",
+   "SEG_MOVE": "carries part of the body cost",
+   "SEG_BURN": "carries part of the body cost",
+   "residual": "the three switches account for the body cost"
+  },
+  "anchoredOnThreshold": {
+   "SEG_MOVE": {
+    "point": 1.7115,
+    "ci95": [
+     1.5941,
+     1.8418
+    ]
+   },
+   "SEG_BURN": {
+    "point": 1.0825,
+    "ci95": [
+     0.8464,
+     1.3242
+    ]
+   },
+   "both": {
+    "point": 2.3579,
+    "ci95": [
+     2.0924,
+     2.6936
+    ]
+   }
+  }
+ },
+ "garden": {
+  "cost": {
+   "000": {
+    "point": 0.5219,
+    "ci95": [
+     0.4919,
+     0.5586
+    ],
+    "perSeed": [
+     0.5313,
+     0.5292,
+     0.6037,
+     0.4825,
+     0.4779,
+     0.5013
+    ]
+   },
+   "T00": {
+    "point": 0.3372,
+    "ci95": [
+     0.3184,
+     0.354
+    ],
+    "perSeed": [
+     0.3444,
+     0.3006,
+     0.3517,
+     0.3108,
+     0.3473,
+     0.3652
+    ]
+   },
+   "0M0": {
+    "point": 0.0609,
+    "ci95": [
+     -0.0194,
+     0.1335
+    ],
+    "perSeed": [
+     0.1284,
+     0.1559,
+     -0.045,
+     0.1603,
+     0.0381,
+     -0.099
+    ]
+   },
+   "00B": {
+    "point": 0.3674,
+    "ci95": [
+     0.3363,
+     0.3891
+    ],
+    "perSeed": [
+     0.3787,
+     0.4034,
+     0.2923,
+     0.3685,
+     0.3717,
+     0.3826
+    ]
+   },
+   "TM0": {
+    "point": -0.093,
+    "ci95": [
+     -0.1796,
+     0.0049
+    ],
+    "perSeed": [
+     -0.1038,
+     -0.0075,
+     -0.2144,
+     0.1104,
+     -0.1882,
+     -0.1852
+    ]
+   },
+   "T0B": {
+    "point": 0.0507,
+    "ci95": [
+     -0.0507,
+     0.143
+    ],
+    "perSeed": [
+     0.1938,
+     -0.0941,
+     -0.0465,
+     0.087,
+     0.1821,
+     -0.0821
+    ]
+   },
+   "0MB": {
+    "point": -0.2552,
+    "ci95": [
+     -0.3358,
+     -0.1898
+    ],
+    "perSeed": [
+     -0.1755,
+     -0.19,
+     -0.2998,
+     -0.3231,
+     -0.4279,
+     -0.1525
+    ]
+   },
+   "TMB": {
+    "point": -0.5368,
+    "ci95": [
+     -0.7081,
+     -0.3887
+    ],
+    "perSeed": [
+     -0.5103,
+     -0.347,
+     -0.8696,
+     -0.6091,
+     -0.2773,
+     -0.7474
+    ]
+   }
+  },
+  "decomposition": {
+   "THRESH_BASE": {
+    "point": 0.4481,
+    "ci95": [
+     0.3287,
+     0.5797
+    ]
+   },
+   "SEG_MOVE": {
+    "point": 1.0059,
+    "ci95": [
+     0.8689,
+     1.1524
+    ]
+   },
+   "SEG_BURN": {
+    "point": 0.5745,
+    "ci95": [
+     0.4495,
+     0.7117
+    ]
+   },
+   "residual": {
+    "point": -1.0285,
+    "ci95": [
+     -1.3681,
+     -0.7356
+    ]
+   }
+  },
+  "statements": {
+   "THRESH_BASE": "carries part of the body cost",
+   "SEG_MOVE": "carries part of the body cost",
+   "SEG_BURN": "carries part of the body cost",
+   "residual": "the three switches account for the body cost",
+   "S3_causal": "the body cost is caused by the part"
+  },
+  "anchoredOnThreshold": {
+   "SEG_MOVE": {
+    "point": 1.2758,
+    "ci95": [
+     0.9852,
+     1.5363
+    ]
+   },
+   "SEG_BURN": {
+    "point": 0.8497,
+    "ci95": [
+     0.5753,
+     1.1515
+    ]
+   },
+   "both": {
+    "point": 2.5918,
+    "ci95": [
+     2.1452,
+     3.1124
+    ]
+   }
+  }
+ },
+ "predictions": {
+  "P1_burnShareExceedsMove": {
+   "predicted": "SEG_BURN share exceeds SEG_MOVE share in both instruments",
+   "result": {
+    "ledger": false,
+    "garden": false
+   },
+   "verdict": "wrong in both"
+  },
+  "P2_moveShareSmall": {
+   "predicted": "SEG_MOVE share under 0.15 in magnitude",
+   "result": {
+    "ledger": false,
+    "garden": false
+   },
+   "verdict": "wrong in both: the share is about one"
+  },
+  "P3_ledgerResidualBelowQuarter": {
+   "predicted": "ledger residual below 0.25",
+   "result": true,
+   "verdict": "held: the residual is negative"
+  },
+  "P4_gardenBaselineCostAtLeast30pct": {
+   "predicted": "garden cost of a bare part at least 30 percent",
+   "result": true,
+   "verdict": "held: 52 percent"
+  }
+ },
+ "descriptive": {
+  "ledger": {
+   "000": {
+    "bodiedShareOfPopulation": 0.143,
+    "meanPartsAmongBodied": 1.088,
+    "twoPlusPartsAmongBodied": 0.0829,
+    "W": {
+     "0/-": 1.476,
+     "1/eye": 0.8609,
+     "1/noeye": 0.8811,
+     "2/eye": 0.5208,
+     "2/noeye": 0.5365,
+     "3+/eye": 0.2857,
+     "3+/noeye": 0.4983
+    }
+   },
+   "T00": {
+    "bodiedShareOfPopulation": 0.2079,
+    "meanPartsAmongBodied": 1.169,
+    "twoPlusPartsAmongBodied": 0.1505,
+    "W": {
+     "0/-": 1.4869,
+     "1/eye": 1.0807,
+     "1/noeye": 1.0987,
+     "2/eye": 0.8415,
+     "2/noeye": 0.8976,
+     "3+/eye": 0.6421,
+     "3+/noeye": 0.765
+    }
+   },
+   "0M0": {
+    "bodiedShareOfPopulation": 0.6992,
+    "meanPartsAmongBodied": 2.4,
+    "twoPlusPartsAmongBodied": 0.7365,
+    "W": {
+     "0/-": 1.4274,
+     "1/eye": 1.3942,
+     "1/noeye": 1.3929,
+     "2/eye": 1.3693,
+     "2/noeye": 1.4457,
+     "3+/eye": 1.2941,
+     "3+/noeye": 1.3657
+    }
+   },
+   "00B": {
+    "bodiedShareOfPopulation": 0.2386,
+    "meanPartsAmongBodied": 1.144,
+    "twoPlusPartsAmongBodied": 0.1302,
+    "W": {
+     "0/-": 1.4869,
+     "1/eye": 1.1137,
+     "1/noeye": 1.0778,
+     "2/eye": 0.8478,
+     "2/noeye": 0.8071,
+     "3+/eye": 0.75,
+     "3+/noeye": 0.6602
+    }
+   },
+   "TM0": {
+    "bodiedShareOfPopulation": 0.9698,
+    "meanPartsAmongBodied": 3.006,
+    "twoPlusPartsAmongBodied": 0.8775,
+    "W": {
+     "0/-": 1.2787,
+     "1/eye": 1.4503,
+     "1/noeye": 1.5162,
+     "2/eye": 1.4427,
+     "2/noeye": 1.5192,
+     "3+/eye": 1.3789,
+     "3+/noeye": 1.4371
+    }
+   },
+   "T0B": {
+    "bodiedShareOfPopulation": 0.8294,
+    "meanPartsAmongBodied": 2.706,
+    "twoPlusPartsAmongBodied": 0.8054,
+    "W": {
+     "0/-": 1.5251,
+     "1/eye": 1.5567,
+     "1/noeye": 1.558,
+     "2/eye": 1.5532,
+     "2/noeye": 1.5644,
+     "3+/eye": 1.3986,
+     "3+/noeye": 1.4542
+    }
+   },
+   "0MB": {
+    "bodiedShareOfPopulation": 0.9831,
+    "meanPartsAmongBodied": 5.012,
+    "twoPlusPartsAmongBodied": 0.973,
+    "W": {
+     "0/-": 1.3094,
+     "1/eye": 1.4336,
+     "1/noeye": 1.5224,
+     "2/eye": 1.3271,
+     "2/noeye": 1.5502,
+     "3+/eye": 1.3349,
+     "3+/noeye": 1.4313
+    }
+   },
+   "TMB": {
+    "bodiedShareOfPopulation": 0.9888,
+    "meanPartsAmongBodied": 5.49,
+    "twoPlusPartsAmongBodied": 0.9846,
+    "W": {
+     "0/-": 1.1906,
+     "1/eye": 1.5229,
+     "1/noeye": 1.6127,
+     "2/eye": 1.4743,
+     "2/noeye": 1.6605,
+     "3+/eye": 1.4356,
+     "3+/noeye": 1.5514
+    }
+   }
+  },
+  "garden": {
+   "000": {
+    "released": 3440,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 3440,
+      "meanLifespan": 62.42,
+      "deathShare": {
+       "killed": 0.036,
+       "starved": 0.6895,
+       "oldAge": 0.2744
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0353
+     },
+     "A2": {
+      "founders": 3440,
+      "meanLifespan": 62.89,
+      "deathShare": {
+       "killed": 0.034,
+       "starved": 0.693,
+       "oldAge": 0.273
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0395
+     },
+     "B": {
+      "founders": 3440,
+      "meanLifespan": 56.28,
+      "deathShare": {
+       "killed": 0.0305,
+       "starved": 0.7099,
+       "oldAge": 0.2596
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0428
+     }
+    }
+   },
+   "T00": {
+    "released": 3522,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 3522,
+      "meanLifespan": 64.25,
+      "deathShare": {
+       "killed": 0.0372,
+       "starved": 0.6772,
+       "oldAge": 0.2856
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0419
+     },
+     "A2": {
+      "founders": 3522,
+      "meanLifespan": 63.29,
+      "deathShare": {
+       "killed": 0.0375,
+       "starved": 0.6811,
+       "oldAge": 0.2814
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.04
+     },
+     "B": {
+      "founders": 3522,
+      "meanLifespan": 54.35,
+      "deathShare": {
+       "killed": 0.0363,
+       "starved": 0.7612,
+       "oldAge": 0.2024
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.051
+     }
+    }
+   },
+   "0M0": {
+    "released": 3399,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 3399,
+      "meanLifespan": 50.24,
+      "deathShare": {
+       "killed": 0.0321,
+       "starved": 0.7676,
+       "oldAge": 0.2004
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0399
+     },
+     "A2": {
+      "founders": 3399,
+      "meanLifespan": 48.89,
+      "deathShare": {
+       "killed": 0.0271,
+       "starved": 0.7835,
+       "oldAge": 0.1895
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0418
+     },
+     "B": {
+      "founders": 3399,
+      "meanLifespan": 53.65,
+      "deathShare": {
+       "killed": 0.0394,
+       "starved": 0.719,
+       "oldAge": 0.2415
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0418
+     }
+    }
+   },
+   "00B": {
+    "released": 3607,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 3607,
+      "meanLifespan": 61.71,
+      "deathShare": {
+       "killed": 0.0319,
+       "starved": 0.7003,
+       "oldAge": 0.2678
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.046
+     },
+     "A2": {
+      "founders": 3607,
+      "meanLifespan": 61.5,
+      "deathShare": {
+       "killed": 0.0344,
+       "starved": 0.6917,
+       "oldAge": 0.2739
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0527
+     },
+     "B": {
+      "founders": 3607,
+      "meanLifespan": 63.7,
+      "deathShare": {
+       "killed": 0.0338,
+       "starved": 0.6354,
+       "oldAge": 0.3307
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0647
+     }
+    }
+   },
+   "TM0": {
+    "released": 3174,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 3174,
+      "meanLifespan": 51.87,
+      "deathShare": {
+       "killed": 0.0318,
+       "starved": 0.7467,
+       "oldAge": 0.2215
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0392
+     },
+     "A2": {
+      "founders": 3174,
+      "meanLifespan": 52.01,
+      "deathShare": {
+       "killed": 0.0353,
+       "starved": 0.7426,
+       "oldAge": 0.2221
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0396
+     },
+     "B": {
+      "founders": 3174,
+      "meanLifespan": 50.24,
+      "deathShare": {
+       "killed": 0.0356,
+       "starved": 0.7561,
+       "oldAge": 0.2083
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0428
+     }
+    }
+   },
+   "T0B": {
+    "released": 2997,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 2997,
+      "meanLifespan": 51.23,
+      "deathShare": {
+       "killed": 0.035,
+       "starved": 0.7598,
+       "oldAge": 0.2052
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0273
+     },
+     "A2": {
+      "founders": 2997,
+      "meanLifespan": 52.55,
+      "deathShare": {
+       "killed": 0.0297,
+       "starved": 0.7601,
+       "oldAge": 0.2102
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0281
+     },
+     "B": {
+      "founders": 2997,
+      "meanLifespan": 51.44,
+      "deathShare": {
+       "killed": 0.035,
+       "starved": 0.7431,
+       "oldAge": 0.2219
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0232
+     }
+    }
+   },
+   "0MB": {
+    "released": 3958,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 3958,
+      "meanLifespan": 34.08,
+      "deathShare": {
+       "killed": 0.022,
+       "starved": 0.8871,
+       "oldAge": 0.091
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0461
+     },
+     "A2": {
+      "founders": 3958,
+      "meanLifespan": 32.53,
+      "deathShare": {
+       "killed": 0.0167,
+       "starved": 0.8994,
+       "oldAge": 0.0839
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0562
+     },
+     "B": {
+      "founders": 3958,
+      "meanLifespan": 42.27,
+      "deathShare": {
+       "killed": 0.025,
+       "starved": 0.8029,
+       "oldAge": 0.1721
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.039
+     }
+    }
+   },
+   "TMB": {
+    "released": 2984,
+    "skipped": 0,
+    "byRole": {
+     "A": {
+      "founders": 2984,
+      "meanLifespan": 33.36,
+      "deathShare": {
+       "killed": 0.0268,
+       "starved": 0.869,
+       "oldAge": 0.1042
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0185
+     },
+     "A2": {
+      "founders": 2984,
+      "meanLifespan": 34.02,
+      "deathShare": {
+       "killed": 0.0302,
+       "starved": 0.8649,
+       "oldAge": 0.1049
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0217
+     },
+     "B": {
+      "founders": 2984,
+      "meanLifespan": 37.12,
+      "deathShare": {
+       "killed": 0.0389,
+       "starved": 0.8331,
+       "oldAge": 0.128
+      },
+      "censored": 0,
+      "sexualOffspringWithTripletSibling": 0.0183
+     }
+    }
+   }
+  }
+ },
+ "exploratory_notPreregistered": {
+  "note": "Computed after the preregistered scoring, to check the garden null arm by arm and to look for the mechanism. Not tests.",
+  "gardenNullByArm": {
+   "values": {
+    "000": {
+     "point": 0.0098,
+     "ci95": [
+      -0.035,
+      0.0598
+     ]
+    },
+    "T00": {
+     "point": -0.0042,
+     "ci95": [
+      -0.0525,
+      0.0464
+     ]
+    },
+    "0M0": {
+     "point": -0.051,
+     "ci95": [
+      -0.0981,
+      0.0022
+     ]
+    },
+    "00B": {
+     "point": -0.0014,
+     "ci95": [
+      -0.0579,
+      0.0538
+     ]
+    },
+    "TM0": {
+     "point": 0.0053,
+     "ci95": [
+      -0.063,
+      0.0788
+     ]
+    },
+    "T0B": {
+     "point": 0.0228,
+     "ci95": [
+      -0.0469,
+      0.1025
+     ]
+    },
+    "0MB": {
+     "point": -0.0964,
+     "ci95": [
+      -0.1601,
+      -0.0308
+     ]
+    },
+    "TMB": {
+     "point": 0.0292,
+     "ci95": [
+      -0.0507,
+      0.1124
+     ]
+    }
+   },
+   "note": "Seven of eight intervals contain zero; SEG_MOVE + SEG_BURN excludes it. With eight arms one exclusion is unremarkable, but that arm's garden estimate deserves less weight."
+  },
+  "gardenFoodIntake": {
+   "values": {
+    "000": {
+     "controlsAlgaeEnergy": 2516,
+     "barePartAlgaeEnergy": 1748,
+     "ratio": 0.695,
+     "controlsLifespan": 62.7,
+     "barePartLifespan": 56.3
+    },
+    "T00": {
+     "controlsAlgaeEnergy": 2633,
+     "barePartAlgaeEnergy": 1758,
+     "ratio": 0.668,
+     "controlsLifespan": 63.8,
+     "barePartLifespan": 54.3
+    },
+    "0M0": {
+     "controlsAlgaeEnergy": 1424,
+     "barePartAlgaeEnergy": 1542,
+     "ratio": 1.083,
+     "controlsLifespan": 49.6,
+     "barePartLifespan": 53.7
+    },
+    "00B": {
+     "controlsAlgaeEnergy": 2557,
+     "barePartAlgaeEnergy": 2065,
+     "ratio": 0.808,
+     "controlsLifespan": 61.6,
+     "barePartLifespan": 63.7
+    },
+    "TM0": {
+     "controlsAlgaeEnergy": 1341,
+     "barePartAlgaeEnergy": 1244,
+     "ratio": 0.928,
+     "controlsLifespan": 51.9,
+     "barePartLifespan": 50.2
+    },
+    "T0B": {
+     "controlsAlgaeEnergy": 1328,
+     "barePartAlgaeEnergy": 994,
+     "ratio": 0.748,
+     "controlsLifespan": 51.9,
+     "barePartLifespan": 51.4
+    },
+    "0MB": {
+     "controlsAlgaeEnergy": 396,
+     "barePartAlgaeEnergy": 510,
+     "ratio": 1.288,
+     "controlsLifespan": 33.3,
+     "barePartLifespan": 42.3
+    },
+    "TMB": {
+     "controlsAlgaeEnergy": 351,
+     "barePartAlgaeEnergy": 376,
+     "ratio": 1.072,
+     "controlsLifespan": 33.7,
+     "barePartLifespan": 37.1
+    }
+   },
+   "note": "A bare part founder eats 30 percent less algae than its identical siblings when movement is penalised, and as much or more wherever SEG_MOVE is on."
+  },
+  "ledgerFoodIntakeAndPopulation": {
+   "values": {
+    "000": {
+     "algaeBodiless": 2220,
+     "algaeOnePart": 1718,
+     "ratio": 0.774,
+     "lifespanBodiless": 54.9,
+     "lifespanOnePart": 52.2,
+     "meanPopulation": 191,
+     "minutesTo400Generations": 308
+    },
+    "T00": {
+     "algaeBodiless": 2214,
+     "algaeOnePart": 1518,
+     "ratio": 0.686,
+     "lifespanBodiless": 54.6,
+     "lifespanOnePart": 47.5,
+     "meanPopulation": 195,
+     "minutesTo400Generations": 310
+    },
+    "0M0": {
+     "algaeBodiless": 1639,
+     "algaeOnePart": 1121,
+     "ratio": 0.684,
+     "lifespanBodiless": 50.4,
+     "lifespanOnePart": 45.3,
+     "meanPopulation": 273,
+     "minutesTo400Generations": 309
+    },
+    "00B": {
+     "algaeBodiless": 2150,
+     "algaeOnePart": 1931,
+     "ratio": 0.898,
+     "lifespanBodiless": 54.5,
+     "lifespanOnePart": 58.7,
+     "meanPopulation": 197,
+     "minutesTo400Generations": 323
+    },
+    "TM0": {
+     "algaeBodiless": 781,
+     "algaeOnePart": 580,
+     "ratio": 0.743,
+     "lifespanBodiless": 43.1,
+     "lifespanOnePart": 38.6,
+     "meanPopulation": 385,
+     "minutesTo400Generations": 264
+    },
+    "T0B": {
+     "algaeBodiless": 1232,
+     "algaeOnePart": 704,
+     "ratio": 0.572,
+     "lifespanBodiless": 46.2,
+     "lifespanOnePart": 41.3,
+     "meanPopulation": 455,
+     "minutesTo400Generations": 256
+    },
+    "0MB": {
+     "algaeBodiless": 866,
+     "algaeOnePart": 859,
+     "ratio": 0.992,
+     "lifespanBodiless": 45.3,
+     "lifespanOnePart": 46.5,
+     "meanPopulation": 293,
+     "minutesTo400Generations": 352
+    },
+    "TMB": {
+     "algaeBodiless": 827,
+     "algaeOnePart": 684,
+     "ratio": 0.826,
+     "lifespanBodiless": 45.4,
+     "lifespanOnePart": 42.1,
+     "meanPopulation": 423,
+     "minutesTo400Generations": 263
+    }
+   },
+   "note": "In the ledger one part creatures eat less in most arms, including SEG_MOVE alone where the garden shows the gap closing: an observational gap reflects who carries parts as well as what parts do. Populations grow from about 190 to 270 with movement freed and to 385 to 455 with two or three penalties removed."
+  }
+ },
+ "interpretation": [
+  "The body cost is caused by the part. Given to one of three otherwise identical newborns released side by side, a bare part cuts lifetime offspring by 52.2 percent (49.2 to 55.9), more than the ledger's 40.3, whose one part creatures often carry fins that offset the thrust penalty.",
+  "Almost all of it is the movement penalty. Freeing movement alone takes the cost to 2.4 percent in the ledger (-1.7 to 5.9) and 6.1 in the garden (-1.9 to 13.4). Its Shapley share of the all-off cost is 0.95 in the ledger and 1.01 in the garden; the threshold's is 0.49 and 0.45, metabolism's 0.44 and 0.57. Each interval lies above zero.",
+  "The penalty works through food (exploratory). In the garden a bare part founder eats 30 percent less algae than its identical siblings; with movement freed it eats 8 percent more. A part divides paddle thrust by 1.2, so a finless body swims at five sixths speed, turns 11 percent slower and is pushed less by the current, in a dish where 69 percent of control founders die starving.",
+  "The shares sum to about two because the three costs overlap: remove any two and the part costs nothing or pays, remove all three and it becomes an advantage of 35 percent in the ledger and 54 in the garden. What a part still does then is store 45 percent more energy, and where most creatures starve a bigger store is worth that much.",
+  "For the 65 percent v1.43 left unexplained: with the threshold switch on, freeing movement removes 171 percent of what remains and freeing metabolism 108 percent, each more than enough alone.",
+  "Remove the penalties and bodies take over (descriptive). Bodied share of the living population rises from 14 percent to 70 with movement freed, 83 with the threshold and metabolism freed, and 99 with all three off, where bodies average 5.5 parts against a cap of 6.",
+  "Two of four predictions failed, both about movement. I expected metabolism to outweigh movement and movement's share to stay under 0.15, reasoning that a slower body also burns less. Foraging lost to slowness is far larger than burn saved.",
+  "This is selection, not drift, favouring more body structure: at a mean population of 423 the advantage of a part in the all-off arm has intervals far from zero in both instruments. But what selection favours there is storage, a side effect of how capacity is computed, not anything a part does with its organs. It is not yet the target this line of work is after."
+ ],
+ "toolingFaults": [
+  "The Browser pane closed seconds after the first launch began and took all eight tabs with it. No run had finished and only tab A's start had been recorded. The tabs were relaunched one at a time, from the same committed build, behind a static page; every preflight passed again.",
+  "Background tabs got about half a CPU core each, and runs with movement freed or with two or more penalties removed took 1.6 to 2.7 times as long as the defaults, because their populations were larger and carried more parts. The study took 176 minutes across eight tabs.",
+  "macOS has no timeout command, so the first watcher never started; it was rerun without one."
+ ],
+ "honestLimitations": [
+  "SEG_MOVE bundles three effects, thrust, turning and the current's push; which of them carries the cost is not known.",
+  "The garden's part is bare. Parts that evolve carry fins, spikes and shells, which is one reason the ledger cost is lower.",
+  "Six seeds per arm. Percentile bootstrap intervals over six units tend to be somewhat narrow.",
+  "The garden null interval excluded zero in one of eight arms (SEG_MOVE + SEG_BURN, -9.6 percent), exploratory.",
+  "The effects interact strongly, so Shapley shares are averages over the orders in which switches are removed, not independent parts.",
+  "One machine; cross machine determinism is known broken."
+ ],
+ "runSummaries": [
+  {
+   "label": "v1.42 acceptance",
+   "tab": "A",
+   "job": 1,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1123200,
+   "fin": {
+    "gen": 400,
+    "min": 312,
+    "pop": 166,
+    "dKill": 5586,
+    "births": 67656,
+    "deaths": 68120
+   },
+   "wallSeconds": 473,
+   "acceptance": {
+    "pass": true,
+    "individuals": 67490,
+    "stopStep": 1123200
+   }
+  },
+  {
+   "label": "burden/ledger/base/60606",
+   "tab": "A",
+   "job": 2,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1123080,
+   "fin": {
+    "gen": 400,
+    "min": 312,
+    "pop": 166,
+    "dKill": 5585,
+    "births": 67649,
+    "deaths": 68113
+   },
+   "wallSeconds": 480
+  },
+  {
+   "label": "burden/ledger/base/1004",
+   "tab": "A",
+   "job": 3,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1091580,
+   "fin": {
+    "gen": 400,
+    "min": 303,
+    "pop": 189,
+    "dKill": 6224,
+    "births": 72608,
+    "deaths": 73049
+   },
+   "wallSeconds": 457
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE/1002",
+   "tab": "A",
+   "job": 4,
+   "kind": "ledger",
+   "arm": "T00",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1169580,
+   "fin": {
+    "gen": 400,
+    "min": 325,
+    "pop": 214,
+    "dKill": 6482,
+    "births": 70886,
+    "deaths": 71302
+   },
+   "wallSeconds": 474
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE/60606",
+   "tab": "A",
+   "job": 5,
+   "kind": "ledger",
+   "arm": "0M0",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1066980,
+   "fin": {
+    "gen": 400,
+    "min": 296,
+    "pop": 350,
+    "dKill": 5711,
+    "births": 138257,
+    "deaths": 138537
+   },
+   "wallSeconds": 894
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE/1004",
+   "tab": "A",
+   "job": 6,
+   "kind": "ledger",
+   "arm": "0M0",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1125900,
+   "fin": {
+    "gen": 400,
+    "min": 313,
+    "pop": 147,
+    "dKill": 6043,
+    "births": 94125,
+    "deaths": 94608
+   },
+   "wallSeconds": 595
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE/1002",
+   "tab": "A",
+   "job": 7,
+   "kind": "ledger",
+   "arm": "TM0",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 959040,
+   "fin": {
+    "gen": 400,
+    "min": 266,
+    "pop": 440,
+    "dKill": 3903,
+    "births": 158836,
+    "deaths": 159026
+   },
+   "wallSeconds": 912
+  },
+  {
+   "label": "burden/ledger/SEG_BURN/60606",
+   "tab": "A",
+   "job": 8,
+   "kind": "ledger",
+   "arm": "00B",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1197000,
+   "fin": {
+    "gen": 400,
+    "min": 332,
+    "pop": 168,
+    "dKill": 5796,
+    "births": 71540,
+    "deaths": 72002
+   },
+   "wallSeconds": 500
+  },
+  {
+   "label": "burden/ledger/SEG_BURN/1004",
+   "tab": "A",
+   "job": 9,
+   "kind": "ledger",
+   "arm": "00B",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1166460,
+   "fin": {
+    "gen": 400,
+    "min": 324,
+    "pop": 148,
+    "dKill": 6172,
+    "births": 66759,
+    "deaths": 67241
+   },
+   "wallSeconds": 476
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_BURN/1002",
+   "tab": "A",
+   "job": 10,
+   "kind": "ledger",
+   "arm": "T0B",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 904500,
+   "fin": {
+    "gen": 400,
+    "min": 251,
+    "pop": 567,
+    "dKill": 4230,
+    "births": 209966,
+    "deaths": 210029
+   },
+   "wallSeconds": 1421
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE+SEG_BURN/60606",
+   "tab": "A",
+   "job": 11,
+   "kind": "ledger",
+   "arm": "0MB",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1257660,
+   "fin": {
+    "gen": 400,
+    "min": 349,
+    "pop": 343,
+    "dKill": 3108,
+    "births": 140245,
+    "deaths": 140532
+   },
+   "wallSeconds": 1056
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE+SEG_BURN/1004",
+   "tab": "A",
+   "job": 12,
+   "kind": "ledger",
+   "arm": "0MB",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1277580,
+   "fin": {
+    "gen": 400,
+    "min": 355,
+    "pop": 317,
+    "dKill": 3332,
+    "births": 140097,
+    "deaths": 140410
+   },
+   "wallSeconds": 1024
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE+SEG_BURN/1002",
+   "tab": "A",
+   "job": 13,
+   "kind": "ledger",
+   "arm": "TMB",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 960780,
+   "fin": {
+    "gen": 400,
+    "min": 267,
+    "pop": 540,
+    "dKill": 4760,
+    "births": 210905,
+    "deaths": 210995
+   },
+   "wallSeconds": 1344
+  },
+  {
+   "label": "burden/garden/base/60606",
+   "tab": "B",
+   "job": 1,
+   "kind": "garden",
+   "arm": "000",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1152120,
+   "fin": {
+    "gen": 400,
+    "min": 320,
+    "pop": 179,
+    "dKill": 5635,
+    "births": 63171,
+    "deaths": 65425
+   },
+   "wallSeconds": 465,
+   "garden": {
+    "released": 601,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 7079,
+    "byRole": {
+     "B": {
+      "founders": 601,
+      "offspring": 468,
+      "lifespanSum": 36696.5,
+      "algaeEnergySum": 1228940,
+      "fleshEnergySum": 1611.2,
+      "sexualOffspring": 215,
+      "withTripletSibling": 12,
+      "killed": 12,
+      "starved": 413,
+      "oldAge": 176
+     },
+     "A": {
+      "founders": 601,
+      "offspring": 975,
+      "lifespanSum": 39826.2,
+      "algaeEnergySum": 1709311,
+      "fleshEnergySum": 2326.8,
+      "sexualOffspring": 469,
+      "withTripletSibling": 17,
+      "killed": 21,
+      "starved": 400,
+      "oldAge": 180
+     },
+     "A2": {
+      "founders": 601,
+      "offspring": 1022,
+      "lifespanSum": 40209.3,
+      "algaeEnergySum": 1687579,
+      "fleshEnergySum": 2451.8,
+      "sexualOffspring": 519,
+      "withTripletSibling": 19,
+      "killed": 20,
+      "starved": 397,
+      "oldAge": 184
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/base/1004",
+   "tab": "B",
+   "job": 2,
+   "kind": "garden",
+   "arm": "000",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1115640,
+   "fin": {
+    "gen": 400,
+    "min": 310,
+    "pop": 208,
+    "dKill": 6313,
+    "births": 75080,
+    "deaths": 77242
+   },
+   "wallSeconds": 523,
+   "garden": {
+    "released": 580,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 4619,
+    "byRole": {
+     "A": {
+      "founders": 580,
+      "offspring": 934,
+      "lifespanSum": 36110.5,
+      "algaeEnergySum": 1288226,
+      "fleshEnergySum": 3371.8,
+      "sexualOffspring": 470,
+      "withTripletSibling": 22,
+      "killed": 18,
+      "starved": 409,
+      "oldAge": 153
+     },
+     "A2": {
+      "founders": 580,
+      "offspring": 966,
+      "lifespanSum": 36030.2,
+      "algaeEnergySum": 1333121,
+      "fleshEnergySum": 2615.8,
+      "sexualOffspring": 466,
+      "withTripletSibling": 22,
+      "killed": 18,
+      "starved": 398,
+      "oldAge": 164
+     },
+     "B": {
+      "founders": 580,
+      "offspring": 496,
+      "lifespanSum": 34844.9,
+      "algaeEnergySum": 1007296,
+      "fleshEnergySum": 3386.2,
+      "sexualOffspring": 250,
+      "withTripletSibling": 8,
+      "killed": 15,
+      "starved": 399,
+      "oldAge": 166
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE/1002",
+   "tab": "B",
+   "job": 3,
+   "kind": "garden",
+   "arm": "T00",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1123080,
+   "fin": {
+    "gen": 400,
+    "min": 312,
+    "pop": 150,
+    "dKill": 5907,
+    "births": 69780,
+    "deaths": 72012
+   },
+   "wallSeconds": 469,
+   "garden": {
+    "released": 584,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 7408,
+    "byRole": {
+     "A": {
+      "founders": 584,
+      "offspring": 1020,
+      "lifespanSum": 37393.8,
+      "algaeEnergySum": 1481707,
+      "fleshEnergySum": 1689.9,
+      "sexualOffspring": 474,
+      "withTripletSibling": 25,
+      "killed": 13,
+      "starved": 396,
+      "oldAge": 175
+     },
+     "B": {
+      "founders": 584,
+      "offspring": 658,
+      "lifespanSum": 31686.4,
+      "algaeEnergySum": 979260,
+      "fleshEnergySum": 672.9,
+      "sexualOffspring": 312,
+      "withTripletSibling": 16,
+      "killed": 17,
+      "starved": 448,
+      "oldAge": 119
+     },
+     "A2": {
+      "founders": 584,
+      "offspring": 1010,
+      "lifespanSum": 35932.6,
+      "algaeEnergySum": 1445616,
+      "fleshEnergySum": 1331.2,
+      "sexualOffspring": 513,
+      "withTripletSibling": 25,
+      "killed": 14,
+      "starved": 398,
+      "oldAge": 172
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE/60606",
+   "tab": "B",
+   "job": 4,
+   "kind": "garden",
+   "arm": "0M0",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1142280,
+   "fin": {
+    "gen": 400,
+    "min": 317,
+    "pop": 142,
+    "dKill": 5019,
+    "births": 77590,
+    "deaths": 79863
+   },
+   "wallSeconds": 536,
+   "garden": {
+    "released": 595,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 5503,
+    "byRole": {
+     "B": {
+      "founders": 595,
+      "offspring": 760,
+      "lifespanSum": 35208.8,
+      "algaeEnergySum": 1524319,
+      "fleshEnergySum": 2287.3,
+      "sexualOffspring": 370,
+      "withTripletSibling": 25,
+      "killed": 24,
+      "starved": 413,
+      "oldAge": 158
+     },
+     "A": {
+      "founders": 595,
+      "offspring": 934,
+      "lifespanSum": 34917.0,
+      "algaeEnergySum": 1462781,
+      "fleshEnergySum": 1808.4,
+      "sexualOffspring": 446,
+      "withTripletSibling": 16,
+      "killed": 19,
+      "starved": 431,
+      "oldAge": 145
+     },
+     "A2": {
+      "founders": 595,
+      "offspring": 810,
+      "lifespanSum": 31840.4,
+      "algaeEnergySum": 1268467,
+      "fleshEnergySum": 2694.7,
+      "sexualOffspring": 368,
+      "withTripletSibling": 21,
+      "killed": 16,
+      "starved": 453,
+      "oldAge": 126
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE/1004",
+   "tab": "B",
+   "job": 5,
+   "kind": "garden",
+   "arm": "0M0",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1113600,
+   "fin": {
+    "gen": 400,
+    "min": 309,
+    "pop": 169,
+    "dKill": 6225,
+    "births": 104838,
+    "deaths": 107036
+   },
+   "wallSeconds": 655,
+   "garden": {
+    "released": 579,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 6659,
+    "byRole": {
+     "A": {
+      "founders": 579,
+      "offspring": 883,
+      "lifespanSum": 28221.0,
+      "algaeEnergySum": 806825,
+      "fleshEnergySum": 812.8,
+      "sexualOffspring": 437,
+      "withTripletSibling": 12,
+      "killed": 23,
+      "starved": 441,
+      "oldAge": 115
+     },
+     "A2": {
+      "founders": 579,
+      "offspring": 874,
+      "lifespanSum": 27764.6,
+      "algaeEnergySum": 863790,
+      "fleshEnergySum": 1822.8,
+      "sexualOffspring": 437,
+      "withTripletSibling": 11,
+      "killed": 19,
+      "starved": 446,
+      "oldAge": 114
+     },
+     "B": {
+      "founders": 579,
+      "offspring": 845,
+      "lifespanSum": 31540.0,
+      "algaeEnergySum": 960346,
+      "fleshEnergySum": 862.9,
+      "sexualOffspring": 434,
+      "withTripletSibling": 13,
+      "killed": 22,
+      "starved": 420,
+      "oldAge": 137
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE/1002",
+   "tab": "B",
+   "job": 6,
+   "kind": "garden",
+   "arm": "TM0",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 943440,
+   "fin": {
+    "gen": 401,
+    "min": 262,
+    "pop": 383,
+    "dKill": 2924,
+    "births": 159839,
+    "deaths": 161541
+   },
+   "wallSeconds": 900,
+   "garden": {
+    "released": 485,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 10,
+    "drainSteps": 7953,
+    "byRole": {
+     "A": {
+      "founders": 485,
+      "offspring": 726,
+      "lifespanSum": 20282.7,
+      "algaeEnergySum": 274435,
+      "fleshEnergySum": 26.2,
+      "sexualOffspring": 433,
+      "withTripletSibling": 10,
+      "killed": 17,
+      "starved": 393,
+      "oldAge": 75
+     },
+     "B": {
+      "founders": 485,
+      "offspring": 861,
+      "lifespanSum": 20358.8,
+      "algaeEnergySum": 279037,
+      "fleshEnergySum": 31.1,
+      "sexualOffspring": 503,
+      "withTripletSibling": 21,
+      "killed": 23,
+      "starved": 382,
+      "oldAge": 80
+     },
+     "A2": {
+      "founders": 485,
+      "offspring": 692,
+      "lifespanSum": 19968.9,
+      "algaeEnergySum": 276405,
+      "fleshEnergySum": 66.5,
+      "sexualOffspring": 434,
+      "withTripletSibling": 19,
+      "killed": 15,
+      "starved": 402,
+      "oldAge": 68
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_BURN/60606",
+   "tab": "B",
+   "job": 7,
+   "kind": "garden",
+   "arm": "00B",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1158420,
+   "fin": {
+    "gen": 400,
+    "min": 322,
+    "pop": 170,
+    "dKill": 5079,
+    "births": 66127,
+    "deaths": 68399
+   },
+   "wallSeconds": 473,
+   "garden": {
+    "released": 604,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 6946,
+    "byRole": {
+     "B": {
+      "founders": 604,
+      "offspring": 648,
+      "lifespanSum": 41006.6,
+      "algaeEnergySum": 1580856,
+      "fleshEnergySum": 2341.5,
+      "sexualOffspring": 290,
+      "withTripletSibling": 18,
+      "killed": 14,
+      "starved": 373,
+      "oldAge": 217
+     },
+     "A": {
+      "founders": 604,
+      "offspring": 1028,
+      "lifespanSum": 39418.6,
+      "algaeEnergySum": 1905024,
+      "fleshEnergySum": 1519.8,
+      "sexualOffspring": 465,
+      "withTripletSibling": 16,
+      "killed": 18,
+      "starved": 414,
+      "oldAge": 172
+     },
+     "A2": {
+      "founders": 604,
+      "offspring": 1058,
+      "lifespanSum": 39752.5,
+      "algaeEnergySum": 1979614,
+      "fleshEnergySum": 1779.5,
+      "sexualOffspring": 498,
+      "withTripletSibling": 20,
+      "killed": 18,
+      "starved": 414,
+      "oldAge": 172
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_BURN/1004",
+   "tab": "B",
+   "job": 8,
+   "kind": "garden",
+   "arm": "00B",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1225080,
+   "fin": {
+    "gen": 400,
+    "min": 340,
+    "pop": 179,
+    "dKill": 5837,
+    "births": 67562,
+    "deaths": 69936
+   },
+   "wallSeconds": 494,
+   "garden": {
+    "released": 641,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 6186,
+    "byRole": {
+     "A": {
+      "founders": 641,
+      "offspring": 1016,
+      "lifespanSum": 38610.9,
+      "algaeEnergySum": 1798056,
+      "fleshEnergySum": 2466.2,
+      "sexualOffspring": 402,
+      "withTripletSibling": 29,
+      "killed": 27,
+      "starved": 446,
+      "oldAge": 168
+     },
+     "A2": {
+      "founders": 641,
+      "offspring": 1136,
+      "lifespanSum": 42643.8,
+      "algaeEnergySum": 1994649,
+      "fleshEnergySum": 3863.8,
+      "sexualOffspring": 481,
+      "withTripletSibling": 29,
+      "killed": 24,
+      "starved": 419,
+      "oldAge": 198
+     },
+     "B": {
+      "founders": 641,
+      "offspring": 676,
+      "lifespanSum": 41446.1,
+      "algaeEnergySum": 1474315,
+      "fleshEnergySum": 4231.3,
+      "sexualOffspring": 273,
+      "withTripletSibling": 20,
+      "killed": 28,
+      "starved": 404,
+      "oldAge": 209
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_BURN/1002",
+   "tab": "B",
+   "job": 9,
+   "kind": "garden",
+   "arm": "T0B",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 871800,
+   "fin": {
+    "gen": 400,
+    "min": 242,
+    "pop": 481,
+    "dKill": 5836,
+    "births": 169868,
+    "deaths": 171352
+   },
+   "wallSeconds": 1152,
+   "garden": {
+    "released": 445,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 12,
+    "drainSteps": 5923,
+    "byRole": {
+     "A": {
+      "founders": 445,
+      "offspring": 770,
+      "lifespanSum": 19519.6,
+      "algaeEnergySum": 307091,
+      "fleshEnergySum": 70.9,
+      "sexualOffspring": 503,
+      "withTripletSibling": 10,
+      "killed": 17,
+      "starved": 360,
+      "oldAge": 68
+     },
+     "B": {
+      "founders": 445,
+      "offspring": 833,
+      "lifespanSum": 21195.3,
+      "algaeEnergySum": 258992,
+      "fleshEnergySum": 10.1,
+      "sexualOffspring": 493,
+      "withTripletSibling": 10,
+      "killed": 18,
+      "starved": 340,
+      "oldAge": 87
+     },
+     "A2": {
+      "founders": 445,
+      "offspring": 822,
+      "lifespanSum": 20274.8,
+      "algaeEnergySum": 326272,
+      "fleshEnergySum": 117.7,
+      "sexualOffspring": 562,
+      "withTripletSibling": 10,
+      "killed": 15,
+      "starved": 356,
+      "oldAge": 74
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE+SEG_BURN/60606",
+   "tab": "B",
+   "job": 10,
+   "kind": "garden",
+   "arm": "0MB",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1274820,
+   "fin": {
+    "gen": 400,
+    "min": 354,
+    "pop": 341,
+    "dKill": 4259,
+    "births": 144402,
+    "deaths": 146698
+   },
+   "wallSeconds": 1054,
+   "garden": {
+    "released": 669,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 6533,
+    "byRole": {
+     "B": {
+      "founders": 669,
+      "offspring": 1038,
+      "lifespanSum": 31311.3,
+      "algaeEnergySum": 384516,
+      "fleshEnergySum": 11.0,
+      "sexualOffspring": 435,
+      "withTripletSibling": 18,
+      "killed": 16,
+      "starved": 514,
+      "oldAge": 139
+     },
+     "A": {
+      "founders": 669,
+      "offspring": 900,
+      "lifespanSum": 25578.1,
+      "algaeEnergySum": 317684,
+      "fleshEnergySum": 80.0,
+      "sexualOffspring": 379,
+      "withTripletSibling": 21,
+      "killed": 20,
+      "starved": 577,
+      "oldAge": 72
+     },
+     "A2": {
+      "founders": 669,
+      "offspring": 866,
+      "lifespanSum": 24488.6,
+      "algaeEnergySum": 303537,
+      "fleshEnergySum": 2.6,
+      "sexualOffspring": 343,
+      "withTripletSibling": 21,
+      "killed": 18,
+      "starved": 582,
+      "oldAge": 69
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE+SEG_BURN/1004",
+   "tab": "B",
+   "job": 11,
+   "kind": "garden",
+   "arm": "0MB",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1269120,
+   "fin": {
+    "gen": 400,
+    "min": 353,
+    "pop": 330,
+    "dKill": 2811,
+    "births": 145856,
+    "deaths": 148154
+   },
+   "wallSeconds": 1109,
+   "garden": {
+    "released": 666,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 10,
+    "drainSteps": 4534,
+    "byRole": {
+     "A": {
+      "founders": 666,
+      "offspring": 689,
+      "lifespanSum": 20997.7,
+      "algaeEnergySum": 242585,
+      "fleshEnergySum": 98.4,
+      "sexualOffspring": 300,
+      "withTripletSibling": 14,
+      "killed": 8,
+      "starved": 610,
+      "oldAge": 48
+     },
+     "A2": {
+      "founders": 666,
+      "offspring": 594,
+      "lifespanSum": 19417.6,
+      "algaeEnergySum": 204484,
+      "fleshEnergySum": 6.1,
+      "sexualOffspring": 254,
+      "withTripletSibling": 22,
+      "killed": 9,
+      "starved": 614,
+      "oldAge": 43
+     },
+     "B": {
+      "founders": 666,
+      "offspring": 916,
+      "lifespanSum": 27745.5,
+      "algaeEnergySum": 318028,
+      "fleshEnergySum": 23.6,
+      "sexualOffspring": 387,
+      "withTripletSibling": 20,
+      "killed": 14,
+      "starved": 538,
+      "oldAge": 114
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE+SEG_BURN/1002",
+   "tab": "B",
+   "job": 12,
+   "kind": "garden",
+   "arm": "TMB",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1039980,
+   "fin": {
+    "gen": 400,
+    "min": 289,
+    "pop": 378,
+    "dKill": 3952,
+    "births": 195430,
+    "deaths": 197296
+   },
+   "wallSeconds": 1280,
+   "garden": {
+    "released": 538,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 6789,
+    "byRole": {
+     "A": {
+      "founders": 538,
+      "offspring": 359,
+      "lifespanSum": 19050.6,
+      "algaeEnergySum": 202725,
+      "fleshEnergySum": 50.2,
+      "sexualOffspring": 255,
+      "withTripletSibling": 8,
+      "killed": 10,
+      "starved": 457,
+      "oldAge": 71
+     },
+     "B": {
+      "founders": 538,
+      "offspring": 645,
+      "lifespanSum": 20786.5,
+      "algaeEnergySum": 198393,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 356,
+      "withTripletSibling": 10,
+      "killed": 10,
+      "starved": 447,
+      "oldAge": 81
+     },
+     "A2": {
+      "founders": 538,
+      "offspring": 331,
+      "lifespanSum": 18600.5,
+      "algaeEnergySum": 190194,
+      "fleshEnergySum": 40.0,
+      "sexualOffspring": 229,
+      "withTripletSibling": 2,
+      "killed": 14,
+      "starved": 464,
+      "oldAge": 60
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/ledger/base/1001",
+   "tab": "C",
+   "job": 1,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1098360,
+   "fin": {
+    "gen": 400,
+    "min": 305,
+    "pop": 151,
+    "dKill": 5397,
+    "births": 64245,
+    "deaths": 64724
+   },
+   "wallSeconds": 453
+  },
+  {
+   "label": "burden/ledger/base/1005",
+   "tab": "C",
+   "job": 2,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1100340,
+   "fin": {
+    "gen": 400,
+    "min": 306,
+    "pop": 181,
+    "dKill": 4852,
+    "births": 59221,
+    "deaths": 59670
+   },
+   "wallSeconds": 417
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE/1003",
+   "tab": "C",
+   "job": 3,
+   "kind": "ledger",
+   "arm": "T00",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1073880,
+   "fin": {
+    "gen": 400,
+    "min": 298,
+    "pop": 202,
+    "dKill": 6627,
+    "births": 73067,
+    "deaths": 73495
+   },
+   "wallSeconds": 449
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE/1001",
+   "tab": "C",
+   "job": 4,
+   "kind": "ledger",
+   "arm": "0M0",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1087500,
+   "fin": {
+    "gen": 400,
+    "min": 302,
+    "pop": 302,
+    "dKill": 4978,
+    "births": 141985,
+    "deaths": 142313
+   },
+   "wallSeconds": 900
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE/1005",
+   "tab": "C",
+   "job": 5,
+   "kind": "ledger",
+   "arm": "0M0",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1098300,
+   "fin": {
+    "gen": 400,
+    "min": 305,
+    "pop": 196,
+    "dKill": 5471,
+    "births": 101001,
+    "deaths": 101435
+   },
+   "wallSeconds": 624
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE/1003",
+   "tab": "C",
+   "job": 6,
+   "kind": "ledger",
+   "arm": "TM0",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 945660,
+   "fin": {
+    "gen": 400,
+    "min": 263,
+    "pop": 413,
+    "dKill": 4323,
+    "births": 169125,
+    "deaths": 169342
+   },
+   "wallSeconds": 1017
+  },
+  {
+   "label": "burden/ledger/SEG_BURN/1001",
+   "tab": "C",
+   "job": 7,
+   "kind": "ledger",
+   "arm": "00B",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1122900,
+   "fin": {
+    "gen": 400,
+    "min": 312,
+    "pop": 179,
+    "dKill": 6322,
+    "births": 65721,
+    "deaths": 66172
+   },
+   "wallSeconds": 479
+  },
+  {
+   "label": "burden/ledger/SEG_BURN/1005",
+   "tab": "C",
+   "job": 8,
+   "kind": "ledger",
+   "arm": "00B",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1138620,
+   "fin": {
+    "gen": 400,
+    "min": 316,
+    "pop": 142,
+    "dKill": 6472,
+    "births": 70299,
+    "deaths": 70787
+   },
+   "wallSeconds": 467
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_BURN/1003",
+   "tab": "C",
+   "job": 9,
+   "kind": "ledger",
+   "arm": "T0B",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 886380,
+   "fin": {
+    "gen": 400,
+    "min": 246,
+    "pop": 573,
+    "dKill": 3217,
+    "births": 204479,
+    "deaths": 204536
+   },
+   "wallSeconds": 1393
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE+SEG_BURN/1001",
+   "tab": "C",
+   "job": 10,
+   "kind": "ledger",
+   "arm": "0MB",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1257000,
+   "fin": {
+    "gen": 400,
+    "min": 349,
+    "pop": 290,
+    "dKill": 2482,
+    "births": 126658,
+    "deaths": 126998
+   },
+   "wallSeconds": 957
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE+SEG_BURN/1005",
+   "tab": "C",
+   "job": 11,
+   "kind": "ledger",
+   "arm": "0MB",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1305060,
+   "fin": {
+    "gen": 400,
+    "min": 363,
+    "pop": 317,
+    "dKill": 2985,
+    "births": 136563,
+    "deaths": 136876
+   },
+   "wallSeconds": 1003
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE+SEG_BURN/1003",
+   "tab": "C",
+   "job": 12,
+   "kind": "ledger",
+   "arm": "TMB",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 912780,
+   "fin": {
+    "gen": 400,
+    "min": 254,
+    "pop": 342,
+    "dKill": 3283,
+    "births": 185098,
+    "deaths": 185386
+   },
+   "wallSeconds": 1134
+  },
+  {
+   "label": "burden/garden/base/1001",
+   "tab": "D",
+   "job": 1,
+   "kind": "garden",
+   "arm": "000",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1070700,
+   "fin": {
+    "gen": 400,
+    "min": 297,
+    "pop": 197,
+    "dKill": 5503,
+    "births": 63868,
+    "deaths": 65966
+   },
+   "wallSeconds": 475,
+   "garden": {
+    "released": 555,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 7752,
+    "byRole": {
+     "A": {
+      "founders": 555,
+      "offspring": 877,
+      "lifespanSum": 34047.3,
+      "algaeEnergySum": 1451358,
+      "fleshEnergySum": 2732.3,
+      "sexualOffspring": 418,
+      "withTripletSibling": 15,
+      "killed": 17,
+      "starved": 387,
+      "oldAge": 151
+     },
+     "B": {
+      "founders": 555,
+      "offspring": 436,
+      "lifespanSum": 29679.7,
+      "algaeEnergySum": 984234,
+      "fleshEnergySum": 996.6,
+      "sexualOffspring": 225,
+      "withTripletSibling": 14,
+      "killed": 12,
+      "starved": 408,
+      "oldAge": 135
+     },
+     "A2": {
+      "founders": 555,
+      "offspring": 975,
+      "lifespanSum": 37924.0,
+      "algaeEnergySum": 1616550,
+      "fleshEnergySum": 3056.8,
+      "sexualOffspring": 480,
+      "withTripletSibling": 21,
+      "killed": 16,
+      "starved": 362,
+      "oldAge": 177
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/base/1005",
+   "tab": "D",
+   "job": 2,
+   "kind": "garden",
+   "arm": "000",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1123140,
+   "fin": {
+    "gen": 400,
+    "min": 312,
+    "pop": 177,
+    "dKill": 5612,
+    "births": 71328,
+    "deaths": 73533
+   },
+   "wallSeconds": 489,
+   "garden": {
+    "released": 584,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 3062,
+    "byRole": {
+     "A": {
+      "founders": 584,
+      "offspring": 969,
+      "lifespanSum": 36500.8,
+      "algaeEnergySum": 1551941,
+      "fleshEnergySum": 1628.2,
+      "sexualOffspring": 491,
+      "withTripletSibling": 14,
+      "killed": 15,
+      "starved": 405,
+      "oldAge": 164
+     },
+     "B": {
+      "founders": 584,
+      "offspring": 468,
+      "lifespanSum": 32679.8,
+      "algaeEnergySum": 1120287,
+      "fleshEnergySum": 1802.3,
+      "sexualOffspring": 228,
+      "withTripletSibling": 11,
+      "killed": 18,
+      "starved": 417,
+      "oldAge": 149
+     },
+     "A2": {
+      "founders": 584,
+      "offspring": 908,
+      "lifespanSum": 35338.8,
+      "algaeEnergySum": 1518972,
+      "fleshEnergySum": 1875.2,
+      "sexualOffspring": 441,
+      "withTripletSibling": 15,
+      "killed": 18,
+      "starved": 421,
+      "oldAge": 145
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE/1003",
+   "tab": "D",
+   "job": 3,
+   "kind": "garden",
+   "arm": "T00",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1105680,
+   "fin": {
+    "gen": 400,
+    "min": 307,
+    "pop": 150,
+    "dKill": 6958,
+    "births": 69347,
+    "deaths": 71552
+   },
+   "wallSeconds": 464,
+   "garden": {
+    "released": 575,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 9149,
+    "byRole": {
+     "A2": {
+      "founders": 575,
+      "offspring": 820,
+      "lifespanSum": 33062.9,
+      "algaeEnergySum": 1326529,
+      "fleshEnergySum": 4684.3,
+      "sexualOffspring": 392,
+      "withTripletSibling": 13,
+      "killed": 23,
+      "starved": 417,
+      "oldAge": 135
+     },
+     "B": {
+      "founders": 575,
+      "offspring": 601,
+      "lifespanSum": 30398.6,
+      "algaeEnergySum": 958306,
+      "fleshEnergySum": 2479.2,
+      "sexualOffspring": 253,
+      "withTripletSibling": 14,
+      "killed": 26,
+      "starved": 441,
+      "oldAge": 108
+     },
+     "A": {
+      "founders": 575,
+      "offspring": 924,
+      "lifespanSum": 34740.8,
+      "algaeEnergySum": 1386169,
+      "fleshEnergySum": 2349.0,
+      "sexualOffspring": 438,
+      "withTripletSibling": 15,
+      "killed": 32,
+      "starved": 404,
+      "oldAge": 139
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE/1001",
+   "tab": "D",
+   "job": 4,
+   "kind": "garden",
+   "arm": "0M0",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1103820,
+   "fin": {
+    "gen": 400,
+    "min": 307,
+    "pop": 179,
+    "dKill": 5424,
+    "births": 98456,
+    "deaths": 100629
+   },
+   "wallSeconds": 645,
+   "garden": {
+    "released": 574,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 10380,
+    "byRole": {
+     "A": {
+      "founders": 574,
+      "offspring": 913,
+      "lifespanSum": 31252.1,
+      "algaeEnergySum": 919272,
+      "fleshEnergySum": 1087.5,
+      "sexualOffspring": 427,
+      "withTripletSibling": 22,
+      "killed": 17,
+      "starved": 431,
+      "oldAge": 126
+     },
+     "B": {
+      "founders": 574,
+      "offspring": 739,
+      "lifespanSum": 32051.3,
+      "algaeEnergySum": 895389,
+      "fleshEnergySum": 580.5,
+      "sexualOffspring": 372,
+      "withTripletSibling": 16,
+      "killed": 18,
+      "starved": 408,
+      "oldAge": 148
+     },
+     "A2": {
+      "founders": 574,
+      "offspring": 838,
+      "lifespanSum": 31392.4,
+      "algaeEnergySum": 933352,
+      "fleshEnergySum": 1789.0,
+      "sexualOffspring": 399,
+      "withTripletSibling": 20,
+      "killed": 18,
+      "starved": 422,
+      "oldAge": 134
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE/1005",
+   "tab": "D",
+   "job": 5,
+   "kind": "garden",
+   "arm": "0M0",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1005120,
+   "fin": {
+    "gen": 400,
+    "min": 279,
+    "pop": 323,
+    "dKill": 3955,
+    "births": 129283,
+    "deaths": 131147
+   },
+   "wallSeconds": 761,
+   "garden": {
+    "released": 519,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 8841,
+    "byRole": {
+     "A": {
+      "founders": 519,
+      "offspring": 761,
+      "lifespanSum": 19552.0,
+      "algaeEnergySum": 283380,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 449,
+      "withTripletSibling": 8,
+      "killed": 21,
+      "starved": 442,
+      "oldAge": 56
+     },
+     "B": {
+      "founders": 519,
+      "offspring": 838,
+      "lifespanSum": 22560.0,
+      "algaeEnergySum": 332829,
+      "fleshEnergySum": 29.8,
+      "sexualOffspring": 482,
+      "withTripletSibling": 5,
+      "killed": 23,
+      "starved": 402,
+      "oldAge": 94
+     },
+     "A2": {
+      "founders": 519,
+      "offspring": 764,
+      "lifespanSum": 19724.9,
+      "algaeEnergySum": 292321,
+      "fleshEnergySum": 46.2,
+      "sexualOffspring": 447,
+      "withTripletSibling": 11,
+      "killed": 15,
+      "starved": 443,
+      "oldAge": 61
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE/1003",
+   "tab": "D",
+   "job": 6,
+   "kind": "garden",
+   "arm": "TM0",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1082820,
+   "fin": {
+    "gen": 400,
+    "min": 301,
+    "pop": 180,
+    "dKill": 6290,
+    "births": 98220,
+    "deaths": 100356
+   },
+   "wallSeconds": 600,
+   "garden": {
+    "released": 562,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 2769,
+    "byRole": {
+     "A2": {
+      "founders": 562,
+      "offspring": 836,
+      "lifespanSum": 30868.6,
+      "algaeEnergySum": 913067,
+      "fleshEnergySum": 727.2,
+      "sexualOffspring": 410,
+      "withTripletSibling": 14,
+      "killed": 21,
+      "starved": 400,
+      "oldAge": 141
+     },
+     "B": {
+      "founders": 562,
+      "offspring": 782,
+      "lifespanSum": 27665.6,
+      "algaeEnergySum": 791224,
+      "fleshEnergySum": 1356.0,
+      "sexualOffspring": 380,
+      "withTripletSibling": 27,
+      "killed": 17,
+      "starved": 436,
+      "oldAge": 109
+     },
+     "A": {
+      "founders": 562,
+      "offspring": 922,
+      "lifespanSum": 32715.2,
+      "algaeEnergySum": 976585,
+      "fleshEnergySum": 1948.8,
+      "sexualOffspring": 448,
+      "withTripletSibling": 19,
+      "killed": 16,
+      "starved": 390,
+      "oldAge": 156
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_BURN/1001",
+   "tab": "D",
+   "job": 7,
+   "kind": "garden",
+   "arm": "00B",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1168740,
+   "fin": {
+    "gen": 400,
+    "min": 325,
+    "pop": 223,
+    "dKill": 7213,
+    "births": 82286,
+    "deaths": 84523
+   },
+   "wallSeconds": 572,
+   "garden": {
+    "released": 610,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 6725,
+    "byRole": {
+     "A": {
+      "founders": 610,
+      "offspring": 1013,
+      "lifespanSum": 38214.2,
+      "algaeEnergySum": 1309445,
+      "fleshEnergySum": 2696.3,
+      "sexualOffspring": 443,
+      "withTripletSibling": 21,
+      "killed": 23,
+      "starved": 415,
+      "oldAge": 172
+     },
+     "B": {
+      "founders": 610,
+      "offspring": 605,
+      "lifespanSum": 37703.8,
+      "algaeEnergySum": 1012118,
+      "fleshEnergySum": 1159.5,
+      "sexualOffspring": 288,
+      "withTripletSibling": 14,
+      "killed": 20,
+      "starved": 395,
+      "oldAge": 195
+     },
+     "A2": {
+      "founders": 610,
+      "offspring": 1015,
+      "lifespanSum": 36873.1,
+      "algaeEnergySum": 1343604,
+      "fleshEnergySum": 1777.8,
+      "sexualOffspring": 462,
+      "withTripletSibling": 27,
+      "killed": 21,
+      "starved": 423,
+      "oldAge": 166
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_BURN/1005",
+   "tab": "D",
+   "job": 8,
+   "kind": "garden",
+   "arm": "00B",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1181460,
+   "fin": {
+    "gen": 400,
+    "min": 328,
+    "pop": 174,
+    "dKill": 5415,
+    "births": 63193,
+    "deaths": 65500
+   },
+   "wallSeconds": 457,
+   "garden": {
+    "released": 617,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 5889,
+    "byRole": {
+     "A": {
+      "founders": 617,
+      "offspring": 915,
+      "lifespanSum": 39214.1,
+      "algaeEnergySum": 1872599,
+      "fleshEnergySum": 4075.6,
+      "sexualOffspring": 379,
+      "withTripletSibling": 18,
+      "killed": 11,
+      "starved": 435,
+      "oldAge": 171
+     },
+     "B": {
+      "founders": 617,
+      "offspring": 568,
+      "lifespanSum": 40177.4,
+      "algaeEnergySum": 1525878,
+      "fleshEnergySum": 1963.2,
+      "sexualOffspring": 248,
+      "withTripletSibling": 21,
+      "killed": 21,
+      "starved": 388,
+      "oldAge": 208
+     },
+     "A2": {
+      "founders": 617,
+      "offspring": 925,
+      "lifespanSum": 38061.4,
+      "algaeEnergySum": 1871762,
+      "fleshEnergySum": 2324.0,
+      "sexualOffspring": 391,
+      "withTripletSibling": 21,
+      "killed": 20,
+      "starved": 422,
+      "oldAge": 175
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_BURN/1003",
+   "tab": "D",
+   "job": 9,
+   "kind": "garden",
+   "arm": "T0B",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 890040,
+   "fin": {
+    "gen": 400,
+    "min": 247,
+    "pop": 535,
+    "dKill": 4342,
+    "births": 195100,
+    "deaths": 196560
+   },
+   "wallSeconds": 1332,
+   "garden": {
+    "released": 455,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 4574,
+    "byRole": {
+     "A2": {
+      "founders": 455,
+      "offspring": 897,
+      "lifespanSum": 20671.1,
+      "algaeEnergySum": 319371,
+      "fleshEnergySum": 220.6,
+      "sexualOffspring": 629,
+      "withTripletSibling": 15,
+      "killed": 10,
+      "starved": 374,
+      "oldAge": 71
+     },
+     "B": {
+      "founders": 455,
+      "offspring": 750,
+      "lifespanSum": 18318.4,
+      "algaeEnergySum": 205081,
+      "fleshEnergySum": 169.2,
+      "sexualOffspring": 476,
+      "withTripletSibling": 5,
+      "killed": 11,
+      "starved": 376,
+      "oldAge": 68
+     },
+     "A": {
+      "founders": 455,
+      "offspring": 746,
+      "lifespanSum": 18180.8,
+      "algaeEnergySum": 283416,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 510,
+      "withTripletSibling": 12,
+      "killed": 12,
+      "starved": 379,
+      "oldAge": 64
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE+SEG_BURN/1001",
+   "tab": "D",
+   "job": 10,
+   "kind": "garden",
+   "arm": "0MB",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1267020,
+   "fin": {
+    "gen": 400,
+    "min": 352,
+    "pop": 307,
+    "dKill": 3362,
+    "births": 142058,
+    "deaths": 144373
+   },
+   "wallSeconds": 1067,
+   "garden": {
+    "released": 664,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 3592,
+    "byRole": {
+     "A": {
+      "founders": 664,
+      "offspring": 722,
+      "lifespanSum": 21593.3,
+      "algaeEnergySum": 262032,
+      "fleshEnergySum": 77.3,
+      "sexualOffspring": 309,
+      "withTripletSibling": 15,
+      "killed": 13,
+      "starved": 596,
+      "oldAge": 55
+     },
+     "B": {
+      "founders": 664,
+      "offspring": 830,
+      "lifespanSum": 26548.9,
+      "algaeEnergySum": 321085,
+      "fleshEnergySum": 449.4,
+      "sexualOffspring": 352,
+      "withTripletSibling": 11,
+      "killed": 15,
+      "starved": 549,
+      "oldAge": 100
+     },
+     "A2": {
+      "founders": 664,
+      "offspring": 673,
+      "lifespanSum": 21432.9,
+      "algaeEnergySum": 248326,
+      "fleshEnergySum": 132.5,
+      "sexualOffspring": 281,
+      "withTripletSibling": 14,
+      "killed": 12,
+      "starved": 590,
+      "oldAge": 62
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE+SEG_BURN/1005",
+   "tab": "D",
+   "job": 11,
+   "kind": "garden",
+   "arm": "0MB",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1249200,
+   "fin": {
+    "gen": 400,
+    "min": 347,
+    "pop": 306,
+    "dKill": 4055,
+    "births": 148638,
+    "deaths": 150927
+   },
+   "wallSeconds": 1070,
+   "garden": {
+    "released": 655,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 5203,
+    "byRole": {
+     "A": {
+      "founders": 655,
+      "offspring": 813,
+      "lifespanSum": 22916.7,
+      "algaeEnergySum": 274863,
+      "fleshEnergySum": 6.4,
+      "sexualOffspring": 382,
+      "withTripletSibling": 17,
+      "killed": 13,
+      "starved": 583,
+      "oldAge": 59
+     },
+     "B": {
+      "founders": 655,
+      "offspring": 854,
+      "lifespanSum": 25705.5,
+      "algaeEnergySum": 307100,
+      "fleshEnergySum": 44.4,
+      "sexualOffspring": 372,
+      "withTripletSibling": 14,
+      "killed": 14,
+      "starved": 541,
+      "oldAge": 100
+     },
+     "A2": {
+      "founders": 655,
+      "offspring": 669,
+      "lifespanSum": 21048.0,
+      "algaeEnergySum": 247499,
+      "fleshEnergySum": 16.8,
+      "sexualOffspring": 286,
+      "withTripletSibling": 13,
+      "killed": 10,
+      "starved": 593,
+      "oldAge": 52
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE+SEG_BURN/1003",
+   "tab": "D",
+   "job": 12,
+   "kind": "garden",
+   "arm": "TMB",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 960240,
+   "fin": {
+    "gen": 400,
+    "min": 267,
+    "pop": 444,
+    "dKill": 3412,
+    "births": 188174,
+    "deaths": 189842
+   },
+   "wallSeconds": 1138,
+   "garden": {
+    "released": 494,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 902,
+    "byRole": {
+     "A2": {
+      "founders": 494,
+      "offspring": 469,
+      "lifespanSum": 16307.2,
+      "algaeEnergySum": 169296,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 299,
+      "withTripletSibling": 8,
+      "killed": 13,
+      "starved": 425,
+      "oldAge": 56
+     },
+     "B": {
+      "founders": 494,
+      "offspring": 704,
+      "lifespanSum": 18542.1,
+      "algaeEnergySum": 186110,
+      "fleshEnergySum": 11.8,
+      "sexualOffspring": 394,
+      "withTripletSibling": 10,
+      "killed": 25,
+      "starved": 404,
+      "oldAge": 65
+     },
+     "A": {
+      "founders": 494,
+      "offspring": 406,
+      "lifespanSum": 15379.1,
+      "algaeEnergySum": 150893,
+      "fleshEnergySum": 32.7,
+      "sexualOffspring": 260,
+      "withTripletSibling": 6,
+      "killed": 11,
+      "starved": 438,
+      "oldAge": 45
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/ledger/base/1002",
+   "tab": "E",
+   "job": 1,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1104180,
+   "fin": {
+    "gen": 400,
+    "min": 307,
+    "pop": 177,
+    "dKill": 5843,
+    "births": 67606,
+    "deaths": 68059
+   },
+   "wallSeconds": 468
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE/60606",
+   "tab": "E",
+   "job": 2,
+   "kind": "ledger",
+   "arm": "T00",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1192560,
+   "fin": {
+    "gen": 400,
+    "min": 331,
+    "pop": 143,
+    "dKill": 6565,
+    "births": 72651,
+    "deaths": 73138
+   },
+   "wallSeconds": 500
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE/1004",
+   "tab": "E",
+   "job": 3,
+   "kind": "ledger",
+   "arm": "T00",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1026960,
+   "fin": {
+    "gen": 400,
+    "min": 285,
+    "pop": 180,
+    "dKill": 6009,
+    "births": 68997,
+    "deaths": 69447
+   },
+   "wallSeconds": 444
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE/1002",
+   "tab": "E",
+   "job": 4,
+   "kind": "ledger",
+   "arm": "0M0",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1107600,
+   "fin": {
+    "gen": 400,
+    "min": 308,
+    "pop": 342,
+    "dKill": 3524,
+    "births": 137332,
+    "deaths": 137620
+   },
+   "wallSeconds": 907
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE/60606",
+   "tab": "E",
+   "job": 5,
+   "kind": "ledger",
+   "arm": "TM0",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1009020,
+   "fin": {
+    "gen": 400,
+    "min": 280,
+    "pop": 446,
+    "dKill": 5874,
+    "births": 205438,
+    "deaths": 205622
+   },
+   "wallSeconds": 1231
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE/1004",
+   "tab": "E",
+   "job": 6,
+   "kind": "ledger",
+   "arm": "TM0",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 910620,
+   "fin": {
+    "gen": 400,
+    "min": 253,
+    "pop": 410,
+    "dKill": 4347,
+    "births": 165347,
+    "deaths": 165567
+   },
+   "wallSeconds": 947
+  },
+  {
+   "label": "burden/ledger/SEG_BURN/1002",
+   "tab": "E",
+   "job": 7,
+   "kind": "ledger",
+   "arm": "00B",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1212900,
+   "fin": {
+    "gen": 400,
+    "min": 337,
+    "pop": 156,
+    "dKill": 6273,
+    "births": 69356,
+    "deaths": 69830
+   },
+   "wallSeconds": 505
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_BURN/60606",
+   "tab": "E",
+   "job": 8,
+   "kind": "ledger",
+   "arm": "T0B",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 903540,
+   "fin": {
+    "gen": 400,
+    "min": 251,
+    "pop": 585,
+    "dKill": 6239,
+    "births": 172589,
+    "deaths": 172634
+   },
+   "wallSeconds": 1179
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_BURN/1004",
+   "tab": "E",
+   "job": 9,
+   "kind": "ledger",
+   "arm": "T0B",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1103340,
+   "fin": {
+    "gen": 400,
+    "min": 306,
+    "pop": 187,
+    "dKill": 8204,
+    "births": 89698,
+    "deaths": 90141
+   },
+   "wallSeconds": 560
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE+SEG_BURN/1002",
+   "tab": "E",
+   "job": 10,
+   "kind": "ledger",
+   "arm": "0MB",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1265700,
+   "fin": {
+    "gen": 400,
+    "min": 352,
+    "pop": 294,
+    "dKill": 1899,
+    "births": 134575,
+    "deaths": 134911
+   },
+   "wallSeconds": 983
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE+SEG_BURN/60606",
+   "tab": "E",
+   "job": 11,
+   "kind": "ledger",
+   "arm": "TMB",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 983940,
+   "fin": {
+    "gen": 400,
+    "min": 273,
+    "pop": 400,
+    "dKill": 3955,
+    "births": 191669,
+    "deaths": 191899
+   },
+   "wallSeconds": 1259
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE+SEG_BURN/1004",
+   "tab": "E",
+   "job": 12,
+   "kind": "ledger",
+   "arm": "TMB",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 917580,
+   "fin": {
+    "gen": 400,
+    "min": 255,
+    "pop": 568,
+    "dKill": 4079,
+    "births": 184060,
+    "deaths": 184122
+   },
+   "wallSeconds": 1114
+  },
+  {
+   "label": "burden/garden/base/1002",
+   "tab": "F",
+   "job": 1,
+   "kind": "garden",
+   "arm": "000",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1090500,
+   "fin": {
+    "gen": 400,
+    "min": 303,
+    "pop": 181,
+    "dKill": 6341,
+    "births": 67772,
+    "deaths": 69919
+   },
+   "wallSeconds": 459,
+   "garden": {
+    "released": 566,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 5348,
+    "byRole": {
+     "A": {
+      "founders": 566,
+      "offspring": 997,
+      "lifespanSum": 36867.5,
+      "algaeEnergySum": 1600074,
+      "fleshEnergySum": 2151.2,
+      "sexualOffspring": 471,
+      "withTripletSibling": 18,
+      "killed": 28,
+      "starved": 370,
+      "oldAge": 168
+     },
+     "B": {
+      "founders": 566,
+      "offspring": 384,
+      "lifespanSum": 30428.8,
+      "algaeEnergySum": 962394,
+      "fleshEnergySum": 1060.4,
+      "sexualOffspring": 150,
+      "withTripletSibling": 7,
+      "killed": 28,
+      "starved": 402,
+      "oldAge": 136
+     },
+     "A2": {
+      "founders": 566,
+      "offspring": 941,
+      "lifespanSum": 35469.7,
+      "algaeEnergySum": 1570668,
+      "fleshEnergySum": 2862.5,
+      "sexualOffspring": 461,
+      "withTripletSibling": 21,
+      "killed": 22,
+      "starved": 397,
+      "oldAge": 147
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE/60606",
+   "tab": "F",
+   "job": 2,
+   "kind": "garden",
+   "arm": "T00",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1093020,
+   "fin": {
+    "gen": 400,
+    "min": 304,
+    "pop": 177,
+    "dKill": 6096,
+    "births": 65209,
+    "deaths": 67366
+   },
+   "wallSeconds": 477,
+   "garden": {
+    "released": 568,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 6978,
+    "byRole": {
+     "B": {
+      "founders": 568,
+      "offspring": 634,
+      "lifespanSum": 30597.8,
+      "algaeEnergySum": 1074839,
+      "fleshEnergySum": 3229.2,
+      "sexualOffspring": 326,
+      "withTripletSibling": 17,
+      "killed": 22,
+      "starved": 441,
+      "oldAge": 105
+     },
+     "A": {
+      "founders": 568,
+      "offspring": 980,
+      "lifespanSum": 38294.5,
+      "algaeEnergySum": 1619984,
+      "fleshEnergySum": 1359.8,
+      "sexualOffspring": 503,
+      "withTripletSibling": 15,
+      "killed": 27,
+      "starved": 367,
+      "oldAge": 174
+     },
+     "A2": {
+      "founders": 568,
+      "offspring": 954,
+      "lifespanSum": 36587.8,
+      "algaeEnergySum": 1599020,
+      "fleshEnergySum": 1929.3,
+      "sexualOffspring": 499,
+      "withTripletSibling": 20,
+      "killed": 21,
+      "starved": 381,
+      "oldAge": 166
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE/1004",
+   "tab": "F",
+   "job": 3,
+   "kind": "garden",
+   "arm": "T00",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1185660,
+   "fin": {
+    "gen": 400,
+    "min": 329,
+    "pop": 203,
+    "dKill": 5920,
+    "births": 68313,
+    "deaths": 70597
+   },
+   "wallSeconds": 496,
+   "garden": {
+    "released": 619,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 15,
+    "drainSteps": 5984,
+    "byRole": {
+     "A": {
+      "founders": 619,
+      "offspring": 988,
+      "lifespanSum": 41140.2,
+      "algaeEnergySum": 1830476,
+      "fleshEnergySum": 1494.0,
+      "sexualOffspring": 439,
+      "withTripletSibling": 20,
+      "killed": 18,
+      "starved": 411,
+      "oldAge": 190
+     },
+     "A2": {
+      "founders": 619,
+      "offspring": 970,
+      "lifespanSum": 41049.0,
+      "algaeEnergySum": 1794765,
+      "fleshEnergySum": 2203.0,
+      "sexualOffspring": 416,
+      "withTripletSibling": 14,
+      "killed": 21,
+      "starved": 410,
+      "oldAge": 188
+     },
+     "B": {
+      "founders": 619,
+      "offspring": 639,
+      "lifespanSum": 35029.0,
+      "algaeEnergySum": 1198429,
+      "fleshEnergySum": 1304.1,
+      "sexualOffspring": 247,
+      "withTripletSibling": 16,
+      "killed": 19,
+      "starved": 462,
+      "oldAge": 138
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE/1002",
+   "tab": "F",
+   "job": 4,
+   "kind": "garden",
+   "arm": "0M0",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1011000,
+   "fin": {
+    "gen": 400,
+    "min": 281,
+    "pop": 285,
+    "dKill": 4182,
+    "births": 130669,
+    "deaths": 132580
+   },
+   "wallSeconds": 798,
+   "garden": {
+    "released": 522,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 12,
+    "drainSteps": 6261,
+    "byRole": {
+     "A": {
+      "founders": 522,
+      "offspring": 839,
+      "lifespanSum": 21739.0,
+      "algaeEnergySum": 319707,
+      "fleshEnergySum": 21.8,
+      "sexualOffspring": 430,
+      "withTripletSibling": 17,
+      "killed": 13,
+      "starved": 430,
+      "oldAge": 79
+     },
+     "B": {
+      "founders": 522,
+      "offspring": 895,
+      "lifespanSum": 24684.4,
+      "algaeEnergySum": 355700,
+      "fleshEnergySum": 87.8,
+      "sexualOffspring": 446,
+      "withTripletSibling": 18,
+      "killed": 22,
+      "starved": 396,
+      "oldAge": 104
+     },
+     "A2": {
+      "founders": 522,
+      "offspring": 874,
+      "lifespanSum": 22205.7,
+      "algaeEnergySum": 332856,
+      "fleshEnergySum": 39.0,
+      "sexualOffspring": 477,
+      "withTripletSibling": 15,
+      "killed": 13,
+      "starved": 438,
+      "oldAge": 71
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE/60606",
+   "tab": "F",
+   "job": 5,
+   "kind": "garden",
+   "arm": "TM0",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1060980,
+   "fin": {
+    "gen": 400,
+    "min": 295,
+    "pop": 211,
+    "dKill": 6772,
+    "births": 88731,
+    "deaths": 90800
+   },
+   "wallSeconds": 555,
+   "garden": {
+    "released": 550,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 4727,
+    "byRole": {
+     "B": {
+      "founders": 550,
+      "offspring": 973,
+      "lifespanSum": 33334.0,
+      "algaeEnergySum": 1314319,
+      "fleshEnergySum": 1924.1,
+      "sexualOffspring": 456,
+      "withTripletSibling": 17,
+      "killed": 24,
+      "starved": 372,
+      "oldAge": 154
+     },
+     "A": {
+      "founders": 550,
+      "offspring": 822,
+      "lifespanSum": 31281.2,
+      "algaeEnergySum": 1252231,
+      "fleshEnergySum": 2746.0,
+      "sexualOffspring": 419,
+      "withTripletSibling": 20,
+      "killed": 23,
+      "starved": 391,
+      "oldAge": 136
+     },
+     "A2": {
+      "founders": 550,
+      "offspring": 941,
+      "lifespanSum": 32803.0,
+      "algaeEnergySum": 1379361,
+      "fleshEnergySum": 6065.6,
+      "sexualOffspring": 484,
+      "withTripletSibling": 23,
+      "killed": 34,
+      "starved": 364,
+      "oldAge": 152
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE/1004",
+   "tab": "F",
+   "job": 6,
+   "kind": "garden",
+   "arm": "TM0",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 974460,
+   "fin": {
+    "gen": 400,
+    "min": 271,
+    "pop": 417,
+    "dKill": 3842,
+    "births": 176180,
+    "deaths": 177899
+   },
+   "wallSeconds": 1052,
+   "garden": {
+    "released": 502,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 12,
+    "drainSteps": 5804,
+    "byRole": {
+     "A": {
+      "founders": 502,
+      "offspring": 715,
+      "lifespanSum": 22815.7,
+      "algaeEnergySum": 303023,
+      "fleshEnergySum": 2.1,
+      "sexualOffspring": 450,
+      "withTripletSibling": 16,
+      "killed": 16,
+      "starved": 387,
+      "oldAge": 99
+     },
+     "A2": {
+      "founders": 502,
+      "offspring": 714,
+      "lifespanSum": 23935.4,
+      "algaeEnergySum": 314394,
+      "fleshEnergySum": 57.1,
+      "sexualOffspring": 445,
+      "withTripletSibling": 11,
+      "killed": 14,
+      "starved": 388,
+      "oldAge": 100
+     },
+     "B": {
+      "founders": 502,
+      "offspring": 849,
+      "lifespanSum": 21254.4,
+      "algaeEnergySum": 264576,
+      "fleshEnergySum": 101.6,
+      "sexualOffspring": 474,
+      "withTripletSibling": 13,
+      "killed": 16,
+      "starved": 402,
+      "oldAge": 84
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_BURN/1002",
+   "tab": "F",
+   "job": 7,
+   "kind": "garden",
+   "arm": "00B",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1093740,
+   "fin": {
+    "gen": 400,
+    "min": 304,
+    "pop": 194,
+    "dKill": 7480,
+    "births": 86459,
+    "deaths": 88599
+   },
+   "wallSeconds": 543,
+   "garden": {
+    "released": 568,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 6876,
+    "byRole": {
+     "A": {
+      "founders": 568,
+      "offspring": 942,
+      "lifespanSum": 32713.0,
+      "algaeEnergySum": 1113510,
+      "fleshEnergySum": 2343.5,
+      "sexualOffspring": 478,
+      "withTripletSibling": 19,
+      "killed": 20,
+      "starved": 419,
+      "oldAge": 129
+     },
+     "B": {
+      "founders": 568,
+      "offspring": 638,
+      "lifespanSum": 34911.9,
+      "algaeEnergySum": 950874,
+      "fleshEnergySum": 2097.6,
+      "sexualOffspring": 286,
+      "withTripletSibling": 17,
+      "killed": 20,
+      "starved": 361,
+      "oldAge": 187
+     },
+     "A2": {
+      "founders": 568,
+      "offspring": 861,
+      "lifespanSum": 32294.2,
+      "algaeEnergySum": 1060245,
+      "fleshEnergySum": 2615.9,
+      "sexualOffspring": 388,
+      "withTripletSibling": 22,
+      "killed": 23,
+      "starved": 409,
+      "oldAge": 136
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_BURN/60606",
+   "tab": "F",
+   "job": 8,
+   "kind": "garden",
+   "arm": "T0B",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 1197060,
+   "fin": {
+    "gen": 400,
+    "min": 333,
+    "pop": 185,
+    "dKill": 6854,
+    "births": 75465,
+    "deaths": 77788
+   },
+   "wallSeconds": 569,
+   "garden": {
+    "released": 626,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 15,
+    "drainSteps": 7234,
+    "byRole": {
+     "B": {
+      "founders": 626,
+      "offspring": 811,
+      "lifespanSum": 40024.0,
+      "algaeEnergySum": 1233655,
+      "fleshEnergySum": 2885.2,
+      "sexualOffspring": 332,
+      "withTripletSibling": 18,
+      "killed": 23,
+      "starved": 416,
+      "oldAge": 187
+     },
+     "A": {
+      "founders": 626,
+      "offspring": 1000,
+      "lifespanSum": 41945.8,
+      "algaeEnergySum": 1637595,
+      "fleshEnergySum": 2908.9,
+      "sexualOffspring": 458,
+      "withTripletSibling": 24,
+      "killed": 26,
+      "starved": 399,
+      "oldAge": 201
+     },
+     "A2": {
+      "founders": 626,
+      "offspring": 1012,
+      "lifespanSum": 42639.9,
+      "algaeEnergySum": 1648058,
+      "fleshEnergySum": 4470.7,
+      "sexualOffspring": 419,
+      "withTripletSibling": 24,
+      "killed": 13,
+      "starved": 419,
+      "oldAge": 194
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_BURN/1004",
+   "tab": "F",
+   "job": 9,
+   "kind": "garden",
+   "arm": "T0B",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 1068660,
+   "fin": {
+    "gen": 400,
+    "min": 297,
+    "pop": 176,
+    "dKill": 7377,
+    "births": 77865,
+    "deaths": 79981
+   },
+   "wallSeconds": 530,
+   "garden": {
+    "released": 554,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 5076,
+    "byRole": {
+     "A": {
+      "founders": 554,
+      "offspring": 899,
+      "lifespanSum": 33830.8,
+      "algaeEnergySum": 1129287,
+      "fleshEnergySum": 2470.9,
+      "sexualOffspring": 430,
+      "withTripletSibling": 16,
+      "killed": 19,
+      "starved": 390,
+      "oldAge": 145
+     },
+     "A2": {
+      "founders": 554,
+      "offspring": 930,
+      "lifespanSum": 35356.4,
+      "algaeEnergySum": 1177040,
+      "fleshEnergySum": 2419.9,
+      "sexualOffspring": 468,
+      "withTripletSibling": 12,
+      "killed": 20,
+      "starved": 377,
+      "oldAge": 157
+     },
+     "B": {
+      "founders": 554,
+      "offspring": 748,
+      "lifespanSum": 33116.7,
+      "algaeEnergySum": 830258,
+      "fleshEnergySum": 868.7,
+      "sexualOffspring": 377,
+      "withTripletSibling": 14,
+      "killed": 25,
+      "starved": 379,
+      "oldAge": 150
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE+SEG_BURN/1002",
+   "tab": "F",
+   "job": 10,
+   "kind": "garden",
+   "arm": "0MB",
+   "seed": 1002,
+   "stop": "gen",
+   "stopStep": 1245540,
+   "fin": {
+    "gen": 400,
+    "min": 346,
+    "pop": 369,
+    "dKill": 3391,
+    "births": 145784,
+    "deaths": 148001
+   },
+   "wallSeconds": 1030,
+   "garden": {
+    "released": 652,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 5994,
+    "byRole": {
+     "A": {
+      "founders": 652,
+      "offspring": 721,
+      "lifespanSum": 21808.8,
+      "algaeEnergySum": 265986,
+      "fleshEnergySum": 451.9,
+      "sexualOffspring": 315,
+      "withTripletSibling": 13,
+      "killed": 15,
+      "starved": 580,
+      "oldAge": 57
+     },
+     "B": {
+      "founders": 652,
+      "offspring": 956,
+      "lifespanSum": 28584.9,
+      "algaeEnergySum": 348480,
+      "fleshEnergySum": 80.3,
+      "sexualOffspring": 407,
+      "withTripletSibling": 13,
+      "killed": 20,
+      "starved": 519,
+      "oldAge": 113
+     },
+     "A2": {
+      "founders": 652,
+      "offspring": 750,
+      "lifespanSum": 22169.3,
+      "algaeEnergySum": 259219,
+      "fleshEnergySum": 252.5,
+      "sexualOffspring": 324,
+      "withTripletSibling": 14,
+      "killed": 6,
+      "starved": 584,
+      "oldAge": 62
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE+SEG_BURN/60606",
+   "tab": "F",
+   "job": 11,
+   "kind": "garden",
+   "arm": "TMB",
+   "seed": 60606,
+   "stop": "gen",
+   "stopStep": 939300,
+   "fin": {
+    "gen": 401,
+    "min": 261,
+    "pop": 342,
+    "dKill": 2853,
+    "births": 186075,
+    "deaths": 187809
+   },
+   "wallSeconds": 1170,
+   "garden": {
+    "released": 482,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 9,
+    "drainSteps": 3230,
+    "byRole": {
+     "B": {
+      "founders": 482,
+      "offspring": 657,
+      "lifespanSum": 16850.7,
+      "algaeEnergySum": 187320,
+      "fleshEnergySum": 4.5,
+      "sexualOffspring": 361,
+      "withTripletSibling": 7,
+      "killed": 17,
+      "starved": 409,
+      "oldAge": 56
+     },
+     "A": {
+      "founders": 482,
+      "offspring": 447,
+      "lifespanSum": 14585.9,
+      "algaeEnergySum": 157477,
+      "fleshEnergySum": 2.6,
+      "sexualOffspring": 308,
+      "withTripletSibling": 8,
+      "killed": 10,
+      "starved": 438,
+      "oldAge": 34
+     },
+     "A2": {
+      "founders": 482,
+      "offspring": 423,
+      "lifespanSum": 14675.9,
+      "algaeEnergySum": 159395,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 293,
+      "withTripletSibling": 9,
+      "killed": 18,
+      "starved": 428,
+      "oldAge": 36
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE+SEG_BURN/1004",
+   "tab": "F",
+   "job": 12,
+   "kind": "garden",
+   "arm": "TMB",
+   "seed": 1004,
+   "stop": "gen",
+   "stopStep": 917460,
+   "fin": {
+    "gen": 400,
+    "min": 255,
+    "pop": 501,
+    "dKill": 3486,
+    "births": 191391,
+    "deaths": 192930
+   },
+   "wallSeconds": 1207,
+   "garden": {
+    "released": 470,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 9,
+    "drainSteps": 3759,
+    "byRole": {
+     "A": {
+      "founders": 470,
+      "offspring": 419,
+      "lifespanSum": 13938.8,
+      "algaeEnergySum": 132560,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 268,
+      "withTripletSibling": 2,
+      "killed": 20,
+      "starved": 417,
+      "oldAge": 33
+     },
+     "A2": {
+      "founders": 470,
+      "offspring": 497,
+      "lifespanSum": 15060.3,
+      "algaeEnergySum": 146225,
+      "fleshEnergySum": 0.0,
+      "sexualOffspring": 317,
+      "withTripletSibling": 4,
+      "killed": 13,
+      "starved": 418,
+      "oldAge": 39
+     },
+     "B": {
+      "founders": 470,
+      "offspring": 585,
+      "lifespanSum": 15458.1,
+      "algaeEnergySum": 145959,
+      "fleshEnergySum": 19.3,
+      "sexualOffspring": 341,
+      "withTripletSibling": 2,
+      "killed": 22,
+      "starved": 404,
+      "oldAge": 44
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/ledger/base/1003",
+   "tab": "G",
+   "job": 1,
+   "kind": "ledger",
+   "arm": "000",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1126740,
+   "fin": {
+    "gen": 400,
+    "min": 313,
+    "pop": 174,
+    "dKill": 5839,
+    "births": 65393,
+    "deaths": 65849
+   },
+   "wallSeconds": 462
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE/1001",
+   "tab": "G",
+   "job": 2,
+   "kind": "ledger",
+   "arm": "T00",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1110360,
+   "fin": {
+    "gen": 400,
+    "min": 308,
+    "pop": 198,
+    "dKill": 6994,
+    "births": 67587,
+    "deaths": 68019
+   },
+   "wallSeconds": 481
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE/1005",
+   "tab": "G",
+   "job": 3,
+   "kind": "ledger",
+   "arm": "T00",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1131840,
+   "fin": {
+    "gen": 400,
+    "min": 314,
+    "pop": 152,
+    "dKill": 5855,
+    "births": 64909,
+    "deaths": 65387
+   },
+   "wallSeconds": 427
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE/1003",
+   "tab": "G",
+   "job": 4,
+   "kind": "ledger",
+   "arm": "0M0",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1183980,
+   "fin": {
+    "gen": 400,
+    "min": 329,
+    "pop": 161,
+    "dKill": 5984,
+    "births": 76362,
+    "deaths": 76831
+   },
+   "wallSeconds": 515
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE/1001",
+   "tab": "G",
+   "job": 5,
+   "kind": "ledger",
+   "arm": "TM0",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 951240,
+   "fin": {
+    "gen": 400,
+    "min": 264,
+    "pop": 400,
+    "dKill": 4755,
+    "births": 175184,
+    "deaths": 175414
+   },
+   "wallSeconds": 1047
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE/1005",
+   "tab": "G",
+   "job": 6,
+   "kind": "ledger",
+   "arm": "TM0",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 922140,
+   "fin": {
+    "gen": 400,
+    "min": 256,
+    "pop": 358,
+    "dKill": 3633,
+    "births": 164572,
+    "deaths": 164844
+   },
+   "wallSeconds": 951
+  },
+  {
+   "label": "burden/ledger/SEG_BURN/1003",
+   "tab": "G",
+   "job": 7,
+   "kind": "ledger",
+   "arm": "00B",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1133580,
+   "fin": {
+    "gen": 400,
+    "min": 315,
+    "pop": 199,
+    "dKill": 6464,
+    "births": 77443,
+    "deaths": 77874
+   },
+   "wallSeconds": 512
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_BURN/1001",
+   "tab": "G",
+   "job": 8,
+   "kind": "ledger",
+   "arm": "T0B",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 897660,
+   "fin": {
+    "gen": 400,
+    "min": 249,
+    "pop": 479,
+    "dKill": 3143,
+    "births": 209186,
+    "deaths": 209337
+   },
+   "wallSeconds": 1490
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_BURN/1005",
+   "tab": "G",
+   "job": 9,
+   "kind": "ledger",
+   "arm": "T0B",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 849480,
+   "fin": {
+    "gen": 400,
+    "min": 236,
+    "pop": 526,
+    "dKill": 2357,
+    "births": 187763,
+    "deaths": 187867
+   },
+   "wallSeconds": 1237
+  },
+  {
+   "label": "burden/ledger/SEG_MOVE+SEG_BURN/1003",
+   "tab": "G",
+   "job": 10,
+   "kind": "ledger",
+   "arm": "0MB",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1242660,
+   "fin": {
+    "gen": 400,
+    "min": 345,
+    "pop": 269,
+    "dKill": 2355,
+    "births": 138338,
+    "deaths": 138699
+   },
+   "wallSeconds": 996
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE+SEG_BURN/1001",
+   "tab": "G",
+   "job": 11,
+   "kind": "ledger",
+   "arm": "TMB",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 975540,
+   "fin": {
+    "gen": 400,
+    "min": 271,
+    "pop": 519,
+    "dKill": 4652,
+    "births": 191511,
+    "deaths": 191622
+   },
+   "wallSeconds": 1255
+  },
+  {
+   "label": "burden/ledger/THRESH_BASE+SEG_MOVE+SEG_BURN/1005",
+   "tab": "G",
+   "job": 12,
+   "kind": "ledger",
+   "arm": "TMB",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 923520,
+   "fin": {
+    "gen": 400,
+    "min": 257,
+    "pop": 439,
+    "dKill": 4842,
+    "births": 188914,
+    "deaths": 189105
+   },
+   "wallSeconds": 1090
+  },
+  {
+   "label": "burden/garden/base/1003",
+   "tab": "H",
+   "job": 1,
+   "kind": "garden",
+   "arm": "000",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1068240,
+   "fin": {
+    "gen": 400,
+    "min": 297,
+    "pop": 218,
+    "dKill": 6821,
+    "births": 83781,
+    "deaths": 85855
+   },
+   "wallSeconds": 541,
+   "garden": {
+    "released": 554,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 6681,
+    "byRole": {
+     "A2": {
+      "founders": 554,
+      "offspring": 869,
+      "lifespanSum": 31361.4,
+      "algaeEnergySum": 991149,
+      "fleshEnergySum": 1153.4,
+      "sexualOffspring": 440,
+      "withTripletSibling": 13,
+      "killed": 23,
+      "starved": 409,
+      "oldAge": 122
+     },
+     "B": {
+      "founders": 554,
+      "offspring": 451,
+      "lifespanSum": 29262.7,
+      "algaeEnergySum": 711680,
+      "fleshEnergySum": 753.3,
+      "sexualOffspring": 241,
+      "withTripletSibling": 4,
+      "killed": 20,
+      "starved": 403,
+      "oldAge": 131
+     },
+     "A": {
+      "founders": 554,
+      "offspring": 874,
+      "lifespanSum": 31367.0,
+      "algaeEnergySum": 994258,
+      "fleshEnergySum": 1715.7,
+      "sexualOffspring": 427,
+      "withTripletSibling": 11,
+      "killed": 25,
+      "starved": 401,
+      "oldAge": 128
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE/1001",
+   "tab": "H",
+   "job": 2,
+   "kind": "garden",
+   "arm": "T00",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1143240,
+   "fin": {
+    "gen": 400,
+    "min": 318,
+    "pop": 188,
+    "dKill": 6630,
+    "births": 68272,
+    "deaths": 70502
+   },
+   "wallSeconds": 490,
+   "garden": {
+    "released": 596,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 9137,
+    "byRole": {
+     "A": {
+      "founders": 596,
+      "offspring": 911,
+      "lifespanSum": 36560.9,
+      "algaeEnergySum": 1490776,
+      "fleshEnergySum": 1977.3,
+      "sexualOffspring": 448,
+      "withTripletSibling": 22,
+      "killed": 23,
+      "starved": 420,
+      "oldAge": 153
+     },
+     "B": {
+      "founders": 596,
+      "offspring": 655,
+      "lifespanSum": 32305.4,
+      "algaeEnergySum": 1049050,
+      "fleshEnergySum": 1491.2,
+      "sexualOffspring": 296,
+      "withTripletSibling": 13,
+      "killed": 24,
+      "starved": 448,
+      "oldAge": 124
+     },
+     "A2": {
+      "founders": 596,
+      "offspring": 962,
+      "lifespanSum": 38060.7,
+      "algaeEnergySum": 1557412,
+      "fleshEnergySum": 1904.5,
+      "sexualOffspring": 446,
+      "withTripletSibling": 21,
+      "killed": 29,
+      "starved": 407,
+      "oldAge": 160
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE/1005",
+   "tab": "H",
+   "job": 3,
+   "kind": "garden",
+   "arm": "T00",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1115280,
+   "fin": {
+    "gen": 400,
+    "min": 310,
+    "pop": 196,
+    "dKill": 5954,
+    "births": 66558,
+    "deaths": 68732
+   },
+   "wallSeconds": 459,
+   "garden": {
+    "released": 580,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 2966,
+    "byRole": {
+     "A": {
+      "founders": 580,
+      "offspring": 880,
+      "lifespanSum": 38151.1,
+      "algaeEnergySum": 1477368,
+      "fleshEnergySum": 2721.6,
+      "sexualOffspring": 441,
+      "withTripletSibling": 18,
+      "killed": 18,
+      "starved": 387,
+      "oldAge": 175
+     },
+     "B": {
+      "founders": 580,
+      "offspring": 585,
+      "lifespanSum": 31393.4,
+      "algaeEnergySum": 932790,
+      "fleshEnergySum": 1907.4,
+      "sexualOffspring": 292,
+      "withTripletSibling": 12,
+      "killed": 20,
+      "starved": 441,
+      "oldAge": 119
+     },
+     "A2": {
+      "founders": 580,
+      "offspring": 963,
+      "lifespanSum": 38213.7,
+      "algaeEnergySum": 1535882,
+      "fleshEnergySum": 3007.7,
+      "sexualOffspring": 460,
+      "withTripletSibling": 16,
+      "killed": 24,
+      "starved": 386,
+      "oldAge": 170
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE/1003",
+   "tab": "H",
+   "job": 4,
+   "kind": "garden",
+   "arm": "0M0",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1169880,
+   "fin": {
+    "gen": 400,
+    "min": 325,
+    "pop": 207,
+    "dKill": 7334,
+    "births": 83559,
+    "deaths": 85812
+   },
+   "wallSeconds": 556,
+   "garden": {
+    "released": 610,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 14,
+    "drainSteps": 5386,
+    "byRole": {
+     "A2": {
+      "founders": 610,
+      "offspring": 861,
+      "lifespanSum": 33262.7,
+      "algaeEnergySum": 1073436,
+      "fleshEnergySum": 1256.5,
+      "sexualOffspring": 408,
+      "withTripletSibling": 28,
+      "killed": 11,
+      "starved": 461,
+      "oldAge": 138
+     },
+     "B": {
+      "founders": 610,
+      "offspring": 765,
+      "lifespanSum": 36327.8,
+      "algaeEnergySum": 1173347,
+      "fleshEnergySum": 1000.7,
+      "sexualOffspring": 360,
+      "withTripletSibling": 26,
+      "killed": 25,
+      "starved": 405,
+      "oldAge": 180
+     },
+     "A": {
+      "founders": 610,
+      "offspring": 961,
+      "lifespanSum": 35077.9,
+      "algaeEnergySum": 1126635,
+      "fleshEnergySum": 1805.0,
+      "sexualOffspring": 443,
+      "withTripletSibling": 30,
+      "killed": 16,
+      "starved": 434,
+      "oldAge": 160
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE/1001",
+   "tab": "H",
+   "job": 5,
+   "kind": "garden",
+   "arm": "TM0",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1003380,
+   "fin": {
+    "gen": 400,
+    "min": 279,
+    "pop": 165,
+    "dKill": 6113,
+    "births": 119320,
+    "deaths": 121339
+   },
+   "wallSeconds": 728,
+   "garden": {
+    "released": 518,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 6601,
+    "byRole": {
+     "A": {
+      "founders": 518,
+      "offspring": 827,
+      "lifespanSum": 27946.7,
+      "algaeEnergySum": 694501,
+      "fleshEnergySum": 896.6,
+      "sexualOffspring": 423,
+      "withTripletSibling": 14,
+      "killed": 14,
+      "starved": 395,
+      "oldAge": 109
+     },
+     "B": {
+      "founders": 518,
+      "offspring": 807,
+      "lifespanSum": 25889.2,
+      "algaeEnergySum": 613391,
+      "fleshEnergySum": 1052.6,
+      "sexualOffspring": 422,
+      "withTripletSibling": 18,
+      "killed": 12,
+      "starved": 408,
+      "oldAge": 98
+     },
+     "A2": {
+      "founders": 518,
+      "offspring": 775,
+      "lifespanSum": 27354.1,
+      "algaeEnergySum": 732304,
+      "fleshEnergySum": 587.0,
+      "sexualOffspring": 367,
+      "withTripletSibling": 14,
+      "killed": 13,
+      "starved": 390,
+      "oldAge": 115
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE/1005",
+   "tab": "H",
+   "job": 6,
+   "kind": "garden",
+   "arm": "TM0",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 1073340,
+   "fin": {
+    "gen": 400,
+    "min": 298,
+    "pop": 207,
+    "dKill": 8042,
+    "births": 139158,
+    "deaths": 141252
+   },
+   "wallSeconds": 820,
+   "garden": {
+    "released": 557,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 13,
+    "drainSteps": 7689,
+    "byRole": {
+     "A": {
+      "founders": 557,
+      "offspring": 867,
+      "lifespanSum": 29580.2,
+      "algaeEnergySum": 680451,
+      "fleshEnergySum": 649.0,
+      "sexualOffspring": 453,
+      "withTripletSibling": 24,
+      "killed": 15,
+      "starved": 414,
+      "oldAge": 128
+     },
+     "B": {
+      "founders": 557,
+      "offspring": 1075,
+      "lifespanSum": 30944.4,
+      "algaeEnergySum": 686590,
+      "fleshEnergySum": 357.5,
+      "sexualOffspring": 525,
+      "withTripletSibling": 22,
+      "killed": 21,
+      "starved": 400,
+      "oldAge": 136
+     },
+     "A2": {
+      "founders": 557,
+      "offspring": 947,
+      "lifespanSum": 30144.1,
+      "algaeEnergySum": 718129,
+      "fleshEnergySum": 721.0,
+      "sexualOffspring": 460,
+      "withTripletSibling": 22,
+      "killed": 15,
+      "starved": 413,
+      "oldAge": 129
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_BURN/1003",
+   "tab": "H",
+   "job": 7,
+   "kind": "garden",
+   "arm": "00B",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1091040,
+   "fin": {
+    "gen": 400,
+    "min": 303,
+    "pop": 174,
+    "dKill": 6651,
+    "births": 77874,
+    "deaths": 80031
+   },
+   "wallSeconds": 512,
+   "garden": {
+    "released": 567,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 15,
+    "drainSteps": 8248,
+    "byRole": {
+     "A2": {
+      "founders": 567,
+      "offspring": 836,
+      "lifespanSum": 32195.3,
+      "algaeEnergySum": 1045830,
+      "fleshEnergySum": 1290.0,
+      "sexualOffspring": 397,
+      "withTripletSibling": 19,
+      "killed": 18,
+      "starved": 408,
+      "oldAge": 141
+     },
+     "B": {
+      "founders": 567,
+      "offspring": 556,
+      "lifespanSum": 34521.7,
+      "algaeEnergySum": 905049,
+      "fleshEnergySum": 365.8,
+      "sexualOffspring": 268,
+      "withTripletSibling": 17,
+      "killed": 19,
+      "starved": 371,
+      "oldAge": 177
+     },
+     "A": {
+      "founders": 567,
+      "offspring": 925,
+      "lifespanSum": 34427.9,
+      "algaeEnergySum": 1148843,
+      "fleshEnergySum": 1814.3,
+      "sexualOffspring": 464,
+      "withTripletSibling": 18,
+      "killed": 16,
+      "starved": 397,
+      "oldAge": 154
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_BURN/1001",
+   "tab": "H",
+   "job": 8,
+   "kind": "garden",
+   "arm": "T0B",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 928200,
+   "fin": {
+    "gen": 400,
+    "min": 258,
+    "pop": 521,
+    "dKill": 4778,
+    "births": 187609,
+    "deaths": 189146
+   },
+   "wallSeconds": 1345,
+   "garden": {
+    "released": 476,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 4945,
+    "byRole": {
+     "A": {
+      "founders": 476,
+      "offspring": 799,
+      "lifespanSum": 21062.7,
+      "algaeEnergySum": 302854,
+      "fleshEnergySum": 16.8,
+      "sexualOffspring": 523,
+      "withTripletSibling": 7,
+      "killed": 21,
+      "starved": 379,
+      "oldAge": 76
+     },
+     "B": {
+      "founders": 476,
+      "offspring": 849,
+      "lifespanSum": 22044.2,
+      "algaeEnergySum": 239515,
+      "fleshEnergySum": 3.2,
+      "sexualOffspring": 499,
+      "withTripletSibling": 8,
+      "killed": 19,
+      "starved": 365,
+      "oldAge": 92
+     },
+     "A2": {
+      "founders": 476,
+      "offspring": 753,
+      "lifespanSum": 20413.9,
+      "algaeEnergySum": 304180,
+      "fleshEnergySum": 22.7,
+      "sexualOffspring": 492,
+      "withTripletSibling": 9,
+      "killed": 21,
+      "starved": 381,
+      "oldAge": 74
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_BURN/1005",
+   "tab": "H",
+   "job": 9,
+   "kind": "garden",
+   "arm": "T0B",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 864900,
+   "fin": {
+    "gen": 400,
+    "min": 240,
+    "pop": 505,
+    "dKill": 3001,
+    "births": 196448,
+    "deaths": 197896
+   },
+   "wallSeconds": 1278,
+   "garden": {
+    "released": 441,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 6957,
+    "byRole": {
+     "A": {
+      "founders": 441,
+      "offspring": 828,
+      "lifespanSum": 18986.3,
+      "algaeEnergySum": 276288,
+      "fleshEnergySum": 450.5,
+      "sexualOffspring": 575,
+      "withTripletSibling": 13,
+      "killed": 10,
+      "starved": 370,
+      "oldAge": 61
+     },
+     "B": {
+      "founders": 441,
+      "offspring": 850,
+      "lifespanSum": 19456.5,
+      "algaeEnergySum": 210829,
+      "fleshEnergySum": 23.5,
+      "sexualOffspring": 535,
+      "withTripletSibling": 8,
+      "killed": 9,
+      "starved": 351,
+      "oldAge": 81
+     },
+     "A2": {
+      "founders": 441,
+      "offspring": 743,
+      "lifespanSum": 18147.2,
+      "algaeEnergySum": 251308,
+      "fleshEnergySum": 409.4,
+      "sexualOffspring": 525,
+      "withTripletSibling": 17,
+      "killed": 10,
+      "starved": 371,
+      "oldAge": 60
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/SEG_MOVE+SEG_BURN/1003",
+   "tab": "H",
+   "job": 10,
+   "kind": "garden",
+   "arm": "0MB",
+   "seed": 1003,
+   "stop": "gen",
+   "stopStep": 1244640,
+   "fin": {
+    "gen": 400,
+    "min": 346,
+    "pop": 286,
+    "dKill": 3914,
+    "births": 147027,
+    "deaths": 149327
+   },
+   "wallSeconds": 1064,
+   "garden": {
+    "released": 652,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 10,
+    "drainSteps": 7097,
+    "byRole": {
+     "A2": {
+      "founders": 652,
+      "offspring": 638,
+      "lifespanSum": 20213.9,
+      "algaeEnergySum": 231348,
+      "fleshEnergySum": 84.1,
+      "sexualOffspring": 273,
+      "withTripletSibling": 15,
+      "killed": 11,
+      "starved": 597,
+      "oldAge": 44
+     },
+     "B": {
+      "founders": 652,
+      "offspring": 946,
+      "lifespanSum": 27418.9,
+      "algaeEnergySum": 338760,
+      "fleshEnergySum": 289.8,
+      "sexualOffspring": 381,
+      "withTripletSibling": 15,
+      "killed": 20,
+      "starved": 517,
+      "oldAge": 115
+     },
+     "A": {
+      "founders": 652,
+      "offspring": 792,
+      "lifespanSum": 22008.1,
+      "algaeEnergySum": 274959,
+      "fleshEnergySum": 196.9,
+      "sexualOffspring": 354,
+      "withTripletSibling": 14,
+      "killed": 18,
+      "starved": 565,
+      "oldAge": 69
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE+SEG_BURN/1001",
+   "tab": "H",
+   "job": 11,
+   "kind": "garden",
+   "arm": "TMB",
+   "seed": 1001,
+   "stop": "gen",
+   "stopStep": 1007220,
+   "fin": {
+    "gen": 400,
+    "min": 280,
+    "pop": 468,
+    "dKill": 4748,
+    "births": 193795,
+    "deaths": 195517
+   },
+   "wallSeconds": 1235,
+   "garden": {
+    "released": 520,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 9106,
+    "byRole": {
+     "A": {
+      "founders": 520,
+      "offspring": 504,
+      "lifespanSum": 19226.5,
+      "algaeEnergySum": 207564,
+      "fleshEnergySum": 14.4,
+      "sexualOffspring": 314,
+      "withTripletSibling": 5,
+      "killed": 17,
+      "starved": 436,
+      "oldAge": 67
+     },
+     "B": {
+      "founders": 520,
+      "offspring": 689,
+      "lifespanSum": 20096.9,
+      "algaeEnergySum": 207923,
+      "fleshEnergySum": 78.4,
+      "sexualOffspring": 374,
+      "withTripletSibling": 9,
+      "killed": 22,
+      "starved": 430,
+      "oldAge": 68
+     },
+     "A2": {
+      "founders": 520,
+      "offspring": 519,
+      "lifespanSum": 18575.5,
+      "algaeEnergySum": 200773,
+      "fleshEnergySum": 200.9,
+      "sexualOffspring": 305,
+      "withTripletSibling": 10,
+      "killed": 14,
+      "starved": 449,
+      "oldAge": 57
+     }
+    }
+   }
+  },
+  {
+   "label": "burden/garden/THRESH_BASE+SEG_MOVE+SEG_BURN/1005",
+   "tab": "H",
+   "job": 12,
+   "kind": "garden",
+   "arm": "TMB",
+   "seed": 1005,
+   "stop": "gen",
+   "stopStep": 935640,
+   "fin": {
+    "gen": 400,
+    "min": 260,
+    "pop": 440,
+    "dKill": 3959,
+    "births": 171139,
+    "deaths": 172769
+   },
+   "wallSeconds": 1063,
+   "garden": {
+    "released": 480,
+    "skipped": 0,
+    "censored": 0,
+    "peakLive": 11,
+    "drainSteps": 6095,
+    "byRole": {
+     "A": {
+      "founders": 480,
+      "offspring": 399,
+      "lifespanSum": 17361.2,
+      "algaeEnergySum": 183300,
+      "fleshEnergySum": 52.8,
+      "sexualOffspring": 268,
+      "withTripletSibling": 2,
+      "killed": 12,
+      "starved": 407,
+      "oldAge": 61
+     },
+     "B": {
+      "founders": 480,
+      "offspring": 671,
+      "lifespanSum": 19038.9,
+      "algaeEnergySum": 195488,
+      "fleshEnergySum": 2.2,
+      "sexualOffspring": 354,
+      "withTripletSibling": 2,
+      "killed": 20,
+      "starved": 392,
+      "oldAge": 68
+     },
+     "A2": {
+      "founders": 480,
+      "offspring": 369,
+      "lifespanSum": 18283.1,
+      "algaeEnergySum": 191496,
+      "fleshEnergySum": 42.5,
+      "sexualOffspring": 261,
+      "withTripletSibling": 4,
+      "killed": 18,
+      "starved": 397,
+      "oldAge": 65
+     }
+    }
+   }
+  }
+ ]
+}

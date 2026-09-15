@@ -90,3 +90,34 @@ Two explanations the design cannot separate. A code mechanism: food in sight mea
 **Reproducibility, as preregistered: failed, then exact.** The control arm came in 425 deaths short of v1.42 across six seeds, every bin at or below, because the new harness checked its stop every 60 steps rather than 3,600. Rerunning seed 60606 with the stop aligned reproduced v1.42's ledger in every field over 1.12 million steps: the build is bit for bit v1.42 with both switches off, and the v1.42 eye study was never touched by the resize hazard found during this run.
 
 Tooling faults found and fixed during the run, all recorded in the study file: the resize handler regenerating terrain, viewport clears at turn end voiding three runs, stop granularity, and zsh word splitting blinding the monitor.
+
+## 2026-09-15 the burden (burden.json)
+
+THRESH_BASE x SEG_MOVE x SEG_BURN, eight arms, six seeds, WORLD 3, 400 generations, measured twice: the fitness ledger, and a new randomised common garden run by `lab.js`. Every 30 simulated seconds after minute 20 the garden releases three newborns beside a random adult resident, copying its genome, brain, lineage, heading, phase and lifespan: A and A2 bodiless, B with one bare part. Outcome: lifetime offspring. 97 runs, preregistered with the analysis script in `burden-prereg.md` (701b750) before any run.
+
+**Validity: all four checks pass.** Preflight in every tab; the acceptance test reproduces v1.42's seed 60606 ledger in every field (67,490 individuals, stop at step 1,123,200); all 12 runs with the new switches off reproduce v1.43's `th0_eye0` and `th1_eye0` field for field; garden null W(A2)/W(A) - 1 = -1.2 percent (-3.6 to +1.2) over 48 runs. Exploratory: the null excludes zero in one arm of eight (SEG_MOVE + SEG_BURN, -9.6).
+
+**Cost of one part, 1 - W(part)/W(bodiless), seed bootstrap intervals:**
+
+| arm | ledger | garden |
+|---|---|---|
+| all penalties (default) | 40.3 (37.3 to 43.3) | 52.2 (49.2 to 55.9) |
+| threshold freed | 26.1 | 33.7 |
+| movement freed | 2.4 (-1.7 to 5.9) | 6.1 (-1.9 to 13.4) |
+| metabolism freed | 27.5 | 36.7 |
+| threshold + movement | -18.6 | -9.3 |
+| threshold + metabolism | -2.2 | 5.1 |
+| movement + metabolism | -16.3 | -25.5 |
+| all three freed | -35.5 (-43.8 to -28.8) | -53.7 (-70.8 to -38.9) |
+
+**Shapley shares of the default cost** (ledger, garden): movement 0.95 (0.86 to 1.06), 1.01 (0.87 to 1.15); threshold 0.49, 0.45; metabolism 0.44, 0.57; residual -0.88, -1.03. Every share above zero. The residual is negative: with all three freed a part is an advantage, so the shares sum to about two. Of the 26.1 percent left with the threshold freed, adding movement removes 171 percent and adding metabolism 108.
+
+**Mechanism (exploratory):** garden founders with a bare part eat 0.695 of their identical siblings' algae under the default, 1.083 with movement freed. A finless part divides thrust by 1.2 (five sixths speed), slows turning 11 percent, damps the current 20 percent; 69 percent of control founders die starving. The ledger's intake gap does not close with movement freed (0.684), which is what a gap driven partly by who carries parts looks like.
+
+**Predictions:** P1 metabolism share above movement, wrong in both. P2 movement share under 0.15, wrong in both. P3 ledger residual under 0.25, held. P4 garden default cost at least 30 percent, held.
+
+**Descriptive:** bodied share of the living population 14 percent (default), 21 threshold, 24 metabolism, 70 movement (2.4 parts, 74 percent of bodied with 2+), 83 threshold + metabolism, 97 threshold + movement, 98 movement + metabolism, 99 all three (5.5 parts against a cap of 6). Mean population 191 default, 273 movement, 385 to 455 with two or three freed.
+
+What is left of a part with all three freed is 45 percent more storage, and storage is what selection favours there: selection, not drift, for more structure, but for a side effect of capacity rather than for function. Next question for design, not measurement: what a part should cost and what its storage should be worth.
+
+Tooling: the Browser pane closed seconds into the first launch, taking eight tabs, before any run finished; relaunched one tab at a time. Hidden tabs got about half a core each; arms with bodies freed ran up to 2.7x slower. 176 minutes on eight tabs.
