@@ -611,6 +611,11 @@ function founderGenome(baseHue){
 let ENTRENCH=0, ENTRENCH_HALF=20;
 // v1.43 switches, both off by default: 0 is bit for bit v1.42
 let THRESH_BASE=0, EYE_FOOD=0;
+// v1.44 switches, both off by default: 0 is bit for bit v1.43
+// SEG_MOVE: parts stop slowing the turn, dividing paddle thrust and damping the current; fins still push and steer
+// SEG_BURN: parts stop adding PART_BURN each to metabolism; mouths and eyes still cost what they cost
+let SEG_MOVE=0, SEG_BURN=0;
+const PART_BURN=0.10;
 function plast(age){ return ENTRENCH>0 ? 1/(1+ENTRENCH*age/ENTRENCH_HALF) : 1; }
 function makeSegFrom(g){return {fin:clamp(g.fin*0.5+Math.abs(gauss())*0.05,0,1),spike:clamp(Math.abs(gauss())*0.03,0,1),shell:clamp(Math.abs(gauss())*0.03,0,1),eye:clamp(Math.abs(gauss())*0.02,0,1),mouth:clamp(Math.abs(gauss())*0.02,0,1),la:0,oa:0};}
 function segInherit(pa,pb,g){
@@ -732,7 +737,7 @@ function applySegs(c,sg){
     eyeSum+=o.eye; mouthSum+=o.mouth;
   }
   c.sgEye=eyeMx; c.sgMouth=mouthSum;
-  c.sgBurnB=1+0.10*n+0.05*mouthSum+0.04*eyeSum;
+  c.sgBurnB=1+PART_BURN*n+0.05*mouthSum+0.04*eyeSum;
   c.sgTurnB=1/(1+0.12*n);
   c.sgMassB=1/(1+0.25*n);
   c.sgSpkB=spk; c.sgShlB=shl;
@@ -1458,7 +1463,7 @@ function step(dt){
     // steer
     if(want!=null){
       let d=want-c.dir; while(d>Math.PI)d-=TAU; while(d<-Math.PI)d+=TAU;
-      const tr=(hunting?10:6)*(1-0.35*g.elong)*(c.segTurn||1);
+      const tr=(hunting?10:6)*(1-0.35*g.elong)*(SEG_MOVE?1:(c.segTurn||1));
       c.dir+=clamp(d,-tr*dt,tr*dt);
     }else{
       c.dir+=gauss()*g.wiggle*dt;
@@ -1477,12 +1482,12 @@ function step(dt){
         padF+=ef*Math.cos(o.axOff);
         padT+=ef*Math.sin(o.axOff)*o.dep*0.3;
       }
-      padThr=1+((1+0.30*padF)/(1+0.20*n2)-1)*fseg;
+      padThr=1+((1+0.30*padF)/(SEG_MOVE?1:1+0.20*n2)-1)*fseg;
       c.dir+=padT*0.6*fseg*dt;
     }
     const sp=g.speed*(1+0.35*g.fin)*(1-0.28*g.shell)*(0.8+0.4*Tc)*(simT<iceUntil?0.65:1)*urgency*arrive*(want==null?0.75:1)*(c.thrustMod||1)*(c.torpid?(1-0.8*g.torpor):1)*padThr;
     flow(c.x,c.y,simT,_fl);
-    const cf=clamp(0.85-gsz*0.05,0.15,0.8)*(1-0.3*g.fin)*(c.segMass||1);
+    const cf=clamp(0.85-gsz*0.05,0.15,0.8)*(1-0.3*g.fin)*(SEG_MOVE?1:(c.segMass||1));
     c.x+=Math.cos(c.dir)*sp*dt+_fl[0]*cf*dt;
     c.y+=Math.sin(c.dir)*sp*dt+_fl[1]*cf*dt;
     rockPush(c,gsz);
@@ -1497,7 +1502,7 @@ function step(dt){
     }
     // metabolism
     const s2=gsz*gsz, vn=sp/60;
-    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike+0.14*g.immune+0.2*g.jaw) + 0.10*s2*vn*vn*(1-0.15*g.diet)*(1+0.5*g.fin)*(1-0.25*g.elong) + 8e-5*sense*sense + 0.009*s2*(c.wsum||0)*g.brainW)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1)*(c.segBurn||1)*(1+0.35*Math.max(0,g.enzA+g.enzB-1.05));
+    let burn=(0.12*s2*(1-0.25*g.diet)*(1+0.30*g.shell+0.18*g.spike+0.14*g.immune+0.2*g.jaw) + 0.10*s2*vn*vn*(1-0.15*g.diet)*(1+0.5*g.fin)*(1-0.25*g.elong) + 8e-5*sense*sense + 0.009*s2*(c.wsum||0)*g.brainW)*(0.75+0.5*Tc)*(1+0.5*Math.abs(Tc-g.warmth))*(simT<iceUntil?0.8:1)*(SEG_BURN?(c.segBurn||1)-PART_BURN*(c.sg?c.sg.length:0)*(c.segF||0):(c.segBurn||1))*(1+0.35*Math.max(0,g.enzA+g.enzB-1.05));
     const torpid=g.torpor>0.1&&c.energy<c.cap*0.3&&Tc<0.35;
     if(torpid)burn*=(1-0.7*g.torpor);
     c.torpid=torpid;
@@ -2519,7 +2524,7 @@ radEl.addEventListener('input',()=>{if(replay){radEl.value=mutRate;return;}logIv
 
 // ---------- persistence: the dish lives between visits ----------
 const GAME_V=6;
-const APP_V='1.43';
+const APP_V='1.44';
 const SAVE_KEY='primordialSoup.save';
 const MAX_SHELF=4;
 let shelfSlot=0, shelfPending=null;
